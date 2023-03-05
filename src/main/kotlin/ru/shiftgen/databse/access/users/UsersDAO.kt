@@ -1,6 +1,7 @@
 package ru.shiftgen.databse.access.users
 
 import org.jetbrains.exposed.sql.ResultRow
+import ru.shiftgen.databse.access.groups.Groups
 
 interface UsersDAO {
     fun ResultRow.toUserDTO() = UserDTO(
@@ -12,7 +13,7 @@ interface UsersDAO {
         firstName = this[Users.firstName],
         lastName = this[Users.lastName],
         patronymic = this[Users.patronymic],
-        accessGroupId = this[Users.accessGroupId],
+        accessGroup = Groups.values()[this[Users.accessGroup]],
         workerId = this[Users.workerId],
         structureId = this[Users.structureId]
     )

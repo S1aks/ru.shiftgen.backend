@@ -2,7 +2,6 @@ package ru.shiftgen.databse.access.users
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import ru.shiftgen.databse.access.groups.Groups
 import ru.shiftgen.databse.access.tokens.Tokens
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.workers.Workers
@@ -24,7 +23,6 @@ object Users : Table(), UsersDAO {
 
     override suspend fun insertUser(user: UserDTO): Boolean = dbQuery {
         Users.insert {
-            it[id] = 0
             it[login] = user.login
             it[password] = user.password
             it[email] = user.email ?: ""
@@ -32,6 +30,9 @@ object Users : Table(), UsersDAO {
             it[firstName] = user.firstName
             it[lastName] = user.lastName
             it[patronymic] = user.patronymic ?: ""
+            it[accessGroup] = user.accessGroup.ordinal
+            it[workerId] = user.workerId
+            it[structureId] = user.structureId
         }.insertedCount > 0
     }
 
@@ -43,6 +44,9 @@ object Users : Table(), UsersDAO {
             it[firstName] = user.firstName
             it[lastName] = user.lastName
             it[patronymic] = user.patronymic ?: ""
+            it[accessGroup] = user.accessGroup.ordinal
+            it[workerId] = user.workerId
+            it[structureId] = user.structureId
         } > 0
     }
 

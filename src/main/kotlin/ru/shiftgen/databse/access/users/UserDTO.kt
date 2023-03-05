@@ -1,5 +1,7 @@
 package ru.shiftgen.databse.access.users
 
+import ru.shiftgen.databse.access.groups.Groups
+
 data class UserDTO(
     val id: Int = 0,
     val login: String,
@@ -9,7 +11,7 @@ data class UserDTO(
     val firstName: String,
     val lastName: String,
     val patronymic: String?,
-    val accessGroup: Int,
+    val accessGroup: Groups,
     val workerId: Int?,
     val structureId: Int?
 )
