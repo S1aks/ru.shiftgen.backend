@@ -43,7 +43,7 @@ object DatabaseFactory {
                 firstName = adminFirstName,
                 lastName = adminLastName,
                 patronymic = null,
-                accessGroup = Groups.ADMIN.ordinal,
+                accessGroup = Groups.ADMIN,
                 structureId = null,
                 workerId = null
             )

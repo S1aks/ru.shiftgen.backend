@@ -9,8 +9,8 @@ interface StructuresDAO {
         description = this[Structures.description]
     )
 
-    suspend fun insertStructure(token: StructureDTO): Boolean
-    suspend fun updateStructure(token: StructureDTO): Boolean
+    suspend fun insertStructure(structure: StructureDTO): Boolean
+    suspend fun updateStructure(structure: StructureDTO): Boolean
     suspend fun getStructure(id: Int): StructureDTO?
     suspend fun deleteStructure(id: Int): Boolean
 
