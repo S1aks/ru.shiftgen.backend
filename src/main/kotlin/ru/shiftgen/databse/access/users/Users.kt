@@ -25,11 +25,11 @@ object Users : Table(), UsersDAO {
         Users.insert {
             it[login] = user.login
             it[password] = user.password
-            it[email] = user.email ?: ""
-            it[phone] = user.phone ?: ""
+            it[email] = user.email
+            it[phone] = user.phone
             it[firstName] = user.firstName
             it[lastName] = user.lastName
-            it[patronymic] = user.patronymic ?: ""
+            it[patronymic] = user.patronymic
             it[accessGroup] = user.accessGroup.ordinal
             it[workerId] = user.workerId
             it[structureId] = user.structureId
@@ -39,11 +39,11 @@ object Users : Table(), UsersDAO {
     override suspend fun updateUser(user: UserDTO): Boolean = dbQuery {
         Users.update({ id eq user.id }) {
             it[password] = user.password
-            it[email] = user.email ?: ""
-            it[phone] = user.phone ?: ""
+            it[email] = user.email
+            it[phone] = user.phone
             it[firstName] = user.firstName
             it[lastName] = user.lastName
-            it[patronymic] = user.patronymic ?: ""
+            it[patronymic] = user.patronymic
             it[accessGroup] = user.accessGroup.ordinal
             it[workerId] = user.workerId
             it[structureId] = user.structureId

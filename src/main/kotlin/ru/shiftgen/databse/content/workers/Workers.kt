@@ -19,24 +19,25 @@ object Workers : Table(), WorkersDAO {
 
     override suspend fun insertWorker(worker: WorkerDTO): Boolean = dbQuery {
         Workers.insert {
-            it[personnelNumber] = worker.personnelNumber ?: 0
+            it[personnelNumber] = worker.personnelNumber
             it[userId] = worker.userId
             it[structureId] = worker.structureId
             it[firstName] = worker.firstName
             it[lastName] = worker.lastName
-            it[patronymic] = worker.patronymic ?: ""
-            it[accessToEvents] = worker.accessToEvents ?: ""
+            it[patronymic] = worker.patronymic
+            it[accessToEvents] = worker.accessToEvents
         }.insertedCount > 0
     }
 
     override suspend fun updateWorker(worker: WorkerDTO): Boolean = dbQuery {
         Workers.update({ id eq worker.id }) {
-            it[personnelNumber] = worker.personnelNumber ?: 0
-            it[userId] = worker.userId ?: 0
+            it[personnelNumber] = worker.personnelNumber
+            it[userId] = worker.userId
+            it[structureId] = worker.structureId
             it[firstName] = worker.firstName
             it[lastName] = worker.lastName
-            it[patronymic] = worker.patronymic ?: ""
-            it[accessToEvents] = worker.accessToEvents ?: ""
+            it[patronymic] = worker.patronymic
+            it[accessToEvents] = worker.accessToEvents
         } > 0
     }
 
