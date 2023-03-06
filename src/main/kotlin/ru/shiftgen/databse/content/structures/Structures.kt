@@ -32,5 +32,4 @@ object Structures : Table(), StructuresDAO {
     override suspend fun deleteStructure(id: Int): Boolean = dbQuery {
         Structures.deleteWhere { Structures.id eq id } > 0
     }
-
 }

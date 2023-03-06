@@ -7,6 +7,7 @@ interface WorkersDAO {
         id = this[Workers.id],
         personnelNumber = this[Workers.personnelNumber],
         userId = this[Workers.userId],
+        structureId = this[Workers.structureId],
         firstName = this[Workers.firstName],
         lastName = this[Workers.lastName],
         patronymic = this[Workers.patronymic],

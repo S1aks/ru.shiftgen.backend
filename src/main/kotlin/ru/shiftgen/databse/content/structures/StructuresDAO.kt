@@ -13,5 +13,4 @@ interface StructuresDAO {
     suspend fun updateStructure(structure: StructureDTO): Boolean
     suspend fun getStructure(id: Int): StructureDTO?
     suspend fun deleteStructure(id: Int): Boolean
-
 }
