@@ -1,4 +1,4 @@
-package ru.shiftgen.databse.content.timesheet
+package ru.shiftgen.databse.content.timesheets
 
 import java.time.YearMonth
 

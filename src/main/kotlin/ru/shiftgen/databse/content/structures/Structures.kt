@@ -8,6 +8,7 @@ object Structures : Table(), StructuresDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val name = varchar("name", 25).uniqueIndex()
     internal val description = varchar("description", 256).nullable()
+    override val primaryKey = PrimaryKey(id, name = "PK_Structure_Id")
 
     override suspend fun insertStructure(structure: StructureDTO): Boolean = dbQuery {
         Structures.insert {
