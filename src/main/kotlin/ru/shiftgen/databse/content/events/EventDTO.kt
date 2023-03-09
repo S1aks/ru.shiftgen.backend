@@ -1,7 +1,8 @@
 package ru.shiftgen.databse.content.events
 
 data class EventDTO(
-    val id: Int,
+    val id: Int = 0,
     val name: String,
-    val timeBlocks: String
+    val directionId: Int,
+    val timeBlocksIds: List<Int>
 )

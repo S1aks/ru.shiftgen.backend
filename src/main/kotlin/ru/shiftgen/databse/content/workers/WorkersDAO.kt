@@ -11,7 +11,7 @@ interface WorkersDAO {
         firstName = this[Workers.firstName],
         lastName = this[Workers.lastName],
         patronymic = this[Workers.patronymic],
-        accessToEvents = this[Workers.accessToEvents]
+        accessToDirections = this[Workers.accessToDirections]?.split(",")?.map { it.toInt() }
     )
 
 

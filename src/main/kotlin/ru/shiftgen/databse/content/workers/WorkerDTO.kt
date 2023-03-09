@@ -8,5 +8,5 @@ data class WorkerDTO(
     val firstName: String,
     val lastName: String,
     val patronymic: String?,
-    val accessToEvents: String?
+    val accessToDirections: List<Int>?
 )

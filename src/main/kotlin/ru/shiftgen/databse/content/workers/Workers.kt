@@ -14,7 +14,7 @@ object Workers : Table(), WorkersDAO {
     internal val firstName = varchar("first_name", 30)
     internal val lastName = varchar("last_name", 30)
     internal val patronymic = varchar("patronymic", 30).nullable()
-    internal val accessToEvents = varchar("access_to_events", 256).nullable()
+    internal val accessToDirections = varchar("access_to_events", 256).nullable()
     override val primaryKey = PrimaryKey(id, name = "PK_Worker_Id")
 
     override suspend fun insertWorker(worker: WorkerDTO): Boolean = dbQuery {
@@ -25,7 +25,7 @@ object Workers : Table(), WorkersDAO {
             it[firstName] = worker.firstName
             it[lastName] = worker.lastName
             it[patronymic] = worker.patronymic
-            it[accessToEvents] = worker.accessToEvents
+            it[accessToDirections] = worker.accessToDirections?.joinToString(",")
         }.insertedCount > 0
     }
 
@@ -37,7 +37,7 @@ object Workers : Table(), WorkersDAO {
             it[firstName] = worker.firstName
             it[lastName] = worker.lastName
             it[patronymic] = worker.patronymic
-            it[accessToEvents] = worker.accessToEvents
+            it[accessToDirections] = worker.accessToDirections?.joinToString(",")
         } > 0
     }
 
