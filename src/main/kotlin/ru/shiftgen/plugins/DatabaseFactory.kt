@@ -10,6 +10,13 @@ import ru.shiftgen.databse.authorization.groups.Groups
 import ru.shiftgen.databse.authorization.tokens.Tokens
 import ru.shiftgen.databse.authorization.users.UserDTO
 import ru.shiftgen.databse.authorization.users.Users
+import ru.shiftgen.databse.content.directions.Directions
+import ru.shiftgen.databse.content.events.Events
+import ru.shiftgen.databse.content.shifts.Shifts
+import ru.shiftgen.databse.content.structures.Structures
+import ru.shiftgen.databse.content.time_blocks.TimeBlocks
+import ru.shiftgen.databse.content.timesheets.TimeSheets
+import ru.shiftgen.databse.content.workers.Workers
 
 object DatabaseFactory {
     private const val dbUser = "postgres"
@@ -25,8 +32,15 @@ object DatabaseFactory {
     fun init() {
         val database = Database.connect(jdbcURL, driverClassName, dbUser, dbPassword)
         transaction(database) {
-            SchemaUtils.create(Users)
             SchemaUtils.create(Tokens)
+            SchemaUtils.create(Users)
+            SchemaUtils.create(Directions)
+            SchemaUtils.create(Events)
+            SchemaUtils.create(Shifts)
+            SchemaUtils.create(Structures)
+            SchemaUtils.create(TimeBlocks)
+            SchemaUtils.create(TimeSheets)
+            SchemaUtils.create(Workers)
         }
         runBlocking {
             initAdminAccount()
