@@ -1,4 +1,4 @@
-package ru.shiftgen.databse.access.tokens
+package ru.shiftgen.databse.authorization.tokens
 
 import org.jetbrains.exposed.sql.ResultRow
 import ru.shiftgen.plugins.GWTGenerator

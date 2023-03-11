@@ -1,6 +1,6 @@
-package ru.shiftgen.databse.access.users
+package ru.shiftgen.databse.authorization.users
 
-import ru.shiftgen.databse.access.groups.Groups
+import ru.shiftgen.databse.authorization.groups.Groups
 
 data class UserDTO(
     val id: Int = 0,

@@ -1,4 +1,4 @@
-package ru.shiftgen.features.auth.register
+package ru.shiftgen.features.authorization.register
 
 import kotlinx.serialization.Serializable
 

@@ -1,8 +1,8 @@
-package ru.shiftgen.databse.access.users
+package ru.shiftgen.databse.authorization.users
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import ru.shiftgen.databse.access.tokens.Tokens
+import ru.shiftgen.databse.authorization.tokens.Tokens
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.workers.Workers
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery

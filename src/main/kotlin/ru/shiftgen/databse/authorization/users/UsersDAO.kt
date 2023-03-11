@@ -1,7 +1,7 @@
-package ru.shiftgen.databse.access.users
+package ru.shiftgen.databse.authorization.users
 
 import org.jetbrains.exposed.sql.ResultRow
-import ru.shiftgen.databse.access.groups.Groups
+import ru.shiftgen.databse.authorization.groups.Groups
 
 interface UsersDAO {
     fun ResultRow.toUserDTO() = UserDTO(

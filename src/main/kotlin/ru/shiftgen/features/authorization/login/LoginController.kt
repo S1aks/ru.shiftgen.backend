@@ -1,12 +1,12 @@
-package ru.shiftgen.features.auth.login
+package ru.shiftgen.features.authorization.login
 
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
-import ru.shiftgen.databse.access.tokens.TokenState
-import ru.shiftgen.databse.access.tokens.Tokens
-import ru.shiftgen.databse.access.users.Users
+import ru.shiftgen.databse.authorization.tokens.TokenState
+import ru.shiftgen.databse.authorization.tokens.Tokens
+import ru.shiftgen.databse.authorization.users.Users
 
 class LoginController(private val call: ApplicationCall) {
 

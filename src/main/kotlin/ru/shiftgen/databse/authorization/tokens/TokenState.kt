@@ -1,4 +1,4 @@
-package ru.shiftgen.databse.access.tokens
+package ru.shiftgen.databse.authorization.tokens
 
 sealed interface TokenState {
     enum class ErrorCodes {

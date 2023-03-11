@@ -1,4 +1,4 @@
-package ru.shiftgen.databse.access.tokens
+package ru.shiftgen.databse.authorization.tokens
 
 data class TokenDTO(
     val login: String,

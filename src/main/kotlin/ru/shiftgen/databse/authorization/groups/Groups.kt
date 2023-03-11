@@ -1,4 +1,4 @@
-package ru.shiftgen.databse.access.groups
+package ru.shiftgen.databse.authorization.groups
 
 enum class Groups {
     ADMIN,

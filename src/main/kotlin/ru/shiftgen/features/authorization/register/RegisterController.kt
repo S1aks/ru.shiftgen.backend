@@ -1,14 +1,14 @@
-package ru.shiftgen.features.auth.register
+package ru.shiftgen.features.authorization.register
 
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
-import ru.shiftgen.databse.access.groups.Groups
-import ru.shiftgen.databse.access.tokens.TokenDTO
-import ru.shiftgen.databse.access.tokens.Tokens
-import ru.shiftgen.databse.access.users.UserDTO
-import ru.shiftgen.databse.access.users.Users
+import ru.shiftgen.databse.authorization.groups.Groups
+import ru.shiftgen.databse.authorization.tokens.TokenDTO
+import ru.shiftgen.databse.authorization.tokens.Tokens
+import ru.shiftgen.databse.authorization.users.UserDTO
+import ru.shiftgen.databse.authorization.users.Users
 import ru.shiftgen.plugins.GWTGenerator
 import ru.shiftgen.utils.isValidEmail
 import java.util.*

@@ -6,10 +6,10 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.shiftgen.databse.access.groups.Groups
-import ru.shiftgen.databse.access.tokens.Tokens
-import ru.shiftgen.databse.access.users.UserDTO
-import ru.shiftgen.databse.access.users.Users
+import ru.shiftgen.databse.authorization.groups.Groups
+import ru.shiftgen.databse.authorization.tokens.Tokens
+import ru.shiftgen.databse.authorization.users.UserDTO
+import ru.shiftgen.databse.authorization.users.Users
 
 object DatabaseFactory {
     private const val dbUser = "postgres"
