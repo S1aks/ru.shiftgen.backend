@@ -1,6 +1,8 @@
 package ru.shiftgen.databse.access.tokens
 
 import org.jetbrains.exposed.sql.ResultRow
+import ru.shiftgen.plugins.GWTGenerator
+import java.util.*
 
 interface TokensDAO {
     fun ResultRow.toTokenDTO() = TokenDTO(
@@ -8,6 +10,25 @@ interface TokensDAO {
         accessToken = this[Tokens.accessToken],
         refreshToken = this[Tokens.refreshToken]
     )
+
+    suspend fun createAndSaveTokens(login: String): TokenState {
+        val accessToken = GWTGenerator.makeToken(login)
+        val refreshToken = UUID.randomUUID().toString()
+        val token = TokenDTO(login, accessToken, refreshToken)
+        return if (Tokens.getToken(token.login) != null) {
+            if (Tokens.updateRefreshToken(token)) {
+                TokenState.Success(token)
+            } else {
+                TokenState.Error(TokenState.ErrorCodes.ERROR_UPDATE)
+            }
+        } else {
+            if (Tokens.insertToken(token)) {
+                TokenState.Success(token)
+            } else {
+                TokenState.Error(TokenState.ErrorCodes.ERROR_CREATE)
+            }
+        }
+    }
 
     suspend fun insertToken(token: TokenDTO): Boolean
     suspend fun updateAccessToken(token: TokenDTO): Boolean
