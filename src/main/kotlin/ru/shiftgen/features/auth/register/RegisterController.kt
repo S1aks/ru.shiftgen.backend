@@ -4,6 +4,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import ru.shiftgen.databse.access.groups.Groups
 import ru.shiftgen.databse.access.tokens.TokenDTO
 import ru.shiftgen.databse.access.tokens.Tokens
 import ru.shiftgen.databse.access.users.UserDTO
@@ -18,33 +19,57 @@ class RegisterController(private val call: ApplicationCall) {
         val receive = call.receive<RegisterReceive>()
         if (!receive.email.isValidEmail()) {
             call.respond(HttpStatusCode.BadRequest, "Email is not valid")
+            return
         }
         val userId = Users.getUserId(receive.login)
         if (userId != null) {
             call.respond(HttpStatusCode.Conflict, "User already exists")
-        } else {
-            val user = UserDTO(
-                id = 0,
-                login = receive.login,
-                password = receive.password,
-                email = receive.email,
-                phone = "",
-                firstName = "",
-                lastName = "",
-                patronymic = ""
-            )
-            if (Users.insertUser(user)) {
-                val accessToken = GWTGenerator.makeToken(user.login)
-                val refreshToken = UUID.randomUUID().toString()
-                val token = TokenDTO(user.login, accessToken, refreshToken)
-                if (Tokens.insertToken(token)) {
-                    call.respond(RegisterResponse(token.accessToken, token.refreshToken))
-                } else {
-                    call.respond(HttpStatusCode.InternalServerError, "Error create token")
-                }
-            } else {
-                call.respond(HttpStatusCode.InternalServerError, "Error create user")
+            return
+        }
+        val user: UserDTO?
+        when (receive.group) {
+            Groups.DISPATCHER.ordinal -> {
+                user = UserDTO(
+                    id = 0,
+                    login = receive.login,
+                    password = receive.password,
+                    email = receive.email,
+                    phone = "",
+                    firstName = "",
+                    lastName = "",
+                    patronymic = "",
+                    accessGroup = Groups.DISPATCHER
+                )
             }
+            Groups.WORKER.ordinal -> {
+                user = UserDTO(
+                    id = 0,
+                    login = receive.login,
+                    password = receive.password,
+                    email = receive.email,
+                    phone = "",
+                    firstName = "",
+                    lastName = "",
+                    patronymic = "",
+                    accessGroup = Groups.WORKER
+                )
+            }
+            else -> {
+                call.respond(HttpStatusCode.Conflict, "Group not exists")
+                return
+            }
+        }
+        if (Users.insertUser(user)) {
+            val accessToken = GWTGenerator.makeToken(user.login)
+            val refreshToken = UUID.randomUUID().toString()
+            val token = TokenDTO(user.login, accessToken, refreshToken)
+            if (Tokens.insertToken(token)) {
+                call.respond(RegisterResponse(token.accessToken, token.refreshToken))
+            } else {
+                call.respond(HttpStatusCode.InternalServerError, "Error create token")
+            }
+        } else {
+            call.respond(HttpStatusCode.InternalServerError, "Error create user")
         }
     }
 }

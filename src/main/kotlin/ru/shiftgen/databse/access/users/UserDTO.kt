@@ -12,6 +12,6 @@ data class UserDTO(
     val lastName: String,
     val patronymic: String?,
     val accessGroup: Groups,
-    val workerId: Int?,
-    val structureId: Int?
+    val workerId: Int? = null,
+    val structureId: Int? = null
 )

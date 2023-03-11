@@ -3,12 +3,6 @@ package ru.shiftgen
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.exists
-import org.jetbrains.exposed.sql.transactions.transaction
-import ru.shiftgen.databse.access.tokens.Tokens
-import ru.shiftgen.databse.access.users.Users
 import ru.shiftgen.features.auth.login.configureLoginRouting
 import ru.shiftgen.features.auth.register.configureRegisterRouting
 import ru.shiftgen.plugins.DatabaseFactory
