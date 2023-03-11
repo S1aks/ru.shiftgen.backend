@@ -6,7 +6,7 @@ data class TimeSheetDTO(
     val id: Int = 0,
     val workerId: Int,
     val periodYearMonth: YearMonth,
-    val workedTime: Long,
-    val calculatedTime: Long,
-    val correctionTime: Long
+    val workedTime: Long = 0L,
+    val calculatedTime: Long = 0L,
+    val correctionTime: Long = 0L
 )
