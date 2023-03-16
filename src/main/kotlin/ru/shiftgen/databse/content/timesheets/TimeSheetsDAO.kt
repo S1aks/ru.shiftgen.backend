@@ -7,6 +7,7 @@ interface TimeSheetsDAO {
     fun ResultRow.toTimeSheetDTO() = TimeSheetDTO(
         id = this[TimeSheets.id],
         workerId = this[TimeSheets.workerId],
+        structureId = this[TimeSheets.structureId],
         periodYearMonth = YearMonth.parse(this[TimeSheets.periodYearMonth]),
         workedTime = this[TimeSheets.workedTime],
         calculatedTime = this[TimeSheets.calculatedTime],
