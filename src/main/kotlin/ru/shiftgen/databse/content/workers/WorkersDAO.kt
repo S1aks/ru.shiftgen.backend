@@ -14,7 +14,6 @@ interface WorkersDAO {
         accessToDirections = this[Workers.accessToDirections]?.split(",")?.map { it.toInt() }
     )
 
-
     suspend fun insertWorker(worker: WorkerDTO): Boolean
     suspend fun updateWorker(worker: WorkerDTO): Boolean
     suspend fun getWorker(id: Int): WorkerDTO?
