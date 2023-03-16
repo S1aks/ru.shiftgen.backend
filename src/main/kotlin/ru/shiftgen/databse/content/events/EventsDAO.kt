@@ -7,6 +7,7 @@ interface EventsDAO {
         id = this[Events.id],
         name = this[Events.name],
         directionId = this[Events.directionId],
+        structureId = this[Events.structureId],
         timeBlocksIds = this[Events.timeBlocksIds].split(",").map { it.toInt() }
     )
 

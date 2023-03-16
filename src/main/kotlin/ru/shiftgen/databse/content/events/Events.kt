@@ -3,12 +3,14 @@ package ru.shiftgen.databse.content.events
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import ru.shiftgen.databse.content.directions.Directions
+import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
 
 object Events : Table(), EventsDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val name = varchar("name", 30)
     internal val directionId = reference("direction_id", Directions.id)
+    internal val structureId = reference("structure_id", Structures.id)
     internal val timeBlocksIds = varchar("time_block_ids", 256)
     override val primaryKey = PrimaryKey(id, name = "PK_Event_Id")
 
@@ -16,6 +18,7 @@ object Events : Table(), EventsDAO {
         Events.insert {
             it[name] = event.name
             it[directionId] = event.directionId
+            it[structureId] = event.structureId
             it[timeBlocksIds] = event.timeBlocksIds.joinToString(",")
         }.insertedCount > 0
     }
@@ -24,6 +27,7 @@ object Events : Table(), EventsDAO {
         Events.update({ id eq event.id }) {
             it[name] = event.name
             it[directionId] = event.directionId
+            it[structureId] = event.structureId
             it[timeBlocksIds] = event.timeBlocksIds.joinToString(",")
         } > 0
     }
