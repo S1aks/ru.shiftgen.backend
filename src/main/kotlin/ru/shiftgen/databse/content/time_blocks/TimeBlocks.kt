@@ -2,10 +2,12 @@ package ru.shiftgen.databse.content.time_blocks
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
 
 object TimeBlocks : Table(), TimeBlocksDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
+    internal val structureId = reference("structure_id", Structures.id)
     internal val name = varchar("name", 30)
     internal val duration = long("duration")
     internal val action = integer("action")
@@ -13,6 +15,7 @@ object TimeBlocks : Table(), TimeBlocksDAO {
 
     override suspend fun insertTimeBlock(timeBlock: TimeBlockDTO): Boolean = dbQuery {
         TimeBlocks.insert {
+            it[structureId] = timeBlock.structureId
             it[name] = timeBlock.name
             it[duration] = timeBlock.duration
             it[action] = timeBlock.action.ordinal
@@ -21,6 +24,7 @@ object TimeBlocks : Table(), TimeBlocksDAO {
 
     override suspend fun updateTimeBlock(timeBlock: TimeBlockDTO): Boolean = dbQuery {
         TimeBlocks.update({ id eq timeBlock.id }) {
+            it[structureId] = timeBlock.structureId
             it[name] = timeBlock.name
             it[duration] = timeBlock.duration
             it[action] = timeBlock.action.ordinal

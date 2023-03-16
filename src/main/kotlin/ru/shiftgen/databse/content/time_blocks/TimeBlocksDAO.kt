@@ -6,6 +6,7 @@ import ru.shiftgen.databse.content.enums.Action
 interface TimeBlocksDAO {
     fun ResultRow.toTimeBlockDTO() = TimeBlockDTO(
         id = this[TimeBlocks.id],
+        structureId = this[TimeBlocks.structureId],
         name = this[TimeBlocks.name],
         duration = this[TimeBlocks.duration],
         action = Action.values()[this[TimeBlocks.action]]
