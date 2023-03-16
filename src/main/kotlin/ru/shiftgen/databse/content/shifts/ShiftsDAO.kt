@@ -9,6 +9,7 @@ interface ShiftsDAO {
         name = this[Shifts.name],
         periodicity = Periodicity.values()[this[Shifts.periodicity]],
         workerId = this[Shifts.workerId],
+        structureId = this[Shifts.structureId],
         startTime = this[Shifts.startTime],
         eventId = this[Shifts.eventId]
     )

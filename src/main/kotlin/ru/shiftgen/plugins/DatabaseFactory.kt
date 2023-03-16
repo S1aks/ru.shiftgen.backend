@@ -53,13 +53,9 @@ object DatabaseFactory {
                 login = adminLogin,
                 password = adminPassword,
                 email = adminEmail,
-                phone = null,
                 firstName = adminFirstName,
                 lastName = adminLastName,
-                patronymic = null,
-                accessGroup = Groups.ADMIN,
-                structureId = null,
-                workerId = null
+                accessGroup = Groups.ADMIN
             )
             if (!Users.insertUser(superUser)) throw Exception("Error initialize admin account!")
         }

@@ -3,6 +3,7 @@ package ru.shiftgen.databse.content.shifts
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import ru.shiftgen.databse.content.events.Events
+import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.workers.Workers
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
 
@@ -11,6 +12,7 @@ object Shifts : Table(), ShiftsDAO {
     internal val name = varchar("name", 30)
     internal val periodicity = integer("periodicity")
     internal val workerId = reference("worker_id", Workers.id).nullable()
+    internal val structureId = reference("structure_id", Structures.id)
     internal val startTime = long("start_time")
     internal val eventId = reference("event_id", Events.id)
     override val primaryKey = PrimaryKey(id, name = "PK_Shift_Id")
@@ -20,6 +22,7 @@ object Shifts : Table(), ShiftsDAO {
             it[name] = shift.name
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
+            it[structureId] = shift.structureId
             it[startTime] = shift.startTime
             it[eventId] = shift.eventId
         }.insertedCount > 0
@@ -30,6 +33,7 @@ object Shifts : Table(), ShiftsDAO {
             it[name] = shift.name
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
+            it[structureId] = shift.structureId
             it[startTime] = shift.startTime
             it[eventId] = shift.eventId
         } > 0

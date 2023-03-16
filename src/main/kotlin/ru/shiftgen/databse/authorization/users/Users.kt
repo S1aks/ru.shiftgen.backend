@@ -18,7 +18,7 @@ object Users : Table(), UsersDAO {
     internal val patronymic = varchar("patronymic", 30).nullable()
     internal val accessGroup = integer("access_group")
     internal val workerId = reference("worker_id", Workers.id).nullable()
-    internal val structureId = reference("structure_id", Structures.id)
+    internal val structureId = reference("structure_id", Structures.id).nullable()
     override val primaryKey = PrimaryKey(login, name = "PK_User_Id")
 
     override suspend fun insertUser(user: UserDTO): Boolean = dbQuery {

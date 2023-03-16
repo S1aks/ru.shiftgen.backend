@@ -6,12 +6,12 @@ data class UserDTO(
     val id: Int = 0,
     val login: String,
     val password: String,
-    val email: String?,
-    val phone: String?,
+    val email: String? = null,
+    val phone: String? = null,
     val firstName: String,
     val lastName: String,
-    val patronymic: String?,
+    val patronymic: String? = null,
     val accessGroup: Groups,
     val workerId: Int? = null,
-    val structureId: Int
+    val structureId: Int? = null
 )

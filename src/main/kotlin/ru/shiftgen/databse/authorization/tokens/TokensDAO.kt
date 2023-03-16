@@ -11,8 +11,8 @@ interface TokensDAO {
         refreshToken = this[Tokens.refreshToken]
     )
 
-    suspend fun createAndSaveTokens(login: String): TokenState {
-        val accessToken = JWTGenerator.makeToken(login)
+    suspend fun createAndSaveTokens(login: String, structureId: Int): TokenState {
+        val accessToken = JWTGenerator.makeToken(login, structureId)
         val refreshToken = UUID.randomUUID().toString()
         val token = TokenDTO(login, accessToken, refreshToken)
         return if (Tokens.getToken(token.login) != null) {
