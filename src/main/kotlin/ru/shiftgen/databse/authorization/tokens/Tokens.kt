@@ -4,7 +4,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import ru.shiftgen.databse.authorization.users.Users
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
-import ru.shiftgen.plugins.GWTGenerator
+import ru.shiftgen.plugins.JWTGenerator
 
 object Tokens : Table(), TokensDAO {
     internal val login = reference("login", Users.login).uniqueIndex()
@@ -18,7 +18,7 @@ object Tokens : Table(), TokensDAO {
             it[login] = token.login
             it[accessToken] = token.accessToken
             it[refreshToken] = token.refreshToken
-            it[refreshTokenExpiration] = GWTGenerator.getRefreshExpiration()
+            it[refreshTokenExpiration] = JWTGenerator.getRefreshExpiration()
         }.insertedCount > 0
     }
 
@@ -32,7 +32,7 @@ object Tokens : Table(), TokensDAO {
         Tokens.update({ login eq token.login }) {
             it[accessToken] = token.accessToken
             it[refreshToken] = token.refreshToken
-            it[refreshTokenExpiration] = GWTGenerator.getRefreshExpiration()
+            it[refreshTokenExpiration] = JWTGenerator.getRefreshExpiration()
         } > 0
     }
 

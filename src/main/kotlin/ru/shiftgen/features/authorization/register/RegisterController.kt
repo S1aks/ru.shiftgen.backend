@@ -9,7 +9,7 @@ import ru.shiftgen.databse.authorization.tokens.TokenDTO
 import ru.shiftgen.databse.authorization.tokens.Tokens
 import ru.shiftgen.databse.authorization.users.UserDTO
 import ru.shiftgen.databse.authorization.users.Users
-import ru.shiftgen.plugins.GWTGenerator
+import ru.shiftgen.plugins.JWTGenerator
 import ru.shiftgen.utils.isValidEmail
 import java.util.*
 
@@ -38,9 +38,11 @@ class RegisterController(private val call: ApplicationCall) {
                     firstName = "",
                     lastName = "",
                     patronymic = "",
-                    accessGroup = Groups.DISPATCHER
+                    accessGroup = Groups.DISPATCHER,
+                    structureId = receive.structureId
                 )
             }
+
             Groups.WORKER.ordinal -> {
                 user = UserDTO(
                     id = 0,
@@ -51,16 +53,18 @@ class RegisterController(private val call: ApplicationCall) {
                     firstName = "",
                     lastName = "",
                     patronymic = "",
-                    accessGroup = Groups.WORKER
+                    accessGroup = Groups.WORKER,
+                    structureId = receive.structureId
                 )
             }
+
             else -> {
                 call.respond(HttpStatusCode.Conflict, "Group not exists")
                 return
             }
         }
         if (Users.insertUser(user)) {
-            val accessToken = GWTGenerator.makeToken(user.login)
+            val accessToken = JWTGenerator.makeToken(user.login, user.structureId)
             val refreshToken = UUID.randomUUID().toString()
             val token = TokenDTO(user.login, accessToken, refreshToken)
             if (Tokens.insertToken(token)) {

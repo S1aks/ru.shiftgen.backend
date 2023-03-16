@@ -5,13 +5,14 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
+import kotlinx.coroutines.runBlocking
 
 fun Application.configureAuthentication() {
 
     install(Authentication) {
         jwt("auth-jwt") {
-            verifier(GWTGenerator.verifier)
-            realm = GWTGenerator.realm
+            verifier(JWTGenerator.verifier)
+            realm = JWTGenerator.realm
             validate {
                 if (it.payload.getClaim("login").asString() != "") {
                     JWTPrincipal(it.payload)
@@ -25,3 +26,15 @@ fun Application.configureAuthentication() {
         }
     }
 }
+
+val ApplicationCall.structureId: Int?
+    get() {
+        val id = this.principal<JWTPrincipal>()?.payload?.getClaim("structureId")?.asInt()
+        return if (id != null) {
+            id
+        } else {
+            runBlocking { this@structureId.respond(HttpStatusCode.BadRequest, "Error in structure id query parameter") }
+            null
+        }
+
+    }

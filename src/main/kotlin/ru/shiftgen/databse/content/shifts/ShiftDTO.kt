@@ -7,6 +7,7 @@ data class ShiftDTO(
     val name: String,
     val periodicity: Periodicity,
     val workerId: Int?,
+    val structureId: Int,
     val startTime: Long,
     val eventId: Int
 )

@@ -18,7 +18,7 @@ object Users : Table(), UsersDAO {
     internal val patronymic = varchar("patronymic", 30).nullable()
     internal val accessGroup = integer("access_group")
     internal val workerId = reference("worker_id", Workers.id).nullable()
-    internal val structureId = reference("structure_id", Structures.id).nullable()
+    internal val structureId = reference("structure_id", Structures.id)
     override val primaryKey = PrimaryKey(login, name = "PK_User_Id")
 
     override suspend fun insertUser(user: UserDTO): Boolean = dbQuery {
@@ -55,27 +55,19 @@ object Users : Table(), UsersDAO {
     }
 
     override suspend fun getUserById(id: Int): UserDTO? = dbQuery {
-        Users.select { Users.id eq id }
-            .singleOrNull()
-            ?.toUserDTO()
+        Users.select { Users.id eq id }.singleOrNull()?.toUserDTO()
     }
 
     override suspend fun getUserByLogin(login: String): UserDTO? = dbQuery {
-        Users.select { Users.login eq login }
-            .singleOrNull()
-            ?.toUserDTO()
+        Users.select { Users.login eq login }.singleOrNull()?.toUserDTO()
     }
 
     override suspend fun getUserLogin(id: Int): String? = dbQuery {
-        Users.select { Users.id eq id }
-            .singleOrNull()
-            ?.let { it[login] }
+        Users.select { Users.id eq id }.singleOrNull()?.let { it[login] }
     }
 
     override suspend fun getUserId(login: String): Int? = dbQuery {
-        Users.select { Users.login eq login }
-            .singleOrNull()
-            ?.let { it[id] }
+        Users.select { Users.login eq login }.singleOrNull()?.let { it[id] }
     }
 
     override suspend fun deleteUser(id: Int): Boolean = dbQuery {

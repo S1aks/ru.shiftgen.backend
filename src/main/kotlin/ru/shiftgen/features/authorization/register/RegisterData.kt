@@ -7,7 +7,8 @@ data class RegisterReceive(
     val login: String,
     val email: String,
     val password: String,
-    val group: Int
+    val group: Int,
+    val structureId: Int
 )
 
 @Serializable
