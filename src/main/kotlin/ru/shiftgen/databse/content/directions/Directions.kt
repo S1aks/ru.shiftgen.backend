@@ -29,7 +29,7 @@ object Directions : Table(), DirectionsDAO {
         Directions.select { Directions.id eq id }.singleOrNull()?.toDirectionDTO()
     }
 
-    override suspend fun getAllDirections(structureId: Int): List<DirectionDTO> = dbQuery {
+    override suspend fun getDirections(structureId: Int): List<DirectionDTO> = dbQuery {
         Directions.select { Directions.structureId eq structureId }.map { it.toDirectionDTO() }
     }
 

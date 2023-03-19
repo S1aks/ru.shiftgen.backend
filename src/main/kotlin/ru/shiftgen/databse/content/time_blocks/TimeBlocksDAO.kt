@@ -15,5 +15,6 @@ interface TimeBlocksDAO {
     suspend fun insertTimeBlock(timeBlock: TimeBlockDTO): Boolean
     suspend fun updateTimeBlock(timeBlock: TimeBlockDTO): Boolean
     suspend fun getTimeBlock(id: Int): TimeBlockDTO?
+    suspend fun getTimeBlocks(structureId: Int): List<TimeBlockDTO>
     suspend fun deleteTimeBlock(id: Int): Boolean
 }

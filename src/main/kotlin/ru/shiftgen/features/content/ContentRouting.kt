@@ -11,7 +11,7 @@ fun Application.configureContentRouting() {
         authenticate("auth-jwt") {
 
             get("/directions") {
-                DirectionsController(call).getAllDirections()
+                DirectionsController(call).getDirections()
             }
 
             post("/direction") {

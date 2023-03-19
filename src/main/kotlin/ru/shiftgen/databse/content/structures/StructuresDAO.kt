@@ -9,8 +9,10 @@ interface StructuresDAO {
         description = this[Structures.description]
     )
 
+    suspend fun ifStructureExists(id: Int): Boolean
     suspend fun insertStructure(structure: StructureDTO): Boolean
     suspend fun updateStructure(structure: StructureDTO): Boolean
     suspend fun getStructure(id: Int): StructureDTO?
+    suspend fun getStructures(): List<StructureDTO>
     suspend fun deleteStructure(id: Int): Boolean
 }

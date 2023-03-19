@@ -18,12 +18,13 @@ interface UsersDAO {
         structureId = this[Users.structureId]
     )
 
+    suspend fun ifUserExist(login: String): Boolean
     suspend fun insertUser(user: UserDTO): Boolean
     suspend fun updateUser(user: UserDTO): Boolean
-    suspend fun ifUserExist(login: String): Boolean
     suspend fun getUserById(id: Int): UserDTO?
     suspend fun getUserByLogin(login: String): UserDTO?
     suspend fun getUserLogin(id: Int): String?
     suspend fun getUserId(login: String): Int?
+    suspend fun getUsersByStructure(structureId: Int): List<UserDTO>
     suspend fun deleteUser(id: Int): Boolean
 }

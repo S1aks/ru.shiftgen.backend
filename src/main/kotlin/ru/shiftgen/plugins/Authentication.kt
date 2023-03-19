@@ -6,6 +6,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
+import ru.shiftgen.databse.content.structures.Structures
 
 fun Application.configureAuthentication() {
 
@@ -30,7 +31,7 @@ fun Application.configureAuthentication() {
 val ApplicationCall.structureId: Int?
     get() {
         val id = this.principal<JWTPrincipal>()?.payload?.getClaim("structureId")?.asInt()
-        return if (id != null) {
+        return if (id != null && runBlocking { Structures.ifStructureExists(id) }) {
             id
         } else {
             runBlocking { this@structureId.respond(HttpStatusCode.BadRequest, "Error in structure id query parameter") }

@@ -9,9 +9,9 @@ import ru.shiftgen.plugins.structureId
 
 class DirectionsController(private val call: ApplicationCall) {
 
-    suspend fun getAllDirections() {
+    suspend fun getDirections() {
         call.structureId?.let { structureId ->
-            call.respond(DirectionsResponse(Directions.getAllDirections(structureId)))
+            call.respond(DirectionsResponse(Directions.getDirections(structureId)))
         }
     }
 

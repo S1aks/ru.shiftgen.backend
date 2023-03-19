@@ -35,6 +35,10 @@ object TimeBlocks : Table(), TimeBlocksDAO {
         TimeBlocks.select { TimeBlocks.id eq id }.singleOrNull()?.toTimeBlockDTO()
     }
 
+    override suspend fun getTimeBlocks(structureId: Int): List<TimeBlockDTO> = dbQuery {
+        TimeBlocks.select { TimeBlocks.structureId eq structureId }.map { it.toTimeBlockDTO() }
+    }
+
     override suspend fun deleteTimeBlock(id: Int): Boolean = dbQuery {
         TimeBlocks.deleteWhere { TimeBlocks.id eq id } > 0
     }

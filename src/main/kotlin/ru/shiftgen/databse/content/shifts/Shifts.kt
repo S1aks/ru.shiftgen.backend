@@ -6,10 +6,12 @@ import ru.shiftgen.databse.content.events.Events
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.workers.Workers
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
+import java.time.YearMonth
 
 object Shifts : Table(), ShiftsDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val name = varchar("name", 30)
+    internal val periodYearMonth = varchar("period_year_month", 8)
     internal val periodicity = integer("periodicity")
     internal val workerId = reference("worker_id", Workers.id).nullable()
     internal val structureId = reference("structure_id", Structures.id)
@@ -20,6 +22,7 @@ object Shifts : Table(), ShiftsDAO {
     override suspend fun insertShift(shift: ShiftDTO): Boolean = dbQuery {
         Shifts.insert {
             it[name] = shift.name
+            it[periodYearMonth] = shift.periodYearMonth.toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
             it[structureId] = shift.structureId
@@ -31,6 +34,7 @@ object Shifts : Table(), ShiftsDAO {
     override suspend fun updateShift(shift: ShiftDTO): Boolean = dbQuery {
         Shifts.update({ id eq shift.id }) {
             it[name] = shift.name
+            it[periodYearMonth] = shift.periodYearMonth.toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
             it[structureId] = shift.structureId
@@ -41,6 +45,11 @@ object Shifts : Table(), ShiftsDAO {
 
     override suspend fun getShift(id: Int): ShiftDTO? = dbQuery {
         Shifts.select { Shifts.id eq id }.singleOrNull()?.toShiftDTO()
+    }
+
+    override suspend fun getShifts(structureId: Int, periodYearMonth: YearMonth): List<ShiftDTO> = dbQuery {
+        Shifts.select { Shifts.structureId eq structureId and (Shifts.periodYearMonth eq periodYearMonth.toString()) }
+            .map { it.toShiftDTO() }
     }
 
     override suspend fun deleteShift(id: Int): Boolean = dbQuery {

@@ -42,6 +42,10 @@ object TimeSheets : Table(), TimeSheetsDAO {
         TimeSheets.select { TimeSheets.id eq id }.singleOrNull()?.toTimeSheetDTO()
     }
 
+    override suspend fun getTimeSheets(structureId: Int): List<TimeSheetDTO> = dbQuery {
+        TimeSheets.select { TimeSheets.structureId eq structureId }.map { it.toTimeSheetDTO() }
+    }
+
     override suspend fun deleteTimeSheet(id: Int): Boolean = dbQuery {
         TimeSheets.deleteWhere { TimeSheets.id eq id } > 0
     }

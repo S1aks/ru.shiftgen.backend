@@ -14,5 +14,6 @@ interface EventsDAO {
     suspend fun insertEvent(event: EventDTO): Boolean
     suspend fun updateEvent(event: EventDTO): Boolean
     suspend fun getEvent(id: Int): EventDTO?
+    suspend fun getEvents(structureId: Int): List<EventDTO>
     suspend fun deleteEvent(id: Int): Boolean
 }

@@ -12,6 +12,6 @@ interface DirectionsDAO {
     suspend fun insertDirection(direction: DirectionDTO): Boolean
     suspend fun updateDirection(direction: DirectionDTO): Boolean
     suspend fun getDirection(id: Int): DirectionDTO?
-    suspend fun getAllDirections(structureId: Int): List<DirectionDTO>
+    suspend fun getDirections(structureId: Int): List<DirectionDTO>
     suspend fun deleteDirection(id: Int): Boolean
 }

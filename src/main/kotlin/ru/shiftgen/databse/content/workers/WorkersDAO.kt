@@ -17,5 +17,6 @@ interface WorkersDAO {
     suspend fun insertWorker(worker: WorkerDTO): Boolean
     suspend fun updateWorker(worker: WorkerDTO): Boolean
     suspend fun getWorker(id: Int): WorkerDTO?
+    suspend fun getWorkers(structureId: Int): List<WorkerDTO>
     suspend fun deleteWorker(id: Int): Boolean
 }

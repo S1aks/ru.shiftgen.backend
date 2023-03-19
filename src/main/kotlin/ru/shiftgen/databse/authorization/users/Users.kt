@@ -21,6 +21,10 @@ object Users : Table(), UsersDAO {
     internal val structureId = reference("structure_id", Structures.id).nullable()
     override val primaryKey = PrimaryKey(login, name = "PK_User_Id")
 
+    override suspend fun ifUserExist(login: String): Boolean = dbQuery {
+        Users.select { Users.login eq login }.singleOrNull() != null
+    }
+
     override suspend fun insertUser(user: UserDTO): Boolean = dbQuery {
         Users.insert {
             it[login] = user.login
@@ -50,10 +54,6 @@ object Users : Table(), UsersDAO {
         } > 0
     }
 
-    override suspend fun ifUserExist(login: String): Boolean = dbQuery {
-        Users.select { Users.login eq login }.empty()
-    }
-
     override suspend fun getUserById(id: Int): UserDTO? = dbQuery {
         Users.select { Users.id eq id }.singleOrNull()?.toUserDTO()
     }
@@ -68,6 +68,10 @@ object Users : Table(), UsersDAO {
 
     override suspend fun getUserId(login: String): Int? = dbQuery {
         Users.select { Users.login eq login }.singleOrNull()?.let { it[id] }
+    }
+
+    override suspend fun getUsersByStructure(structureId: Int): List<UserDTO> = dbQuery {
+        Users.select { Users.structureId eq structureId }.map { it.toUserDTO() }
     }
 
     override suspend fun deleteUser(id: Int): Boolean = dbQuery {

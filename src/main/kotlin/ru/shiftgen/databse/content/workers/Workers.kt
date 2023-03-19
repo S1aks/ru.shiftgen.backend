@@ -45,6 +45,10 @@ object Workers : Table(), WorkersDAO {
         Workers.select { Workers.id eq id }.singleOrNull()?.toWorkerDTO()
     }
 
+    override suspend fun getWorkers(structureId: Int): List<WorkerDTO> = dbQuery {
+        Workers.select { Workers.structureId eq structureId }.map { it.toWorkerDTO() }
+    }
+
     override suspend fun deleteWorker(id: Int): Boolean = dbQuery {
         Workers.deleteWhere { Workers.id eq id } > 0
     }

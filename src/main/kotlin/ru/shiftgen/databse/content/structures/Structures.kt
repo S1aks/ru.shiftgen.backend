@@ -10,6 +10,10 @@ object Structures : Table(), StructuresDAO {
     internal val description = varchar("description", 256).nullable()
     override val primaryKey = PrimaryKey(id, name = "PK_Structure_Id")
 
+    override suspend fun ifStructureExists(id: Int): Boolean = dbQuery {
+        Structures.select { Structures.id eq id }.singleOrNull() != null
+    }
+
     override suspend fun insertStructure(structure: StructureDTO): Boolean = dbQuery {
         Structures.insert {
             it[name] = structure.name
@@ -28,6 +32,10 @@ object Structures : Table(), StructuresDAO {
         Structures.select(Structures.id eq id)
             .singleOrNull()
             ?.toStructureDTO()
+    }
+
+    override suspend fun getStructures(): List<StructureDTO> = dbQuery {
+        Structures.selectAll().map { it.toStructureDTO() }
     }
 
     override suspend fun deleteStructure(id: Int): Boolean = dbQuery {

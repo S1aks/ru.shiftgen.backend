@@ -36,6 +36,10 @@ object Events : Table(), EventsDAO {
         Events.select { Events.id eq id }.singleOrNull()?.toEventDTO()
     }
 
+    override suspend fun getEvents(structureId: Int): List<EventDTO> = dbQuery {
+        Events.select { Events.structureId eq structureId }.map { it.toEventDTO() }
+    }
+
     override suspend fun deleteEvent(id: Int): Boolean = dbQuery {
         Events.deleteWhere { Events.id eq id } > 0
     }
