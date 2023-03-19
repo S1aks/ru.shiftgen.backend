@@ -10,6 +10,11 @@ data class DirectionReceive(
 )
 
 @Serializable
+data class DirectionResponse(
+    val direction: DirectionDTO
+)
+
+@Serializable
 data class DirectionsResponse(
     val list: List<DirectionDTO>
 )

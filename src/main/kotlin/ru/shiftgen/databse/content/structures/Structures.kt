@@ -29,9 +29,7 @@ object Structures : Table(), StructuresDAO {
     }
 
     override suspend fun getStructure(id: Int): StructureDTO? = dbQuery {
-        Structures.select(Structures.id eq id)
-            .singleOrNull()
-            ?.toStructureDTO()
+        Structures.select(Structures.id eq id).singleOrNull()?.toStructureDTO()
     }
 
     override suspend fun getStructures(): List<StructureDTO> = dbQuery {

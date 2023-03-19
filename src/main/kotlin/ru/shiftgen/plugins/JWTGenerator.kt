@@ -18,7 +18,7 @@ object JWTGenerator {
         .withIssuer(issuer)
         .build()
 
-    fun makeToken(login: String, structureId: Int): String = JWT.create()
+    fun makeToken(login: String, structureId: Int?): String = JWT.create()
         .withIssuer(issuer)
         .withClaim("login", login)
         .withClaim("structureId", structureId)
