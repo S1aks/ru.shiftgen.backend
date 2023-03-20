@@ -8,6 +8,7 @@ import ru.shiftgen.features.content.events.EventsController
 import ru.shiftgen.features.content.shifts.ShiftsController
 import ru.shiftgen.features.content.structures.StructuresController
 import ru.shiftgen.features.content.time_blocks.TimeBlocksController
+import ru.shiftgen.features.content.timesheets.TimeSheetsController
 
 fun Application.configureContentRouting() {
 
@@ -37,6 +38,12 @@ fun Application.configureContentRouting() {
             post("/time_block/insert") { TimeBlocksController(call).insertTimeBlock() }
             post("/time_block/update") { TimeBlocksController(call).updateTimeBlock() }
             post("/time_block/delete") { TimeBlocksController(call).deleteTimeBlock() }
+
+            get("/timesheets") { TimeSheetsController(call).getTimeSheets() }
+            get("/timesheet/get") { TimeSheetsController(call).getTimeSheet() }
+            post("/timesheet/insert") { TimeSheetsController(call).insertTimeSheet() }
+            post("/timesheet/update") { TimeSheetsController(call).updateTimeSheet() }
+            post("/timesheet/delete") { TimeSheetsController(call).deleteTimeSheet() }
 
             get("/structures") { StructuresController(call).getStructures() }
             get("/structure/get") { StructuresController(call).getStructure() }

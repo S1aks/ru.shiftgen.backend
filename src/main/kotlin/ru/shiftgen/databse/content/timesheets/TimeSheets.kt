@@ -14,7 +14,7 @@ object TimeSheets : Table(), TimeSheetsDAO {
     internal val workedTime = long("worked_time")
     internal val calculatedTime = long("calculated_time")
     internal val correctionTime = long("correction_time")
-    override val primaryKey = PrimaryKey(id, name = "PK_WorkerTimeSheet_Id")
+    override val primaryKey = PrimaryKey(id, name = "PK_TimeSheet_Id")
 
     override suspend fun insertTimeSheet(timeSheet: TimeSheetDTO): Boolean = dbQuery {
         TimeSheets.insert {
