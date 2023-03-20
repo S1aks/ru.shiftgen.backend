@@ -7,6 +7,7 @@ import ru.shiftgen.features.content.directions.DirectionsController
 import ru.shiftgen.features.content.events.EventsController
 import ru.shiftgen.features.content.shifts.ShiftsController
 import ru.shiftgen.features.content.structures.StructuresController
+import ru.shiftgen.features.content.time_blocks.TimeBlocksController
 
 fun Application.configureContentRouting() {
 
@@ -30,6 +31,12 @@ fun Application.configureContentRouting() {
             post("/shift/insert") { ShiftsController(call).insertShift() }
             post("/shift/update") { ShiftsController(call).updateShift() }
             post("/shift/delete") { ShiftsController(call).deleteShift() }
+
+            get("/time_blocks") { TimeBlocksController(call).getTimeBlocks() }
+            get("/time_block/get") { TimeBlocksController(call).getTimeBlock() }
+            post("/time_block/insert") { TimeBlocksController(call).insertTimeBlock() }
+            post("/time_block/update") { TimeBlocksController(call).updateTimeBlock() }
+            post("/time_block/delete") { TimeBlocksController(call).deleteTimeBlock() }
 
             get("/structures") { StructuresController(call).getStructures() }
             get("/structure/get") { StructuresController(call).getStructure() }

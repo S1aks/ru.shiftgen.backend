@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import ru.shiftgen.databse.content.events.EventDTO
 
 @Serializable
-data class EventsReceive(
+data class EventReceive(
     val id: Int,
     val name: String,
     val directionId: Int,

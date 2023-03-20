@@ -7,7 +7,7 @@ import ru.shiftgen.utils.YearMonthSerializer
 import java.time.YearMonth
 
 @Serializable
-data class ShiftsReceive(
+data class ShiftReceive(
     val id: Int,
     val name: String,
     @Serializable(with = YearMonthSerializer::class)
@@ -20,7 +20,7 @@ data class ShiftsReceive(
 )
 
 @Serializable
-data class GetShiftsReceive(
+data class ShiftsReceive(
     @Serializable(with = YearMonthSerializer::class)
     val periodYearMonth: YearMonth
 )

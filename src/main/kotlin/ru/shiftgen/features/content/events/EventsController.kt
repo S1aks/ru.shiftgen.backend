@@ -36,7 +36,7 @@ class EventsController(private val call: ApplicationCall) {
 
     suspend fun insertEvent() {
         call.structureId?.let { structureId ->
-            val receive = call.receive<EventsReceive>()
+            val receive = call.receive<EventReceive>()
             if (!Events.insertEvent(
                     EventDTO(0, receive.name, receive.directionId, structureId, receive.timeBlocksIds)
                 )
@@ -48,9 +48,9 @@ class EventsController(private val call: ApplicationCall) {
 
     suspend fun updateEvent() {
         call.structureId?.let { structureId ->
-            val receive = call.receive<EventsReceive>()
+            val receive = call.receive<EventReceive>()
             if (!Events.updateEvent(
-                    EventDTO(0, receive.name, receive.directionId, structureId, receive.timeBlocksIds)
+                    EventDTO(receive.id, receive.name, receive.directionId, structureId, receive.timeBlocksIds)
                 )
             ) {
                 call.respond(HttpStatusCode.InternalServerError, "Error update event data")
