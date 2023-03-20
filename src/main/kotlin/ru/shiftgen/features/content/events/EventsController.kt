@@ -41,7 +41,7 @@ class EventsController(private val call: ApplicationCall) {
                     EventDTO(0, receive.name, receive.directionId, structureId, receive.timeBlocksIds)
                 )
             ) {
-                call.respond(HttpStatusCode.InternalServerError, "Error insert direction data")
+                call.respond(HttpStatusCode.InternalServerError, "Error insert event data")
             }
         }
     }
@@ -53,7 +53,7 @@ class EventsController(private val call: ApplicationCall) {
                     EventDTO(0, receive.name, receive.directionId, structureId, receive.timeBlocksIds)
                 )
             ) {
-                call.respond(HttpStatusCode.InternalServerError, "Error update direction data")
+                call.respond(HttpStatusCode.InternalServerError, "Error update event data")
             }
         }
     }
@@ -62,7 +62,7 @@ class EventsController(private val call: ApplicationCall) {
         call.structureId?.let {
             val receive = call.receive<IdReceive>()
             if (!Events.deleteEvent(receive.id)) {
-                call.respond(HttpStatusCode.InternalServerError, "Error delete direction data")
+                call.respond(HttpStatusCode.InternalServerError, "Error delete event data")
             }
         }
     }

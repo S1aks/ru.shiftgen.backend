@@ -5,6 +5,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.routing.*
 import ru.shiftgen.features.content.directions.DirectionsController
 import ru.shiftgen.features.content.events.EventsController
+import ru.shiftgen.features.content.shifts.ShiftsController
 import ru.shiftgen.features.content.structures.StructuresController
 
 fun Application.configureContentRouting() {
@@ -23,6 +24,12 @@ fun Application.configureContentRouting() {
             post("/event/insert") { EventsController(call).insertEvent() }
             post("/event/update") { EventsController(call).updateEvent() }
             post("/event/delete") { EventsController(call).deleteEvent() }
+
+            get("/shifts") { ShiftsController(call).getShifts() }
+            get("/shift/get") { ShiftsController(call).getShift() }
+            post("/shift/insert") { ShiftsController(call).insertShift() }
+            post("/shift/update") { ShiftsController(call).updateShift() }
+            post("/shift/delete") { ShiftsController(call).deleteShift() }
 
             get("/structures") { StructuresController(call).getStructures() }
             get("/structure/get") { StructuresController(call).getStructure() }
