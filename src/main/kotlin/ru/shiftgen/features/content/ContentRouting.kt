@@ -9,12 +9,12 @@ import ru.shiftgen.features.content.shifts.ShiftsController
 import ru.shiftgen.features.content.structures.StructuresController
 import ru.shiftgen.features.content.time_blocks.TimeBlocksController
 import ru.shiftgen.features.content.timesheets.TimeSheetsController
+import ru.shiftgen.features.content.workers.WorkersController
 
 fun Application.configureContentRouting() {
 
     routing {
         authenticate("auth-jwt") {
-
             get("/directions") { DirectionsController(call).getDirections() }
             get("/direction/get") { DirectionsController(call).getDirection() }
             post("/direction/insert") { DirectionsController(call).insertDirection() }
@@ -33,6 +33,12 @@ fun Application.configureContentRouting() {
             post("/shift/update") { ShiftsController(call).updateShift() }
             post("/shift/delete") { ShiftsController(call).deleteShift() }
 
+            get("/structures") { StructuresController(call).getStructures() }
+            get("/structure/get") { StructuresController(call).getStructure() }
+            post("/structure/insert") { StructuresController(call).insertStructure() }
+            post("/structure/update") { StructuresController(call).updateStructure() }
+            post("/structure/delete") { StructuresController(call).deleteStructure() }
+
             get("/time_blocks") { TimeBlocksController(call).getTimeBlocks() }
             get("/time_block/get") { TimeBlocksController(call).getTimeBlock() }
             post("/time_block/insert") { TimeBlocksController(call).insertTimeBlock() }
@@ -45,11 +51,11 @@ fun Application.configureContentRouting() {
             post("/timesheet/update") { TimeSheetsController(call).updateTimeSheet() }
             post("/timesheet/delete") { TimeSheetsController(call).deleteTimeSheet() }
 
-            get("/structures") { StructuresController(call).getStructures() }
-            get("/structure/get") { StructuresController(call).getStructure() }
-            post("/structure/insert") { StructuresController(call).insertStructure() }
-            post("/structure/update") { StructuresController(call).updateStructure() }
-            post("/structure/delete") { StructuresController(call).deleteStructure() }
+            get("/workers") { WorkersController(call).getWorkers() }
+            get("/worker/get") { WorkersController(call).getWorker() }
+            post("/worker/insert") { WorkersController(call).insertWorker() }
+            post("/worker/update") { WorkersController(call).updateWorker() }
+            post("/worker/delete") { WorkersController(call).deleteWorker() }
         }
     }
 }
