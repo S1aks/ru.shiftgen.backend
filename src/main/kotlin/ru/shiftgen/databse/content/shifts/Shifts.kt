@@ -49,6 +49,7 @@ object Shifts : Table(), ShiftsDAO {
 
     override suspend fun getShifts(structureId: Int, periodYearMonth: YearMonth): List<ShiftDTO> = dbQuery {
         Shifts.select { Shifts.structureId eq structureId and (Shifts.periodYearMonth eq periodYearMonth.toString()) }
+            .orderBy(startTime)
             .map { it.toShiftDTO() }
     }
 

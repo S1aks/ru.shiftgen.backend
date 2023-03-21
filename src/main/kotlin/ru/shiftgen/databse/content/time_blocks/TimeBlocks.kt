@@ -36,7 +36,7 @@ object TimeBlocks : Table(), TimeBlocksDAO {
     }
 
     override suspend fun getTimeBlocks(structureId: Int): List<TimeBlockDTO> = dbQuery {
-        TimeBlocks.select { TimeBlocks.structureId eq structureId }.map { it.toTimeBlockDTO() }
+        TimeBlocks.select { TimeBlocks.structureId eq structureId }.orderBy(name).map { it.toTimeBlockDTO() }
     }
 
     override suspend fun deleteTimeBlock(id: Int): Boolean = dbQuery {

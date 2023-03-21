@@ -37,7 +37,7 @@ object Events : Table(), EventsDAO {
     }
 
     override suspend fun getEvents(structureId: Int): List<EventDTO> = dbQuery {
-        Events.select { Events.structureId eq structureId }.map { it.toEventDTO() }
+        Events.select { Events.structureId eq structureId }.orderBy(name).map { it.toEventDTO() }
     }
 
     override suspend fun deleteEvent(id: Int): Boolean = dbQuery {

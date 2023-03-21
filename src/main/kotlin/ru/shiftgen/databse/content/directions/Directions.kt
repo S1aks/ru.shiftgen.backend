@@ -30,7 +30,7 @@ object Directions : Table(), DirectionsDAO {
     }
 
     override suspend fun getDirections(structureId: Int): List<DirectionDTO> = dbQuery {
-        Directions.select { Directions.structureId eq structureId }.map { it.toDirectionDTO() }
+        Directions.select { Directions.structureId eq structureId }.orderBy(name).map { it.toDirectionDTO() }
     }
 
     override suspend fun deleteDirection(id: Int): Boolean = dbQuery {

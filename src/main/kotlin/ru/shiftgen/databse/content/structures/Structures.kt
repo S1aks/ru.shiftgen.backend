@@ -33,7 +33,7 @@ object Structures : Table(), StructuresDAO {
     }
 
     override suspend fun getStructures(): List<StructureDTO> = dbQuery {
-        Structures.selectAll().map { it.toStructureDTO() }
+        Structures.selectAll().orderBy(name).map { it.toStructureDTO() }
     }
 
     override suspend fun deleteStructure(id: Int): Boolean = dbQuery {
