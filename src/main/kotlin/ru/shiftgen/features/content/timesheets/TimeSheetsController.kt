@@ -21,16 +21,64 @@ class TimeSheetsController(private val call: ApplicationCall) {
         }
     }
 
-    suspend fun getTimeSheet() {
+    suspend fun getTimeSheetById() {
         call.structureId?.let { structureId ->
             val receive = call.receive<IdReceive>()
-            TimeSheets.getTimeSheet(receive.id)?.let { timeSheet ->
+            TimeSheets.getTimeSheetById(receive.id)?.let { timeSheet ->
                 if (timeSheet.structureId == structureId) {
                     call.respond(TimeSheetResponse(timeSheet))
                 } else {
-                    call.respond(HttpStatusCode.BadRequest, "Error in data structure id")
+                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
                 }
-            } ?: call.respond(HttpStatusCode.InternalServerError, "Error getting timesheet data")
+            } ?: call.respond(HttpStatusCode.InternalServerError, "Error getting timesheet data by id")
+        }
+    }
+
+    suspend fun getTimeSheetsByWorkerId() {
+        call.structureId?.let { structureId ->
+            val receive = call.receive<IdReceive>()
+            val list = TimeSheets.getTimeSheetsByWorkerId(receive.id)
+            if (list.isNotEmpty()) {
+                if (list.first().structureId == structureId) {
+                    call.respond(TimeSheetsResponse(list))
+                } else {
+                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                }
+            } else {
+                call.respond(HttpStatusCode.InternalServerError, "Error getting timesheets data by worker id")
+            }
+        }
+    }
+
+    suspend fun getTimeSheetByWorkerIdInYearMonth() {
+        call.structureId?.let { structureId ->
+            val receive = call.receive<TimeSheetsWorkerIdYearMonthReceive>()
+            TimeSheets.getTimeSheetByWorkerIdInYearMonth(receive.workerId, receive.periodYearMonth)?.let { timeSheet ->
+                if (timeSheet.structureId == structureId) {
+                    call.respond(TimeSheetResponse(timeSheet))
+                } else {
+                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                }
+            } ?: call.respond(
+                HttpStatusCode.InternalServerError,
+                "Error getting timesheet data by worker id and year - month"
+            )
+        }
+    }
+
+    suspend fun getTimeSheetsInYearMonth() {
+        call.structureId?.let { structureId ->
+            val receive = call.receive<TimeSheetsYearMonthReceive>()
+            val list = TimeSheets.getTimeSheetsInYearMonth(structureId, receive.periodYearMonth)
+            if (list.isNotEmpty()) {
+                if (list.first().structureId == structureId) {
+                    call.respond(TimeSheetsResponse(list))
+                } else {
+                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                }
+            } else {
+                call.respond(HttpStatusCode.InternalServerError, "Error getting timesheets data by year - month")
+            }
         }
     }
 

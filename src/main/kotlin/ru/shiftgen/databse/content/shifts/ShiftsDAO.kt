@@ -2,6 +2,7 @@ package ru.shiftgen.databse.content.shifts
 
 import org.jetbrains.exposed.sql.ResultRow
 import ru.shiftgen.databse.content.enums.Periodicity
+import java.time.LocalDateTime
 import java.time.YearMonth
 
 interface ShiftsDAO {
@@ -12,8 +13,9 @@ interface ShiftsDAO {
         periodicity = Periodicity.values()[this[Shifts.periodicity]],
         workerId = this[Shifts.workerId],
         structureId = this[Shifts.structureId],
-        startTime = this[Shifts.startTime],
-        eventId = this[Shifts.eventId]
+        directionId = this[Shifts.directionId],
+        startTime = LocalDateTime.parse(this[Shifts.startTime]),
+        timeBlocksIds = this[Shifts.timeBlocksIds].split(",").map { it.toInt() }
     )
 
     suspend fun insertShift(shift: ShiftDTO): Boolean

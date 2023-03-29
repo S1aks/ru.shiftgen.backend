@@ -6,7 +6,11 @@ interface StructuresDAO {
     fun ResultRow.toStructureDTO() = StructureDTO(
         id = this[Structures.id],
         name = this[Structures.name],
-        description = this[Structures.description]
+        description = this[Structures.description],
+        restHours = this[Structures.restHours],
+        allowedConsecutiveNights = this[Structures.allowedConsecutiveNights],
+        nightStartHour = this[Structures.nightStartHour],
+        nightEndHour = this[Structures.nightEndHour]
     )
 
     suspend fun ifStructureExists(id: Int): Boolean

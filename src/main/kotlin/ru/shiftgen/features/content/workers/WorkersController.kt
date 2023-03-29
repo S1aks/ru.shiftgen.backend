@@ -28,7 +28,7 @@ class WorkersController(private val call: ApplicationCall) {
                 if (worker.structureId == structureId) {
                     call.respond(WorkerResponse(worker))
                 } else {
-                    call.respond(HttpStatusCode.BadRequest, "Error in data structure id")
+                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
                 }
             } ?: call.respond(HttpStatusCode.InternalServerError, "Error getting worker data")
         }

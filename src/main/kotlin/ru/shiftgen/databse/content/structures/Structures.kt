@@ -8,6 +8,10 @@ object Structures : Table(), StructuresDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val name = varchar("name", 25).uniqueIndex()
     internal val description = varchar("description", 256).nullable()
+    internal val restHours = integer("rest_hours")
+    internal val allowedConsecutiveNights = integer("allowed_consecutive_nights")
+    internal val nightStartHour = integer("night_start_hour")
+    internal val nightEndHour = integer("night_end_hour")
     override val primaryKey = PrimaryKey(id, name = "PK_Structure_Id")
 
     override suspend fun ifStructureExists(id: Int): Boolean = dbQuery {
@@ -18,6 +22,10 @@ object Structures : Table(), StructuresDAO {
         Structures.insert {
             it[name] = structure.name
             it[description] = structure.description
+            it[restHours] = structure.restHours
+            it[allowedConsecutiveNights] = structure.allowedConsecutiveNights
+            it[nightStartHour] = structure.nightStartHour
+            it[nightEndHour] = structure.nightEndHour
         }.insertedCount > 0
     }
 
@@ -25,6 +33,10 @@ object Structures : Table(), StructuresDAO {
         Structures.update({ id eq structure.id }) {
             it[name] = structure.name
             it[description] = structure.description
+            it[restHours] = structure.restHours
+            it[allowedConsecutiveNights] = structure.allowedConsecutiveNights
+            it[nightStartHour] = structure.nightStartHour
+            it[nightEndHour] = structure.nightEndHour
         } > 0
     }
 

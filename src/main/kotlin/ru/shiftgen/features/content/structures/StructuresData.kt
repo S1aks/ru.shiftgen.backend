@@ -7,7 +7,11 @@ import ru.shiftgen.databse.content.structures.StructureDTO
 data class StructureReceive(
     val id: Int,
     val name: String,
-    val description: String?
+    val description: String?,
+    val restHours: Int,
+    val allowedConsecutiveNights: Int,
+    val nightStartHour: Int,
+    val nightEndHour: Int
 )
 
 @Serializable
@@ -17,5 +21,5 @@ data class StructureResponse(
 
 @Serializable
 data class StructuresResponse(
-    val list: List<StructureDTO>
+    val list: Map<Int, String>
 )

@@ -17,15 +17,17 @@ class LoginController(private val call: ApplicationCall) {
             call.respond(HttpStatusCode.BadRequest, "User not found")
             return
         }
-        if (user.password == receive.password) {
-            when (val tokenState = Tokens.createAndSaveTokens(receive.login)) {
+        if (user.password == receive.password && user.structureId != null) {
+            when (val tokenState = Tokens.createAndSaveTokens(receive.login, user.structureId)) {
                 is TokenState.Success -> {
                     call.respond(LoginResponse(tokenState.data.accessToken, tokenState.data.refreshToken))
                 }
+
                 is TokenState.Error -> {
                     when (tokenState.statusCode) {
                         TokenState.ErrorCodes.ERROR_CREATE ->
                             call.respond(HttpStatusCode.InternalServerError, "Error create token")
+
                         TokenState.ErrorCodes.ERROR_UPDATE ->
                             call.respond(HttpStatusCode.InternalServerError, "Error update token")
                     }
@@ -44,15 +46,17 @@ class LoginController(private val call: ApplicationCall) {
             call.respond(HttpStatusCode.BadRequest, "User not found")
             return
         }
-        if (token == receive.refreshToken) {
-            when (val tokenState = Tokens.createAndSaveTokens(receive.login)) {
+        if (token == receive.refreshToken && user.structureId != null) {
+            when (val tokenState = Tokens.createAndSaveTokens(receive.login, user.structureId)) {
                 is TokenState.Success -> {
                     call.respond(LoginResponse(tokenState.data.accessToken, tokenState.data.refreshToken))
                 }
+
                 is TokenState.Error -> {
                     when (tokenState.statusCode) {
                         TokenState.ErrorCodes.ERROR_CREATE ->
                             call.respond(HttpStatusCode.InternalServerError, "Error create token")
+
                         TokenState.ErrorCodes.ERROR_UPDATE ->
                             call.respond(HttpStatusCode.InternalServerError, "Error update token")
                     }

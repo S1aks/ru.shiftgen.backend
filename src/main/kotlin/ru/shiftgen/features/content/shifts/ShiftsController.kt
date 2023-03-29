@@ -29,7 +29,7 @@ class ShiftsController(private val call: ApplicationCall) {
                 if (shift.structureId == structureId) {
                     call.respond(ShiftResponse(shift))
                 } else {
-                    call.respond(HttpStatusCode.BadRequest, "Error in data structure id")
+                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
                 }
             } ?: call.respond(HttpStatusCode.InternalServerError, "Error getting shift data")
         }
@@ -46,8 +46,9 @@ class ShiftsController(private val call: ApplicationCall) {
                         receive.periodicity,
                         receive.workerId,
                         structureId,
+                        receive.directionId,
                         receive.startTime,
-                        receive.eventId
+                        receive.timeBlocksIds
                     )
                 )
             ) {
@@ -67,8 +68,9 @@ class ShiftsController(private val call: ApplicationCall) {
                         receive.periodicity,
                         receive.workerId,
                         structureId,
+                        receive.directionId,
                         receive.startTime,
-                        receive.eventId
+                        receive.timeBlocksIds
                     )
                 )
             ) {

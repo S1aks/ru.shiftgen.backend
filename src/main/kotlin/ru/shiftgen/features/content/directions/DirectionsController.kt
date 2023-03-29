@@ -29,7 +29,7 @@ class DirectionsController(private val call: ApplicationCall) {
                 if (direction.structureId == structureId) {
                     call.respond(DirectionResponse(direction))
                 } else {
-                    call.respond(HttpStatusCode.BadRequest, "Error in data structure id")
+                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
                 }
             } ?: call.respond(HttpStatusCode.InternalServerError, "Error getting direction data")
         }

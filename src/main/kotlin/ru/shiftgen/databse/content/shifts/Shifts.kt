@@ -2,7 +2,7 @@ package ru.shiftgen.databse.content.shifts
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import ru.shiftgen.databse.content.events.Events
+import ru.shiftgen.databse.content.directions.Directions
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.workers.Workers
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
@@ -15,8 +15,9 @@ object Shifts : Table(), ShiftsDAO {
     internal val periodicity = integer("periodicity")
     internal val workerId = reference("worker_id", Workers.id).nullable()
     internal val structureId = reference("structure_id", Structures.id)
-    internal val startTime = long("start_time")
-    internal val eventId = reference("event_id", Events.id)
+    internal val directionId = reference("direction_id", Directions.id)
+    internal val startTime = varchar("start_time", 30)
+    internal val timeBlocksIds = varchar("event_id", 256)
     override val primaryKey = PrimaryKey(id, name = "PK_Shift_Id")
 
     override suspend fun insertShift(shift: ShiftDTO): Boolean = dbQuery {
@@ -26,8 +27,9 @@ object Shifts : Table(), ShiftsDAO {
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
             it[structureId] = shift.structureId
-            it[startTime] = shift.startTime
-            it[eventId] = shift.eventId
+            it[directionId] = shift.directionId
+            it[startTime] = shift.startTime.toString()
+            it[timeBlocksIds] = shift.timeBlocksIds.joinToString(",")
         }.insertedCount > 0
     }
 
@@ -38,8 +40,9 @@ object Shifts : Table(), ShiftsDAO {
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
             it[structureId] = shift.structureId
-            it[startTime] = shift.startTime
-            it[eventId] = shift.eventId
+            it[directionId] = shift.directionId
+            it[startTime] = shift.startTime.toString()
+            it[timeBlocksIds] = shift.timeBlocksIds.joinToString(",")
         } > 0
     }
 

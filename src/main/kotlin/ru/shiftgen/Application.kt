@@ -10,7 +10,7 @@ import ru.shiftgen.plugins.configureAuthentication
 import ru.shiftgen.plugins.configureSerialization
 
 fun main() {
-    embeddedServer(CIO, port = 8080, host = "0.0.0.0", module = Application::module)
+    embeddedServer(CIO, port = System.getenv("PORT").toInt(), host = "5.8.10.211", module = Application::module)
         .start(wait = true)
 }
 

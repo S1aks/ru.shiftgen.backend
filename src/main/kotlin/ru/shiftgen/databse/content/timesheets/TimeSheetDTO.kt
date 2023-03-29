@@ -11,7 +11,7 @@ data class TimeSheetDTO(
     val structureId: Int,
     @Serializable(with = YearMonthSerializer::class)
     val periodYearMonth: YearMonth,
-    val workedTime: Long = 0L,
-    val calculatedTime: Long = 0L,
+    var workedTime: Long = 0L,
+    var calculatedTime: Long = 0L,
     val correctionTime: Long = 0L
 )

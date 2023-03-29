@@ -18,6 +18,19 @@ data class TimeSheetReceive(
 )
 
 @Serializable
+data class TimeSheetsWorkerIdYearMonthReceive(
+    val workerId: Int,
+    @Serializable(with = YearMonthSerializer::class)
+    val periodYearMonth: YearMonth
+)
+
+@Serializable
+data class TimeSheetsYearMonthReceive(
+    @Serializable(with = YearMonthSerializer::class)
+    val periodYearMonth: YearMonth
+)
+
+@Serializable
 data class TimeSheetResponse(
     val event: TimeSheetDTO
 )

@@ -28,7 +28,7 @@ class TimeBlocksController(private val call: ApplicationCall) {
                 if (timeBlock.structureId == structureId) {
                     call.respond(TimeBlockResponse(timeBlock))
                 } else {
-                    call.respond(HttpStatusCode.BadRequest, "Error in data structure id")
+                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
                 }
             } ?: call.respond(HttpStatusCode.InternalServerError, "Error getting time_block data")
         }
