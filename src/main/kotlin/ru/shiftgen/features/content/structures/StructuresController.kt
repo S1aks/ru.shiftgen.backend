@@ -11,7 +11,7 @@ import ru.shiftgen.plugins.structureId
 
 class StructuresController(private val call: ApplicationCall) {
     suspend fun getStructures() {
-        call.structureId?.let { structureId ->
+        call.structureId?.let { _ ->
             val list = Structures.getStructures()
             if (list.isNotEmpty()) {
                 call.respond(StructuresResponse(list.associateBy({ it.id }, { it.name })))

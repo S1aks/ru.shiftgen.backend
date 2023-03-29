@@ -11,7 +11,6 @@ import ru.shiftgen.databse.authorization.tokens.Tokens
 import ru.shiftgen.databse.authorization.users.UserDTO
 import ru.shiftgen.databse.authorization.users.Users
 import ru.shiftgen.databse.content.directions.Directions
-import ru.shiftgen.databse.content.events.Events
 import ru.shiftgen.databse.content.shifts.Shifts
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.time_blocks.TimeBlocks
@@ -35,7 +34,6 @@ object DatabaseFactory {
             SchemaUtils.create(Tokens)
             SchemaUtils.create(Users)
             SchemaUtils.create(Directions)
-            SchemaUtils.create(Events)
             SchemaUtils.create(Shifts)
             SchemaUtils.create(Structures)
             SchemaUtils.create(TimeBlocks)
