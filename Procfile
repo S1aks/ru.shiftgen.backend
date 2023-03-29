@@ -1,1 +1,1 @@
-web: ./build/install/ktor-get-started-sample/bin/ktor-get-started-sample
+web: ./build/install/shiftgen-backend/bin/shiftgen-backend
