@@ -1,1 +1,1 @@
-rootProject.name = "ru.shiftgen.backend"
+rootProject.name = "shiftgen-backend"
