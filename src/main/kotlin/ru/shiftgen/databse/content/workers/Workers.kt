@@ -10,7 +10,7 @@ object Workers : Table(), WorkersDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val personnelNumber = integer("personnel_number").nullable()
     internal val userId = reference("user_id", Users.id).nullable()
-    internal val structureId = reference("user_id", Structures.id)
+    internal val structureId = reference("structure_id", Structures.id)
     internal val firstName = varchar("first_name", 30)
     internal val lastName = varchar("last_name", 30)
     internal val patronymic = varchar("patronymic", 30).nullable()
