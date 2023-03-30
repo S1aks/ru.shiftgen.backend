@@ -21,7 +21,7 @@ object DatabaseFactory {
     private const val dbUser = "postgres"
     private const val dbPassword = "D!24013555"
     private const val driverClassName = "org.postgresql.Driver"
-    private const val jdbcURL = "jdbc:postgresql://localhost:5432/shiftgen"
+    private const val jdbcURL = "jdbc:postgresql://localhost:5432/shiftgendatabase"
     private const val adminLogin = "adm1n"
     private const val adminPassword = "D43_7fG+3m/"
     private const val adminEmail = "admin@shiftgen.ru"
