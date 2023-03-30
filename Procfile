@@ -1,1 +1,1 @@
-web: .git /bin/shiftgen-backend
+web: ./build/install/shiftgen.ru/bin/shiftgen.ru
