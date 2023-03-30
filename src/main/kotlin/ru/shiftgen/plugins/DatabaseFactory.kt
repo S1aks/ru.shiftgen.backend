@@ -19,7 +19,7 @@ import ru.shiftgen.databse.content.workers.Workers
 
 object DatabaseFactory {
     private const val dbUser = "postgres"
-    private const val dbPassword = "D!24013555"
+    private const val dbPassword = "c99dd9d709408eae2c5d87a73ee02120"
     private const val driverClassName = "org.postgresql.Driver"
     private const val jdbcURL = "jdbc:postgresql://172.17.0.2:5432/shiftgendatabase"
     private const val adminLogin = "adm1n"
