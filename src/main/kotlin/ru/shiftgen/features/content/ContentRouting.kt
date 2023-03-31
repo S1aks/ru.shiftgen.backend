@@ -1,7 +1,9 @@
 package ru.shiftgen.features.content
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ru.shiftgen.features.content.directions.DirectionsController
 import ru.shiftgen.features.content.shifts.ShiftsController
@@ -13,6 +15,8 @@ import ru.shiftgen.features.content.workers.WorkersController
 fun Application.configureContentRouting() {
 
     routing {
+        get("/") { call.respond(HttpStatusCode.OK, "Server Ok!") }
+
         authenticate("auth-jwt") {
             get("/directions") { DirectionsController(call).getDirections() }
             get("/direction/get") { DirectionsController(call).getDirection() }
