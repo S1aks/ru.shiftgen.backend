@@ -36,7 +36,9 @@ suspend fun ApplicationCall.getDirection() {
 suspend fun ApplicationCall.insertDirection() {
     this.structureId?.let { structureId ->
         val receive = this.receive<DirectionReceive>()
-        if (!Directions.insertDirection(DirectionDTO(0, receive.name, structureId))) {
+        if (Directions.insertDirection(DirectionDTO(0, receive.name, structureId))) {
+            this.respond(HttpStatusCode.OK, "Direction data inserted")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error insert direction data")
         }
     }
@@ -45,7 +47,9 @@ suspend fun ApplicationCall.insertDirection() {
 suspend fun ApplicationCall.updateDirection() {
     this.structureId?.let { structureId ->
         val receive = this.receive<DirectionReceive>()
-        if (!Directions.updateDirection(DirectionDTO(receive.id, receive.name, structureId))) {
+        if (Directions.updateDirection(DirectionDTO(receive.id, receive.name, structureId))) {
+            this.respond(HttpStatusCode.OK, "Direction data updated")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error update direction data")
         }
     }
@@ -54,7 +58,9 @@ suspend fun ApplicationCall.updateDirection() {
 suspend fun ApplicationCall.deleteDirection() {
     this.structureId?.let {
         val receive = this.receive<IdReceive>()
-        if (!Directions.deleteDirection(receive.id)) {
+        if (Directions.deleteDirection(receive.id)) {
+            this.respond(HttpStatusCode.OK, "Direction data deleted")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error delete direction data")
         }
     }

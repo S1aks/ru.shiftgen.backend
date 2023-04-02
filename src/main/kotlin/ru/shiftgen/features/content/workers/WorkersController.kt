@@ -36,7 +36,7 @@ suspend fun ApplicationCall.getWorker() {
 suspend fun ApplicationCall.insertWorker() {
     this.structureId?.let { structureId ->
         val receive = this.receive<WorkerReceive>()
-        if (!Workers.insertWorker(
+        if (Workers.insertWorker(
                 WorkerDTO(
                     0,
                     receive.personnelNumber,
@@ -49,6 +49,8 @@ suspend fun ApplicationCall.insertWorker() {
                 )
             )
         ) {
+            this.respond(HttpStatusCode.OK, "Worker data inserted")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error insert worker data")
         }
     }
@@ -57,7 +59,7 @@ suspend fun ApplicationCall.insertWorker() {
 suspend fun ApplicationCall.updateWorker() {
     this.structureId?.let { structureId ->
         val receive = this.receive<WorkerReceive>()
-        if (!Workers.updateWorker(
+        if (Workers.updateWorker(
                 WorkerDTO(
                     receive.id,
                     receive.personnelNumber,
@@ -70,6 +72,8 @@ suspend fun ApplicationCall.updateWorker() {
                 )
             )
         ) {
+            this.respond(HttpStatusCode.OK, "Worker data updated")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error update worker data")
         }
     }
@@ -78,7 +82,9 @@ suspend fun ApplicationCall.updateWorker() {
 suspend fun ApplicationCall.deleteWorker() {
     this.structureId?.let {
         val receive = this.receive<IdReceive>()
-        if (!Workers.deleteWorker(receive.id)) {
+        if (Workers.deleteWorker(receive.id)) {
+            this.respond(HttpStatusCode.OK, "Worker data deleted")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error delete worker data")
         }
     }

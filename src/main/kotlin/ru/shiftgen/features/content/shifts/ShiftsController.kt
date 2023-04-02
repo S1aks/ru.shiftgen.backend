@@ -37,7 +37,7 @@ suspend fun ApplicationCall.getShift() {
 suspend fun ApplicationCall.insertShift() {
     this.structureId?.let { structureId ->
         val receive = this.receive<ShiftReceive>()
-        if (!Shifts.insertShift(
+        if (Shifts.insertShift(
                 ShiftDTO(
                     0,
                     receive.name,
@@ -51,6 +51,8 @@ suspend fun ApplicationCall.insertShift() {
                 )
             )
         ) {
+            this.respond(HttpStatusCode.OK, "Shift data inserted")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error insert shift data")
         }
     }
@@ -59,7 +61,7 @@ suspend fun ApplicationCall.insertShift() {
 suspend fun ApplicationCall.updateShift() {
     this.structureId?.let { structureId ->
         val receive = this.receive<ShiftReceive>()
-        if (!Shifts.updateShift(
+        if (Shifts.updateShift(
                 ShiftDTO(
                     receive.id,
                     receive.name,
@@ -73,6 +75,8 @@ suspend fun ApplicationCall.updateShift() {
                 )
             )
         ) {
+            this.respond(HttpStatusCode.OK, "Shift data updated")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error update shift data")
         }
     }
@@ -81,7 +85,9 @@ suspend fun ApplicationCall.updateShift() {
 suspend fun ApplicationCall.deleteShift() {
     this.structureId?.let {
         val receive = this.receive<IdReceive>()
-        if (!Shifts.deleteShift(receive.id)) {
+        if (Shifts.deleteShift(receive.id)) {
+            this.respond(HttpStatusCode.OK, "Shift data deleted")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error delete shift data")
         }
     }

@@ -36,10 +36,12 @@ suspend fun ApplicationCall.getTimeBlock() {
 suspend fun ApplicationCall.insertTimeBlock() {
     this.structureId?.let { structureId ->
         val receive = this.receive<TimeBlockReceive>()
-        if (!TimeBlocks.insertTimeBlock(
+        if (TimeBlocks.insertTimeBlock(
                 TimeBlockDTO(0, structureId, receive.name, receive.duration, receive.action)
             )
         ) {
+            this.respond(HttpStatusCode.OK, "TimeBlock data inserted")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error insert time_block data")
         }
     }
@@ -48,10 +50,12 @@ suspend fun ApplicationCall.insertTimeBlock() {
 suspend fun ApplicationCall.updateTimeBlock() {
     this.structureId?.let { structureId ->
         val receive = this.receive<TimeBlockReceive>()
-        if (!TimeBlocks.updateTimeBlock(
+        if (TimeBlocks.updateTimeBlock(
                 TimeBlockDTO(receive.id, structureId, receive.name, receive.duration, receive.action)
             )
         ) {
+            this.respond(HttpStatusCode.OK, "TimeBlock data updated")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error update time_block data")
         }
     }
@@ -60,7 +64,9 @@ suspend fun ApplicationCall.updateTimeBlock() {
 suspend fun ApplicationCall.deleteTimeBlock() {
     this.structureId?.let {
         val receive = this.receive<IdReceive>()
-        if (!TimeBlocks.deleteTimeBlock(receive.id)) {
+        if (TimeBlocks.deleteTimeBlock(receive.id)) {
+            this.respond(HttpStatusCode.OK, "TimeBlock data deleted")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error delete time_block data")
         }
     }

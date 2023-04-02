@@ -33,7 +33,7 @@ suspend fun ApplicationCall.getStructure() {
 
 suspend fun ApplicationCall.insertStructure() {
     val receive = this.receive<StructureReceive>()
-    if (!Structures.insertStructure(
+    if (Structures.insertStructure(
             StructureDTO(
                 0,
                 receive.name,
@@ -45,6 +45,8 @@ suspend fun ApplicationCall.insertStructure() {
             )
         )
     ) {
+        this.respond(HttpStatusCode.OK, "Structure inserted")
+    } else {
         this.respond(HttpStatusCode.InternalServerError, "Error insert structure data")
     }
 }
@@ -53,7 +55,7 @@ suspend fun ApplicationCall.updateStructure() {
     this.structureId?.let { structureId ->
         val receive = this.receive<StructureReceive>()
         if (receive.id == structureId) {
-            if (!Structures.updateStructure(
+            if (Structures.updateStructure(
                     StructureDTO(
                         receive.id,
                         receive.name,
@@ -65,6 +67,8 @@ suspend fun ApplicationCall.updateStructure() {
                     )
                 )
             ) {
+                this.respond(HttpStatusCode.OK, "Structure updated")
+            } else {
                 this.respond(HttpStatusCode.InternalServerError, "Error update structure data")
             }
         } else {
@@ -77,7 +81,9 @@ suspend fun ApplicationCall.deleteStructure() {
     this.structureId?.let { structureId ->
         val receive = this.receive<IdReceive>()
         if (receive.id == structureId) {
-            if (!Structures.deleteStructure(receive.id)) {
+            if (Structures.deleteStructure(receive.id)) {
+                this.respond(HttpStatusCode.OK, "Structure deleted")
+            } else {
                 this.respond(HttpStatusCode.InternalServerError, "Error delete structure data")
             }
         } else {

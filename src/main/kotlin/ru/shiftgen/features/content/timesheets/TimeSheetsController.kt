@@ -84,7 +84,7 @@ suspend fun ApplicationCall.getTimeSheetsInYearMonth() {
 suspend fun ApplicationCall.insertTimeSheet() {
     this.structureId?.let { structureId ->
         val receive = this.receive<TimeSheetReceive>()
-        if (!TimeSheets.insertTimeSheet(
+        if (TimeSheets.insertTimeSheet(
                 TimeSheetDTO(
                     0,
                     receive.workerId,
@@ -96,6 +96,8 @@ suspend fun ApplicationCall.insertTimeSheet() {
                 )
             )
         ) {
+            this.respond(HttpStatusCode.OK, "TimeSheet data inserted")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error insert timesheet data")
         }
     }
@@ -104,7 +106,7 @@ suspend fun ApplicationCall.insertTimeSheet() {
 suspend fun ApplicationCall.updateTimeSheet() {
     this.structureId?.let { structureId ->
         val receive = this.receive<TimeSheetReceive>()
-        if (!TimeSheets.updateTimeSheet(
+        if (TimeSheets.updateTimeSheet(
                 TimeSheetDTO(
                     receive.id,
                     receive.workerId,
@@ -116,6 +118,8 @@ suspend fun ApplicationCall.updateTimeSheet() {
                 )
             )
         ) {
+            this.respond(HttpStatusCode.OK, "TimeSheet data updated")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error update timesheet data")
         }
     }
@@ -124,7 +128,9 @@ suspend fun ApplicationCall.updateTimeSheet() {
 suspend fun ApplicationCall.deleteTimeSheet() {
     this.structureId?.let {
         val receive = this.receive<IdReceive>()
-        if (!TimeSheets.deleteTimeSheet(receive.id)) {
+        if (TimeSheets.deleteTimeSheet(receive.id)) {
+            this.respond(HttpStatusCode.OK, "TimeSheet data deleted")
+        } else {
             this.respond(HttpStatusCode.InternalServerError, "Error delete timesheet data")
         }
     }
