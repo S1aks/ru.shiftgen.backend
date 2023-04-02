@@ -55,7 +55,7 @@ class ShiftGenerator {
 //        val shiftEnd = shift.endTime()
 //        val nightStart = shiftStart.withHour(nightStartHour)
 //        val nightEnd = shiftStart.withHour(nightEndHour)
-//        return if (nightStartHour in 20..23) {
+//        return if (nightStartHour in 18..23) {
 //            shiftStart < nightEnd && shiftEnd > nightEnd.minusDays(1) ||
 //                    shiftStart < nightEnd.plusDays(1) && shiftEnd > nightStart
 //        } else {
@@ -69,7 +69,7 @@ class ShiftGenerator {
         val shiftEnd = shift.endTime()
         var numberOfNights = 0
         if (shiftStart.hour < nightEndHour) numberOfNights++
-        if (nightStartHour >= 20 && shiftEnd.hour > nightStartHour) numberOfNights++
+        if (nightStartHour >= 18 && shiftEnd.hour > nightStartHour) numberOfNights++
         numberOfNights += ChronoUnit.DAYS.between(
             shiftStart.toLocalDate().atStartOfDay(), shiftEnd.toLocalDate().atStartOfDay()
         ).toInt()
