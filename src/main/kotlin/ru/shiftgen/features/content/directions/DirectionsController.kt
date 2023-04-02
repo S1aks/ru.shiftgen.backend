@@ -9,56 +9,53 @@ import ru.shiftgen.databse.content.directions.Directions
 import ru.shiftgen.features.content.IdReceive
 import ru.shiftgen.plugins.structureId
 
-class DirectionsController(private val call: ApplicationCall) {
+suspend fun ApplicationCall.getDirections() {
+    this.structureId?.let { structureId ->
+        val list = Directions.getDirections(structureId)
+        if (list.isNotEmpty()) {
+            this.respond(DirectionsResponse(list))
+        } else {
+            this.respond(HttpStatusCode.InternalServerError, "Error getting directions data")
+        }
+    }
+}
 
-    suspend fun getDirections() {
-        call.structureId?.let { structureId ->
-            val list = Directions.getDirections(structureId)
-            if (list.isNotEmpty()) {
-                call.respond(DirectionsResponse(list))
+suspend fun ApplicationCall.getDirection() {
+    this.structureId?.let { structureId ->
+        val receive = this.receive<IdReceive>()
+        Directions.getDirection(receive.id)?.let { direction ->
+            if (direction.structureId == structureId) {
+                this.respond(DirectionResponse(direction))
             } else {
-                call.respond(HttpStatusCode.InternalServerError, "Error getting directions data")
+                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
             }
+        } ?: this.respond(HttpStatusCode.InternalServerError, "Error getting direction data")
+    }
+}
+
+suspend fun ApplicationCall.insertDirection() {
+    this.structureId?.let { structureId ->
+        val receive = this.receive<DirectionReceive>()
+        if (!Directions.insertDirection(DirectionDTO(0, receive.name, structureId))) {
+            this.respond(HttpStatusCode.InternalServerError, "Error insert direction data")
         }
     }
+}
 
-    suspend fun getDirection() {
-        call.structureId?.let { structureId ->
-            val receive = call.receive<IdReceive>()
-            Directions.getDirection(receive.id)?.let { direction ->
-                if (direction.structureId == structureId) {
-                    call.respond(DirectionResponse(direction))
-                } else {
-                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
-                }
-            } ?: call.respond(HttpStatusCode.InternalServerError, "Error getting direction data")
+suspend fun ApplicationCall.updateDirection() {
+    this.structureId?.let { structureId ->
+        val receive = this.receive<DirectionReceive>()
+        if (!Directions.updateDirection(DirectionDTO(receive.id, receive.name, structureId))) {
+            this.respond(HttpStatusCode.InternalServerError, "Error update direction data")
         }
     }
+}
 
-    suspend fun insertDirection() {
-        call.structureId?.let { structureId ->
-            val receive = call.receive<DirectionReceive>()
-            if (!Directions.insertDirection(DirectionDTO(0, receive.name, structureId))) {
-                call.respond(HttpStatusCode.InternalServerError, "Error insert direction data")
-            }
-        }
-    }
-
-    suspend fun updateDirection() {
-        call.structureId?.let { structureId ->
-            val receive = call.receive<DirectionReceive>()
-            if (!Directions.updateDirection(DirectionDTO(receive.id, receive.name, structureId))) {
-                call.respond(HttpStatusCode.InternalServerError, "Error update direction data")
-            }
-        }
-    }
-
-    suspend fun deleteDirection() {
-        call.structureId?.let {
-            val receive = call.receive<IdReceive>()
-            if (!Directions.deleteDirection(receive.id)) {
-                call.respond(HttpStatusCode.InternalServerError, "Error delete direction data")
-            }
+suspend fun ApplicationCall.deleteDirection() {
+    this.structureId?.let {
+        val receive = this.receive<IdReceive>()
+        if (!Directions.deleteDirection(receive.id)) {
+            this.respond(HttpStatusCode.InternalServerError, "Error delete direction data")
         }
     }
 }

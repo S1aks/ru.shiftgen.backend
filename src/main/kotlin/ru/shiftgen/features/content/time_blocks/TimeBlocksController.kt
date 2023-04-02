@@ -9,61 +9,59 @@ import ru.shiftgen.databse.content.time_blocks.TimeBlocks
 import ru.shiftgen.features.content.IdReceive
 import ru.shiftgen.plugins.structureId
 
-class TimeBlocksController(private val call: ApplicationCall) {
-    suspend fun getTimeBlocks() {
-        call.structureId?.let { structureId ->
-            val list = TimeBlocks.getTimeBlocks(structureId)
-            if (list.isNotEmpty()) {
-                call.respond(TimeBlocksResponse(list))
+suspend fun ApplicationCall.getTimeBlocks() {
+    this.structureId?.let { structureId ->
+        val list = TimeBlocks.getTimeBlocks(structureId)
+        if (list.isNotEmpty()) {
+            this.respond(TimeBlocksResponse(list))
+        } else {
+            this.respond(HttpStatusCode.InternalServerError, "Error getting time_blocks data")
+        }
+    }
+}
+
+suspend fun ApplicationCall.getTimeBlock() {
+    this.structureId?.let { structureId ->
+        val receive = this.receive<IdReceive>()
+        TimeBlocks.getTimeBlock(receive.id)?.let { timeBlock ->
+            if (timeBlock.structureId == structureId) {
+                this.respond(TimeBlockResponse(timeBlock))
             } else {
-                call.respond(HttpStatusCode.InternalServerError, "Error getting time_blocks data")
+                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
             }
+        } ?: this.respond(HttpStatusCode.InternalServerError, "Error getting time_block data")
+    }
+}
+
+suspend fun ApplicationCall.insertTimeBlock() {
+    this.structureId?.let { structureId ->
+        val receive = this.receive<TimeBlockReceive>()
+        if (!TimeBlocks.insertTimeBlock(
+                TimeBlockDTO(0, structureId, receive.name, receive.duration, receive.action)
+            )
+        ) {
+            this.respond(HttpStatusCode.InternalServerError, "Error insert time_block data")
         }
     }
+}
 
-    suspend fun getTimeBlock() {
-        call.structureId?.let { structureId ->
-            val receive = call.receive<IdReceive>()
-            TimeBlocks.getTimeBlock(receive.id)?.let { timeBlock ->
-                if (timeBlock.structureId == structureId) {
-                    call.respond(TimeBlockResponse(timeBlock))
-                } else {
-                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
-                }
-            } ?: call.respond(HttpStatusCode.InternalServerError, "Error getting time_block data")
+suspend fun ApplicationCall.updateTimeBlock() {
+    this.structureId?.let { structureId ->
+        val receive = this.receive<TimeBlockReceive>()
+        if (!TimeBlocks.updateTimeBlock(
+                TimeBlockDTO(receive.id, structureId, receive.name, receive.duration, receive.action)
+            )
+        ) {
+            this.respond(HttpStatusCode.InternalServerError, "Error update time_block data")
         }
     }
+}
 
-    suspend fun insertTimeBlock() {
-        call.structureId?.let { structureId ->
-            val receive = call.receive<TimeBlockReceive>()
-            if (!TimeBlocks.insertTimeBlock(
-                    TimeBlockDTO(0, structureId, receive.name, receive.duration, receive.action)
-                )
-            ) {
-                call.respond(HttpStatusCode.InternalServerError, "Error insert time_block data")
-            }
-        }
-    }
-
-    suspend fun updateTimeBlock() {
-        call.structureId?.let { structureId ->
-            val receive = call.receive<TimeBlockReceive>()
-            if (!TimeBlocks.updateTimeBlock(
-                    TimeBlockDTO(receive.id, structureId, receive.name, receive.duration, receive.action)
-                )
-            ) {
-                call.respond(HttpStatusCode.InternalServerError, "Error update time_block data")
-            }
-        }
-    }
-
-    suspend fun deleteTimeBlock() {
-        call.structureId?.let {
-            val receive = call.receive<IdReceive>()
-            if (!TimeBlocks.deleteTimeBlock(receive.id)) {
-                call.respond(HttpStatusCode.InternalServerError, "Error delete time_block data")
-            }
+suspend fun ApplicationCall.deleteTimeBlock() {
+    this.structureId?.let {
+        val receive = this.receive<IdReceive>()
+        if (!TimeBlocks.deleteTimeBlock(receive.id)) {
+            this.respond(HttpStatusCode.InternalServerError, "Error delete time_block data")
         }
     }
 }

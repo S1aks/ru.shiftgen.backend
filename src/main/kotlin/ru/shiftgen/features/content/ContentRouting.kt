@@ -5,59 +5,59 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import ru.shiftgen.features.content.directions.DirectionsController
-import ru.shiftgen.features.content.shifts.ShiftsController
-import ru.shiftgen.features.content.structures.StructuresController
-import ru.shiftgen.features.content.time_blocks.TimeBlocksController
-import ru.shiftgen.features.content.timesheets.TimeSheetsController
-import ru.shiftgen.features.content.workers.WorkersController
+import ru.shiftgen.features.content.directions.*
+import ru.shiftgen.features.content.shifts.*
+import ru.shiftgen.features.content.structures.*
+import ru.shiftgen.features.content.time_blocks.*
+import ru.shiftgen.features.content.timesheets.*
+import ru.shiftgen.features.content.workers.*
 
 fun Application.configureContentRouting() {
 
     routing {
         get("/") { call.respond(HttpStatusCode.OK, "Server Ok!") }
 
-        get("/structures") { StructuresController(call).getStructures() }
-        post("/structure/insert") { StructuresController(call).insertStructure() }
+        get("/structures") { call.getStructures() }
+        post("/structure/insert") { call.insertStructure() }
 
         authenticate("auth-jwt") {
-            get("/directions") { DirectionsController(call).getDirections() }
-            get("/direction/get") { DirectionsController(call).getDirection() }
-            post("/direction/insert") { DirectionsController(call).insertDirection() }
-            post("/direction/update") { DirectionsController(call).updateDirection() }
-            post("/direction/delete") { DirectionsController(call).deleteDirection() }
+            get("/directions") { call.getDirections() }
+            get("/direction/get") { call.getDirection() }
+            post("/direction/insert") { call.insertDirection() }
+            post("/direction/update") { call.updateDirection() }
+            post("/direction/delete") { call.deleteDirection() }
 
-            get("/shifts") { ShiftsController(call).getShifts() }
-            get("/shift/get") { ShiftsController(call).getShift() }
-            post("/shift/insert") { ShiftsController(call).insertShift() }
-            post("/shift/update") { ShiftsController(call).updateShift() }
-            post("/shift/delete") { ShiftsController(call).deleteShift() }
+            get("/shifts") { call.getShifts() }
+            get("/shift/get") { call.getShift() }
+            post("/shift/insert") { call.insertShift() }
+            post("/shift/update") { call.updateShift() }
+            post("/shift/delete") { call.deleteShift() }
 
 
-            get("/structure/get") { StructuresController(call).getStructure() }
-            post("/structure/update") { StructuresController(call).updateStructure() }
-            post("/structure/delete") { StructuresController(call).deleteStructure() }
+            get("/structure/get") { call.getStructure() }
+            post("/structure/update") { call.updateStructure() }
+            post("/structure/delete") { call.deleteStructure() }
 
-            get("/time_blocks") { TimeBlocksController(call).getTimeBlocks() }
-            get("/time_block/get") { TimeBlocksController(call).getTimeBlock() }
-            post("/time_block/insert") { TimeBlocksController(call).insertTimeBlock() }
-            post("/time_block/update") { TimeBlocksController(call).updateTimeBlock() }
-            post("/time_block/delete") { TimeBlocksController(call).deleteTimeBlock() }
+            get("/time_blocks") { call.getTimeBlocks() }
+            get("/time_block/get") { call.getTimeBlock() }
+            post("/time_block/insert") { call.insertTimeBlock() }
+            post("/time_block/update") { call.updateTimeBlock() }
+            post("/time_block/delete") { call.deleteTimeBlock() }
 
-            get("/timesheets") { TimeSheetsController(call).getTimeSheets() }
-            get("/timesheet/get_by_id") { TimeSheetsController(call).getTimeSheetById() }
-            get("/timesheet/get_by_worker_id") { TimeSheetsController(call).getTimeSheetsByWorkerId() }
-            get("/timesheet/get_by_worker_id_in_year_month") { TimeSheetsController(call).getTimeSheetByWorkerIdInYearMonth() }
-            get("/timesheet/get_by_year_month") { TimeSheetsController(call).getTimeSheetsInYearMonth() }
-            post("/timesheet/insert") { TimeSheetsController(call).insertTimeSheet() }
-            post("/timesheet/update") { TimeSheetsController(call).updateTimeSheet() }
-            post("/timesheet/delete") { TimeSheetsController(call).deleteTimeSheet() }
+            get("/timesheets") { call.getTimeSheets() }
+            get("/timesheet/get_by_id") { call.getTimeSheetById() }
+            get("/timesheet/get_by_worker_id") { call.getTimeSheetsByWorkerId() }
+            get("/timesheet/get_by_worker_id_in_year_month") { call.getTimeSheetByWorkerIdInYearMonth() }
+            get("/timesheet/get_by_year_month") { call.getTimeSheetsInYearMonth() }
+            post("/timesheet/insert") { call.insertTimeSheet() }
+            post("/timesheet/update") { call.updateTimeSheet() }
+            post("/timesheet/delete") { call.deleteTimeSheet() }
 
-            get("/workers") { WorkersController(call).getWorkers() }
-            get("/worker/get") { WorkersController(call).getWorker() }
-            post("/worker/insert") { WorkersController(call).insertWorker() }
-            post("/worker/update") { WorkersController(call).updateWorker() }
-            post("/worker/delete") { WorkersController(call).deleteWorker() }
+            get("/workers") { call.getWorkers() }
+            get("/worker/get") { call.getWorker() }
+            post("/worker/insert") { call.insertWorker() }
+            post("/worker/update") { call.updateWorker() }
+            post("/worker/delete") { call.deleteWorker() }
         }
     }
 }

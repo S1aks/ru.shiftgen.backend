@@ -9,82 +9,80 @@ import ru.shiftgen.databse.content.shifts.Shifts
 import ru.shiftgen.features.content.IdReceive
 import ru.shiftgen.plugins.structureId
 
-class ShiftsController(private val call: ApplicationCall) {
-    suspend fun getShifts() {
-        call.structureId?.let { structureId ->
-            val receive = call.receive<ShiftsReceive>()
-            val list = Shifts.getShifts(structureId, receive.periodYearMonth)
-            if (list.isNotEmpty()) {
-                call.respond(ShiftsResponse(list))
+suspend fun ApplicationCall.getShifts() {
+    this.structureId?.let { structureId ->
+        val receive = this.receive<ShiftsReceive>()
+        val list = Shifts.getShifts(structureId, receive.periodYearMonth)
+        if (list.isNotEmpty()) {
+            this.respond(ShiftsResponse(list))
+        } else {
+            this.respond(HttpStatusCode.InternalServerError, "Error getting shifts data")
+        }
+    }
+}
+
+suspend fun ApplicationCall.getShift() {
+    this.structureId?.let { structureId ->
+        val receive = this.receive<IdReceive>()
+        Shifts.getShift(receive.id)?.let { shift ->
+            if (shift.structureId == structureId) {
+                this.respond(ShiftResponse(shift))
             } else {
-                call.respond(HttpStatusCode.InternalServerError, "Error getting shifts data")
+                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
             }
-        }
+        } ?: this.respond(HttpStatusCode.InternalServerError, "Error getting shift data")
     }
+}
 
-    suspend fun getShift() {
-        call.structureId?.let { structureId ->
-            val receive = call.receive<IdReceive>()
-            Shifts.getShift(receive.id)?.let { shift ->
-                if (shift.structureId == structureId) {
-                    call.respond(ShiftResponse(shift))
-                } else {
-                    call.respond(HttpStatusCode.BadRequest, "Structure Id match error")
-                }
-            } ?: call.respond(HttpStatusCode.InternalServerError, "Error getting shift data")
-        }
-    }
-
-    suspend fun insertShift() {
-        call.structureId?.let { structureId ->
-            val receive = call.receive<ShiftReceive>()
-            if (!Shifts.insertShift(
-                    ShiftDTO(
-                        0,
-                        receive.name,
-                        receive.periodYearMonth,
-                        receive.periodicity,
-                        receive.workerId,
-                        structureId,
-                        receive.directionId,
-                        receive.startTime,
-                        receive.timeBlocksIds
-                    )
+suspend fun ApplicationCall.insertShift() {
+    this.structureId?.let { structureId ->
+        val receive = this.receive<ShiftReceive>()
+        if (!Shifts.insertShift(
+                ShiftDTO(
+                    0,
+                    receive.name,
+                    receive.periodYearMonth,
+                    receive.periodicity,
+                    receive.workerId,
+                    structureId,
+                    receive.directionId,
+                    receive.startTime,
+                    receive.timeBlocksIds
                 )
-            ) {
-                call.respond(HttpStatusCode.InternalServerError, "Error insert shift data")
-            }
+            )
+        ) {
+            this.respond(HttpStatusCode.InternalServerError, "Error insert shift data")
         }
     }
+}
 
-    suspend fun updateShift() {
-        call.structureId?.let { structureId ->
-            val receive = call.receive<ShiftReceive>()
-            if (!Shifts.updateShift(
-                    ShiftDTO(
-                        receive.id,
-                        receive.name,
-                        receive.periodYearMonth,
-                        receive.periodicity,
-                        receive.workerId,
-                        structureId,
-                        receive.directionId,
-                        receive.startTime,
-                        receive.timeBlocksIds
-                    )
+suspend fun ApplicationCall.updateShift() {
+    this.structureId?.let { structureId ->
+        val receive = this.receive<ShiftReceive>()
+        if (!Shifts.updateShift(
+                ShiftDTO(
+                    receive.id,
+                    receive.name,
+                    receive.periodYearMonth,
+                    receive.periodicity,
+                    receive.workerId,
+                    structureId,
+                    receive.directionId,
+                    receive.startTime,
+                    receive.timeBlocksIds
                 )
-            ) {
-                call.respond(HttpStatusCode.InternalServerError, "Error update shift data")
-            }
+            )
+        ) {
+            this.respond(HttpStatusCode.InternalServerError, "Error update shift data")
         }
     }
+}
 
-    suspend fun deleteShift() {
-        call.structureId?.let {
-            val receive = call.receive<IdReceive>()
-            if (!Shifts.deleteShift(receive.id)) {
-                call.respond(HttpStatusCode.InternalServerError, "Error delete shift data")
-            }
+suspend fun ApplicationCall.deleteShift() {
+    this.structureId?.let {
+        val receive = this.receive<IdReceive>()
+        if (!Shifts.deleteShift(receive.id)) {
+            this.respond(HttpStatusCode.InternalServerError, "Error delete shift data")
         }
     }
 }
