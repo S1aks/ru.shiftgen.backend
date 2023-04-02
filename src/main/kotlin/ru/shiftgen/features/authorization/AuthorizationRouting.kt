@@ -9,16 +9,8 @@ import ru.shiftgen.features.authorization.register.registerNewUser
 fun Application.configureAuthorizationRouting() {
 
     routing {
-        post("auth/register") {
-            call.registerNewUser()
-        }
-
-        post("auth/login") {
-            call.performLogin()
-        }
-
-        post("auth/refresh") {
-            call.refreshToken()
-        }
+        post("auth/register") { call.registerNewUser() }
+        post("auth/login") { call.performLogin() }
+        post("auth/refresh") { call.refreshToken() }
     }
 }
