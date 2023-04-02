@@ -2,22 +2,23 @@ package ru.shiftgen.features.authorization
 
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
-import ru.shiftgen.features.authorization.login.LoginController
-import ru.shiftgen.features.authorization.register.RegisterController
+import ru.shiftgen.features.authorization.login.performLogin
+import ru.shiftgen.features.authorization.login.refreshToken
+import ru.shiftgen.features.authorization.register.registerNewUser
 
 fun Application.configureAuthorizationRouting() {
 
     routing {
         post("auth/register") {
-            RegisterController(call).registerNewUser()
+            call.registerNewUser()
         }
 
         post("auth/login") {
-            LoginController(call).performLogin()
+            call.performLogin()
         }
 
         post("auth/refresh") {
-            LoginController(call).refreshToken()
+            call.refreshToken()
         }
     }
 }

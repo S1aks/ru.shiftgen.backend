@@ -11,13 +11,11 @@ import ru.shiftgen.plugins.structureId
 
 class StructuresController(private val call: ApplicationCall) {
     suspend fun getStructures() {
-        call.structureId?.let { _ ->
-            val list = Structures.getStructures()
-            if (list.isNotEmpty()) {
-                call.respond(StructuresResponse(list.associateBy({ it.id }, { it.name })))
-            } else {
-                call.respond(HttpStatusCode.InternalServerError, "Error getting structures data")
-            }
+        val list = Structures.getStructures()
+        if (list.isNotEmpty()) {
+            call.respond(StructuresResponse(list.associateBy({ it.id }, { it.name })))
+        } else {
+            call.respond(HttpStatusCode.InternalServerError, "Error getting structures data")
         }
     }
 

@@ -17,6 +17,9 @@ fun Application.configureContentRouting() {
     routing {
         get("/") { call.respond(HttpStatusCode.OK, "Server Ok!") }
 
+        get("/structures") { StructuresController(call).getStructures() }
+        post("/structure/insert") { StructuresController(call).insertStructure() }
+
         authenticate("auth-jwt") {
             get("/directions") { DirectionsController(call).getDirections() }
             get("/direction/get") { DirectionsController(call).getDirection() }
@@ -30,9 +33,8 @@ fun Application.configureContentRouting() {
             post("/shift/update") { ShiftsController(call).updateShift() }
             post("/shift/delete") { ShiftsController(call).deleteShift() }
 
-            get("/structures") { StructuresController(call).getStructures() }
+
             get("/structure/get") { StructuresController(call).getStructure() }
-            post("/structure/insert") { StructuresController(call).insertStructure() }
             post("/structure/update") { StructuresController(call).updateStructure() }
             post("/structure/delete") { StructuresController(call).deleteStructure() }
 

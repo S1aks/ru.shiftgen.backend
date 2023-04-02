@@ -7,7 +7,7 @@ data class RegisterReceive(
     val login: String,
     val email: String,
     val password: String,
-    val group: Int,
+    val accessGroup: Int,
     val structureId: Int
 )
 

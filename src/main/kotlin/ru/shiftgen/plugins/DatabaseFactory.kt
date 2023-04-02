@@ -1,7 +1,9 @@
 package ru.shiftgen.plugins
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -19,9 +21,10 @@ import ru.shiftgen.databse.content.workers.Workers
 
 object DatabaseFactory {
     private const val dbUser = "postgres"
-    private const val dbPassword = "c99dd9d709408eae2c5d87a73ee02120"
+    //    private const val dbPassword = "d24013" // local
+    private const val dbPassword = "D!24013555" // remote
     private const val driverClassName = "org.postgresql.Driver"
-    private const val jdbcURL = "jdbc:postgresql://172.17.0.2:5432/shiftgendatabase"
+    private const val jdbcURL = "jdbc:postgresql://127.0.0.1:5432/shiftgen_db"
     private const val adminLogin = "adm1n"
     private const val adminPassword = "D43_7fG+3m/"
     private const val adminEmail = "admin@shiftgen.ru"
@@ -40,9 +43,7 @@ object DatabaseFactory {
             SchemaUtils.create(TimeSheets)
             SchemaUtils.create(Workers)
         }
-        runBlocking {
-            initAdminAccount()
-        }
+        CoroutineScope(Job()).launch { initAdminAccount() }
     }
 
     private suspend fun initAdminAccount() = dbQuery {
