@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import ru.shiftgen.databse.content.directions.DirectionDTO
 
 @Serializable
-data class DirectionReceive(
+data class DirectionRequest(
     val id: Int,
     val name: String
 )

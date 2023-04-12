@@ -51,7 +51,7 @@ suspend fun ApplicationCall.getTimeSheetsByWorkerId() {
 
 suspend fun ApplicationCall.getTimeSheetByWorkerIdInYearMonth() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<TimeSheetsWorkerIdYearMonthReceive>()
+        val receive = this.receive<TimeSheetsWorkerIdYearMonthRequest>()
         TimeSheets.getTimeSheetByWorkerIdInYearMonth(receive.workerId, receive.periodYearMonth)?.let { timeSheet ->
             if (timeSheet.structureId == structureId) {
                 this.respond(TimeSheetResponse(timeSheet))
@@ -67,7 +67,7 @@ suspend fun ApplicationCall.getTimeSheetByWorkerIdInYearMonth() {
 
 suspend fun ApplicationCall.getTimeSheetsInYearMonth() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<TimeSheetsYearMonthReceive>()
+        val receive = this.receive<TimeSheetsYearMonthRequest>()
         val list = TimeSheets.getTimeSheetsInYearMonth(structureId, receive.periodYearMonth)
         if (list.isNotEmpty()) {
             if (list.first().structureId == structureId) {
@@ -83,7 +83,7 @@ suspend fun ApplicationCall.getTimeSheetsInYearMonth() {
 
 suspend fun ApplicationCall.insertTimeSheet() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<TimeSheetReceive>()
+        val receive = this.receive<TimeSheetRequest>()
         if (TimeSheets.insertTimeSheet(
                 TimeSheetDTO(
                     0,
@@ -105,7 +105,7 @@ suspend fun ApplicationCall.insertTimeSheet() {
 
 suspend fun ApplicationCall.updateTimeSheet() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<TimeSheetReceive>()
+        val receive = this.receive<TimeSheetRequest>()
         if (TimeSheets.updateTimeSheet(
                 TimeSheetDTO(
                     receive.id,

@@ -1,7 +1,6 @@
 package ru.shiftgen.features.content.shifts
 
 import kotlinx.serialization.Serializable
-import ru.shiftgen.databse.content.directions.DirectionDTO
 import ru.shiftgen.databse.content.enums.Periodicity
 import ru.shiftgen.databse.content.shifts.ShiftDTO
 import ru.shiftgen.utils.LocalDateTimeSerializer
@@ -10,7 +9,7 @@ import java.time.LocalDateTime
 import java.time.YearMonth
 
 @Serializable
-data class ShiftReceive(
+data class ShiftRequest(
     val id: Int,
     val name: String,
     @Serializable(with = YearMonthSerializer::class)
@@ -25,7 +24,7 @@ data class ShiftReceive(
 )
 
 @Serializable
-data class ShiftsReceive(
+data class ShiftsRequest(
     @Serializable(with = YearMonthSerializer::class)
     val periodYearMonth: YearMonth
 )

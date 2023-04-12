@@ -35,7 +35,7 @@ suspend fun ApplicationCall.getWorker() {
 
 suspend fun ApplicationCall.insertWorker() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<WorkerReceive>()
+        val receive = this.receive<WorkerRequest>()
         if (Workers.insertWorker(
                 WorkerDTO(
                     0,
@@ -58,7 +58,7 @@ suspend fun ApplicationCall.insertWorker() {
 
 suspend fun ApplicationCall.updateWorker() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<WorkerReceive>()
+        val receive = this.receive<WorkerRequest>()
         if (Workers.updateWorker(
                 WorkerDTO(
                     receive.id,

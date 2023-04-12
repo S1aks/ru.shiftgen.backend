@@ -35,7 +35,7 @@ suspend fun ApplicationCall.getTimeBlock() {
 
 suspend fun ApplicationCall.insertTimeBlock() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<TimeBlockReceive>()
+        val receive = this.receive<TimeBlockRequest>()
         if (TimeBlocks.insertTimeBlock(
                 TimeBlockDTO(0, structureId, receive.name, receive.duration, receive.action)
             )
@@ -49,7 +49,7 @@ suspend fun ApplicationCall.insertTimeBlock() {
 
 suspend fun ApplicationCall.updateTimeBlock() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<TimeBlockReceive>()
+        val receive = this.receive<TimeBlockRequest>()
         if (TimeBlocks.updateTimeBlock(
                 TimeBlockDTO(receive.id, structureId, receive.name, receive.duration, receive.action)
             )

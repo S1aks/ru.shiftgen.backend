@@ -9,7 +9,7 @@ import ru.shiftgen.databse.authorization.tokens.Tokens
 import ru.shiftgen.databse.authorization.users.Users
 
 suspend fun ApplicationCall.performLogin() {
-    val receive = this.receive<LoginReceive>()
+    val receive = this.receive<LoginRequest>()
     val user = Users.getUserByLogin(receive.login)
     if (user == null) {
         this.respond(HttpStatusCode.BadRequest, "User not found")
@@ -37,7 +37,7 @@ suspend fun ApplicationCall.performLogin() {
 }
 
 suspend fun ApplicationCall.refreshToken() {
-    val receive = this.receive<RefreshReceive>()
+    val receive = this.receive<RefreshRequest>()
     val user = Users.getUserByLogin(receive.login)
     val token = Tokens.getRefreshToken(receive.login)
     if (user == null) {

@@ -25,3 +25,11 @@ mkdir ./shiftgen
 sudo systemctl daemon-reload
 sudo systemctl start shiftgen.service	/// stop - остановить, status - информация, enable - вкл. автозапуск, disable - выкл. автозапуск
 
+ss -nltpn	// Просмотр открытых портов
+df -h		// Просмотр разделов и их размеров
+hystory	// Просмотр истории введенных комманд
+su - postgres psql	// Вход в редактор psql
+	//  \d			- вывод списка баз данных или таблиц при присоединении к бд
+	//  \c shiftgen_db	- сконнектиться с бд shiftgen_db
+	//  SELECT * FROM users;	- вывести содержание таблицы users
+	//  \q			- выход из psql

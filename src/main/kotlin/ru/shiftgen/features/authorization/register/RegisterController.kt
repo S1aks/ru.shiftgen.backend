@@ -15,7 +15,7 @@ import ru.shiftgen.utils.isValidEmail
 import java.util.*
 
 suspend fun ApplicationCall.registerNewUser() {
-    val receive = this.receive<RegisterReceive>()
+    val receive = this.receive<RegisterRequest>()
     if (!receive.email.isValidEmail()) {
         this.respond(HttpStatusCode.BadRequest, "Email is not valid")
         return
