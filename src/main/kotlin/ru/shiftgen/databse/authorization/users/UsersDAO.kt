@@ -13,7 +13,7 @@ interface UsersDAO {
         firstName = this[Users.firstName],
         lastName = this[Users.lastName],
         patronymic = this[Users.patronymic],
-        accessGroup = Groups.values()[this[Users.accessGroup]],
+        group = Groups.values()[this[Users.group]],
         workerId = this[Users.workerId],
         structureId = this[Users.structureId]
     )

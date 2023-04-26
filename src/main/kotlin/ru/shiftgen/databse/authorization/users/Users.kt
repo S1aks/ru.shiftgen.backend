@@ -16,7 +16,7 @@ object Users : Table(), UsersDAO {
     internal val firstName = varchar("first_name", 30)
     internal val lastName = varchar("last_name", 30)
     internal val patronymic = varchar("patronymic", 30).nullable()
-    internal val accessGroup = integer("access_group")
+    internal val group = integer("group")
     internal val workerId = reference("worker_id", Workers.id).nullable()
     internal val structureId = reference("structure_id", Structures.id).nullable()
     override val primaryKey = PrimaryKey(login, name = "PK_User_Id")
@@ -34,7 +34,7 @@ object Users : Table(), UsersDAO {
             it[firstName] = user.firstName
             it[lastName] = user.lastName
             it[patronymic] = user.patronymic
-            it[accessGroup] = user.accessGroup.ordinal
+            it[group] = user.group.ordinal
             it[workerId] = user.workerId
             it[structureId] = user.structureId
         }.insertedCount > 0
@@ -48,7 +48,7 @@ object Users : Table(), UsersDAO {
             it[firstName] = user.firstName
             it[lastName] = user.lastName
             it[patronymic] = user.patronymic
-            it[accessGroup] = user.accessGroup.ordinal
+            it[group] = user.group.ordinal
             it[workerId] = user.workerId
             it[structureId] = user.structureId
         } > 0

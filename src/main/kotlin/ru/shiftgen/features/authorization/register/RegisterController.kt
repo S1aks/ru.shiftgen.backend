@@ -31,7 +31,7 @@ suspend fun ApplicationCall.registerNewUser() {
         return
     }
     val user: UserDTO?
-    when (receive.accessGroup) {
+    when (receive.group) {
         Groups.DISPATCHER.ordinal -> {
             user = UserDTO(
                 id = 0,
@@ -42,7 +42,7 @@ suspend fun ApplicationCall.registerNewUser() {
                 firstName = "",
                 lastName = "",
                 patronymic = "",
-                accessGroup = Groups.DISPATCHER,
+                group = Groups.DISPATCHER,
                 structureId = receive.structureId
             )
         }
@@ -57,7 +57,7 @@ suspend fun ApplicationCall.registerNewUser() {
                 firstName = "",
                 lastName = "",
                 patronymic = "",
-                accessGroup = Groups.WORKER,
+                group = Groups.WORKER,
                 structureId = receive.structureId
             )
         }

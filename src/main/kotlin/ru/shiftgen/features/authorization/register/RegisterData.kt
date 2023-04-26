@@ -7,7 +7,7 @@ data class RegisterRequest(
     val login: String,
     val email: String,
     val password: String,
-    val accessGroup: Int,
+    val group: Int,
     val structureId: Int
 )
 

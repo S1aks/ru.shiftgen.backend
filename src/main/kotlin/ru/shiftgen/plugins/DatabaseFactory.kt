@@ -54,7 +54,7 @@ object DatabaseFactory {
                 email = adminEmail,
                 firstName = adminFirstName,
                 lastName = adminLastName,
-                accessGroup = Groups.ADMIN
+                group = Groups.ADMIN
             )
             if (!Users.insertUser(superUser)) throw Exception("Error initialize admin account!")
         }
