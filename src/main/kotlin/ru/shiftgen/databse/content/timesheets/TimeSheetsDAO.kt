@@ -18,8 +18,8 @@ interface TimeSheetsDAO {
     suspend fun updateTimeSheet(timeSheet: TimeSheetDTO): Boolean
     suspend fun getTimeSheetById(id: Int): TimeSheetDTO?
     suspend fun getTimeSheetsByWorkerId(workerId: Int): List<TimeSheetDTO>
-    suspend fun getTimeSheetByWorkerIdInYearMonth(workerId: Int, periodYearMonth: YearMonth): TimeSheetDTO?
+    suspend fun getTimeSheetByWorkerIdInYearMonth(workerId: Int, yearMonth: YearMonth): TimeSheetDTO?
     suspend fun getTimeSheets(structureId: Int): List<TimeSheetDTO>
-    suspend fun getTimeSheetsInYearMonth(structureId: Int, periodYearMonth: YearMonth): List<TimeSheetDTO>
+    suspend fun getTimeSheetsInYearMonth(structureId: Int, yearMonth: YearMonth): List<TimeSheetDTO>
     suspend fun deleteTimeSheet(id: Int): Boolean
 }

@@ -12,7 +12,7 @@ data class ShiftDTO(
     val id: Int = 0,
     val name: String,
     @Serializable(with = YearMonthSerializer::class)
-    val periodYearMonth: YearMonth,
+    val yearMonth: YearMonth,
     val periodicity: Periodicity,
     var workerId: Int?,
     val structureId: Int,

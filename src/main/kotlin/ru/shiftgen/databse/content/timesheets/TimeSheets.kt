@@ -49,9 +49,9 @@ object TimeSheets : Table(), TimeSheetsDAO {
             .map { it.toTimeSheetDTO() }
     }
 
-    override suspend fun getTimeSheetByWorkerIdInYearMonth(workerId: Int, periodYearMonth: YearMonth): TimeSheetDTO? =
+    override suspend fun getTimeSheetByWorkerIdInYearMonth(workerId: Int, yearMonth: YearMonth): TimeSheetDTO? =
         dbQuery {
-            TimeSheets.select { TimeSheets.workerId eq workerId and (TimeSheets.yearMonth eq periodYearMonth.toString()) }
+            TimeSheets.select { TimeSheets.workerId eq workerId and (TimeSheets.yearMonth eq yearMonth.toString()) }
                 .singleOrNull()?.toTimeSheetDTO()
         }
 
@@ -61,9 +61,9 @@ object TimeSheets : Table(), TimeSheetsDAO {
             .map { it.toTimeSheetDTO() }
     }
 
-    override suspend fun getTimeSheetsInYearMonth(structureId: Int, periodYearMonth: YearMonth): List<TimeSheetDTO> =
+    override suspend fun getTimeSheetsInYearMonth(structureId: Int, yearMonth: YearMonth): List<TimeSheetDTO> =
         dbQuery {
-            TimeSheets.select { TimeSheets.structureId eq structureId and (TimeSheets.yearMonth eq periodYearMonth.toString()) }
+            TimeSheets.select { TimeSheets.structureId eq structureId and (TimeSheets.yearMonth eq yearMonth.toString()) }
                 .map { it.toTimeSheetDTO() }
         }
 

@@ -13,7 +13,7 @@ data class ShiftRequest(
     val id: Int,
     val name: String,
     @Serializable(with = YearMonthSerializer::class)
-    val periodYearMonth: YearMonth,
+    val yearMonth: YearMonth,
     val periodicity: Periodicity,
     val workerId: Int?,
     val structureId: Int,
@@ -26,7 +26,7 @@ data class ShiftRequest(
 @Serializable
 data class ShiftsRequest(
     @Serializable(with = YearMonthSerializer::class)
-    val periodYearMonth: YearMonth
+    val yearMonth: YearMonth
 )
 
 @Serializable

@@ -41,13 +41,13 @@ class ShiftGenerator {
     }
 
     private suspend fun getBusyOrRestWorkersIdsOnTime(
-        shifts: List<ShiftDTO>, periodYearMonth: YearMonth, time: LocalDateTime, restHours: Int
+        shifts: List<ShiftDTO>, yearMonth: YearMonth, time: LocalDateTime, restHours: Int
     ): List<Int?> = shifts
         .filter { it.workerId != null }
         .filter { shift ->
             time >= shift.startTime && time <= shift.endTimeWithCorrection(restHours.hoursToMillis)
         }
-        .filter { it.periodYearMonth == periodYearMonth }
+        .filter { it.yearMonth == yearMonth }
         .map { it.workerId }
 
 //    private suspend fun isShiftCrossNight(shift: ShiftDTO, nightStartHour: Int, nightEndHour: Int): Boolean {
@@ -105,18 +105,18 @@ class ShiftGenerator {
             .filter { it.accessToDirections?.contains(shift.directionId) ?: false }
             // Отсеиваем тех кто занят или на отдыхе после смены
             .filter {
-                it.id !in getBusyOrRestWorkersIdsOnTime(shifts, shift.periodYearMonth, shift.startTime, restHours)
+                it.id !in getBusyOrRestWorkersIdsOnTime(shifts, shift.yearMonth, shift.startTime, restHours)
             }
 
     suspend fun fillShiftsListWithWorkers(
         structure: StructureDTO,
-        periodYearMonth: YearMonth
+        yearMonth: YearMonth
     ): List<ShiftDTO> = dbQuery {
-        val prevPeriodShifts = Shifts.getShifts(structure.id, periodYearMonth.minusMonths(1))
-        val currentPeriodShifts = Shifts.getShifts(structure.id, periodYearMonth)
+        val prevPeriodShifts = Shifts.getShifts(structure.id, yearMonth.minusMonths(1))
+        val currentPeriodShifts = Shifts.getShifts(structure.id, yearMonth)
         val shifts = prevPeriodShifts + currentPeriodShifts
         val workers = Workers.getWorkers(structure.id)
-        val timeSheets = TimeSheets.getTimeSheetsInYearMonth(structure.id, periodYearMonth)
+        val timeSheets = TimeSheets.getTimeSheetsInYearMonth(structure.id, yearMonth)
         shifts.forEach { shift ->
             if (shift.workerId == null) {   // Если рабочий не назначен
                 shift.workerId = workers

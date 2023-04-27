@@ -12,7 +12,7 @@ import ru.shiftgen.plugins.structureId
 suspend fun ApplicationCall.getShifts() {
     this.structureId?.let { structureId ->
         val receive = this.receive<ShiftsRequest>()
-        val list = Shifts.getShifts(structureId, receive.periodYearMonth)
+        val list = Shifts.getShifts(structureId, receive.yearMonth)
         if (list.isNotEmpty()) {
             this.respond(ShiftsResponse(list))
         } else {
@@ -41,7 +41,7 @@ suspend fun ApplicationCall.insertShift() {
                 ShiftDTO(
                     0,
                     receive.name,
-                    receive.periodYearMonth,
+                    receive.yearMonth,
                     receive.periodicity,
                     receive.workerId,
                     structureId,
@@ -65,7 +65,7 @@ suspend fun ApplicationCall.updateShift() {
                 ShiftDTO(
                     receive.id,
                     receive.name,
-                    receive.periodYearMonth,
+                    receive.yearMonth,
                     receive.periodicity,
                     receive.workerId,
                     structureId,
