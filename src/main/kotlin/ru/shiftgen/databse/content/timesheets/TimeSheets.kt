@@ -11,7 +11,7 @@ object TimeSheets : Table(), TimeSheetsDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val workerId = reference("worker_id", Workers.id)
     internal val structureId = reference("structure_id", Structures.id)
-    internal val periodYearMonth = varchar("period_year_month", 8)
+    internal val yearMonth = varchar("year_month", 8)
     internal val workedTime = long("worked_time")
     internal val calculatedTime = long("calculated_time")
     internal val correctionTime = long("correction_time")
@@ -21,7 +21,7 @@ object TimeSheets : Table(), TimeSheetsDAO {
         TimeSheets.insert {
             it[workerId] = timeSheet.workerId
             it[structureId] = timeSheet.structureId
-            it[periodYearMonth] = timeSheet.periodYearMonth.toString()
+            it[yearMonth] = timeSheet.yearMonth.toString()
             it[workedTime] = timeSheet.workedTime
             it[calculatedTime] = timeSheet.calculatedTime
             it[correctionTime] = timeSheet.correctionTime
@@ -32,7 +32,7 @@ object TimeSheets : Table(), TimeSheetsDAO {
         TimeSheets.update({ id eq timeSheet.id }) {
             it[workerId] = timeSheet.workerId
             it[structureId] = timeSheet.structureId
-            it[periodYearMonth] = timeSheet.periodYearMonth.toString()
+            it[yearMonth] = timeSheet.yearMonth.toString()
             it[workedTime] = timeSheet.workedTime
             it[calculatedTime] = timeSheet.calculatedTime
             it[correctionTime] = timeSheet.correctionTime
@@ -45,25 +45,25 @@ object TimeSheets : Table(), TimeSheetsDAO {
 
     override suspend fun getTimeSheetsByWorkerId(workerId: Int): List<TimeSheetDTO> = dbQuery {
         TimeSheets.select { TimeSheets.workerId eq workerId }
-            .orderBy(periodYearMonth)
+            .orderBy(yearMonth)
             .map { it.toTimeSheetDTO() }
     }
 
     override suspend fun getTimeSheetByWorkerIdInYearMonth(workerId: Int, periodYearMonth: YearMonth): TimeSheetDTO? =
         dbQuery {
-            TimeSheets.select { TimeSheets.workerId eq workerId and (TimeSheets.periodYearMonth eq periodYearMonth.toString()) }
+            TimeSheets.select { TimeSheets.workerId eq workerId and (TimeSheets.yearMonth eq periodYearMonth.toString()) }
                 .singleOrNull()?.toTimeSheetDTO()
         }
 
     override suspend fun getTimeSheets(structureId: Int): List<TimeSheetDTO> = dbQuery {
         TimeSheets.select { TimeSheets.structureId eq structureId }
-            .orderBy(periodYearMonth)
+            .orderBy(yearMonth)
             .map { it.toTimeSheetDTO() }
     }
 
     override suspend fun getTimeSheetsInYearMonth(structureId: Int, periodYearMonth: YearMonth): List<TimeSheetDTO> =
         dbQuery {
-            TimeSheets.select { TimeSheets.structureId eq structureId and (TimeSheets.periodYearMonth eq periodYearMonth.toString()) }
+            TimeSheets.select { TimeSheets.structureId eq structureId and (TimeSheets.yearMonth eq periodYearMonth.toString()) }
                 .map { it.toTimeSheetDTO() }
         }
 

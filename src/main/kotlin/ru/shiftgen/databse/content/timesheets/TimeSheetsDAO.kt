@@ -8,7 +8,7 @@ interface TimeSheetsDAO {
         id = this[TimeSheets.id],
         workerId = this[TimeSheets.workerId],
         structureId = this[TimeSheets.structureId],
-        periodYearMonth = YearMonth.parse(this[TimeSheets.periodYearMonth]),
+        yearMonth = YearMonth.parse(this[TimeSheets.yearMonth]),
         workedTime = this[TimeSheets.workedTime],
         calculatedTime = this[TimeSheets.calculatedTime],
         correctionTime = this[TimeSheets.correctionTime]
