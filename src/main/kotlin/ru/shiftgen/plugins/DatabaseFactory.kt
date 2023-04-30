@@ -14,6 +14,7 @@ import ru.shiftgen.databse.authorization.users.UserDTO
 import ru.shiftgen.databse.authorization.users.Users
 import ru.shiftgen.databse.content.directions.Directions
 import ru.shiftgen.databse.content.shifts.Shifts
+import ru.shiftgen.databse.content.structures.StructureDTO
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.time_blocks.TimeBlocks
 import ru.shiftgen.databse.content.timesheets.TimeSheets
@@ -21,6 +22,7 @@ import ru.shiftgen.databse.content.workers.Workers
 
 object DatabaseFactory {
     private const val dbUser = "postgres"
+
     //    private const val dbPassword = "d24013" // local
     private const val dbPassword = "D!24013555" // remote
     private const val driverClassName = "org.postgresql.Driver"
@@ -44,6 +46,7 @@ object DatabaseFactory {
             SchemaUtils.create(Workers)
         }
         CoroutineScope(Job()).launch { initAdminAccount() }
+        CoroutineScope(Job()).launch { createTestData() }
     }
 
     private suspend fun initAdminAccount() = dbQuery {
@@ -57,6 +60,12 @@ object DatabaseFactory {
                 group = Groups.ADMIN
             )
             if (!Users.insertUser(superUser)) throw Exception("Error initialize admin account!")
+        }
+    }
+
+    private suspend fun createTestData() = dbQuery {
+        if (Structures.getStructure(1) == null) {
+            Structures.insertStructure(StructureDTO(1, "Тестовый раздел", "Тестовая структура для пробных запросов."))
         }
     }
 
