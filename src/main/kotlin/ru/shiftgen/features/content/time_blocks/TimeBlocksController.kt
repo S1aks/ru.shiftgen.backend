@@ -15,7 +15,7 @@ suspend fun ApplicationCall.getTimeBlocks() {
         if (list.isNotEmpty()) {
             this.respond(TimeBlocksResponse(list))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error getting time_blocks data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка получения временных блоков.")
         }
     }
 }
@@ -27,9 +27,9 @@ suspend fun ApplicationCall.getTimeBlock() {
             if (timeBlock.structureId == structureId) {
                 this.respond(TimeBlockResponse(timeBlock))
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
             }
-        } ?: this.respond(HttpStatusCode.InternalServerError, "Error getting time_block data")
+        } ?: this.respond(HttpStatusCode.InternalServerError, "Ошибка получения временного блока.")
     }
 }
 
@@ -40,9 +40,9 @@ suspend fun ApplicationCall.insertTimeBlock() {
                 TimeBlockDTO(0, structureId, receive.name, receive.duration, receive.action)
             )
         ) {
-            this.respond(HttpStatusCode.OK, "TimeBlock data inserted")
+            this.respond(HttpStatusCode.OK, "Временной блок добавлен.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error insert time_block data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка добавления временного блока.")
         }
     }
 }
@@ -54,9 +54,9 @@ suspend fun ApplicationCall.updateTimeBlock() {
                 TimeBlockDTO(receive.id, structureId, receive.name, receive.duration, receive.action)
             )
         ) {
-            this.respond(HttpStatusCode.OK, "TimeBlock data updated")
+            this.respond(HttpStatusCode.OK, "Временной блок обновлен.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error update time_block data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка обновления временного блока.")
         }
     }
 }
@@ -65,9 +65,9 @@ suspend fun ApplicationCall.deleteTimeBlock() {
     this.structureId?.let {
         val receive = this.receive<IdReceive>()
         if (TimeBlocks.deleteTimeBlock(receive.id)) {
-            this.respond(HttpStatusCode.OK, "TimeBlock data deleted")
+            this.respond(HttpStatusCode.OK, "Временной блок удален.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error delete time_block data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка удаления временного блока.")
         }
     }
 }

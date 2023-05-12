@@ -17,17 +17,17 @@ import java.util.*
 suspend fun ApplicationCall.registerNewUser() {
     val receive = this.receive<RegisterRequest>()
     if (!receive.email.isValidEmail()) {
-        this.respond(HttpStatusCode.BadRequest, "Email is not valid")
+        this.respond(HttpStatusCode.BadRequest, "Неверный E-mail.")
         return
     }
     val userId = Users.getUserId(receive.login)
     if (userId != null) {
-        this.respond(HttpStatusCode.Conflict, "User already exists")
+        this.respond(HttpStatusCode.Conflict, "Пользователь существует.")
         return
     }
     val structure = Structures.getStructure(receive.structureId)
     if (structure == null) {
-        this.respond(HttpStatusCode.BadRequest, "Structure not exists")
+        this.respond(HttpStatusCode.BadRequest, "Структура не существует.")
         return
     }
     val user: UserDTO?
@@ -48,22 +48,24 @@ suspend fun ApplicationCall.registerNewUser() {
         }
 
         Groups.WORKER.ordinal -> {
-            user = UserDTO(
-                id = 0,
-                login = receive.login,
-                email = receive.email,
-                password = receive.password,
-                phone = "",
-                firstName = "",
-                lastName = "",
-                patronymic = "",
-                group = Groups.WORKER,
-                structureId = receive.structureId
-            )
+            this.respond(HttpStatusCode.Conflict, "Группа рабочего пока не может быть создана.")
+            return
+//            user = UserDTO(
+//                id = 0,
+//                login = receive.login,
+//                email = receive.email,
+//                password = receive.password,
+//                phone = "",
+//                firstName = "",
+//                lastName = "",
+//                patronymic = "",
+//                group = Groups.WORKER,
+//                structureId = receive.structureId
+//            )
         }
 
         else -> {
-            this.respond(HttpStatusCode.Conflict, "Group not exists")
+            this.respond(HttpStatusCode.Conflict, "Группа не существует.")
             return
         }
     }
@@ -74,9 +76,9 @@ suspend fun ApplicationCall.registerNewUser() {
         if (Tokens.insertToken(token)) {
             this.respond(RegisterResponse(token.accessToken, token.refreshToken))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error create token")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка создания JWT токена.")
         }
     } else {
-        this.respond(HttpStatusCode.InternalServerError, "Error create user")
+        this.respond(HttpStatusCode.InternalServerError, "Ошибка создания пользователя.")
     }
 }

@@ -15,7 +15,7 @@ suspend fun ApplicationCall.getWorkers() {
         if (list.isNotEmpty()) {
             this.respond(WorkersResponse(list))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error getting workers data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка получения работников.")
         }
     }
 }
@@ -27,9 +27,9 @@ suspend fun ApplicationCall.getWorker() {
             if (worker.structureId == structureId) {
                 this.respond(WorkerResponse(worker))
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
             }
-        } ?: this.respond(HttpStatusCode.InternalServerError, "Error getting worker data")
+        } ?: this.respond(HttpStatusCode.InternalServerError, "Ошибка получения работника.")
     }
 }
 
@@ -49,9 +49,9 @@ suspend fun ApplicationCall.insertWorker() {
                 )
             )
         ) {
-            this.respond(HttpStatusCode.OK, "Worker data inserted")
+            this.respond(HttpStatusCode.OK, "Работник добавлен.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error insert worker data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка добавления работника.")
         }
     }
 }
@@ -72,9 +72,9 @@ suspend fun ApplicationCall.updateWorker() {
                 )
             )
         ) {
-            this.respond(HttpStatusCode.OK, "Worker data updated")
+            this.respond(HttpStatusCode.OK, "Работник обновлен.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error update worker data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка обновления работника.")
         }
     }
 }
@@ -83,9 +83,9 @@ suspend fun ApplicationCall.deleteWorker() {
     this.structureId?.let {
         val receive = this.receive<IdReceive>()
         if (Workers.deleteWorker(receive.id)) {
-            this.respond(HttpStatusCode.OK, "Worker data deleted")
+            this.respond(HttpStatusCode.OK, "Работник удален.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error delete worker data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка удаления работника.")
         }
     }
 }

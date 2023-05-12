@@ -16,7 +16,7 @@ suspend fun ApplicationCall.getShifts() {
         if (list.isNotEmpty()) {
             this.respond(ShiftsResponse(list))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error getting shifts data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка получения смен.")
         }
     }
 }
@@ -28,9 +28,9 @@ suspend fun ApplicationCall.getShift() {
             if (shift.structureId == structureId) {
                 this.respond(ShiftResponse(shift))
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
             }
-        } ?: this.respond(HttpStatusCode.InternalServerError, "Error getting shift data")
+        } ?: this.respond(HttpStatusCode.InternalServerError, "Ошибка получения смены.")
     }
 }
 
@@ -51,9 +51,9 @@ suspend fun ApplicationCall.insertShift() {
                 )
             )
         ) {
-            this.respond(HttpStatusCode.OK, "Shift data inserted")
+            this.respond(HttpStatusCode.OK, "Смена добавлена.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error insert shift data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка добавления смены.")
         }
     }
 }
@@ -75,9 +75,9 @@ suspend fun ApplicationCall.updateShift() {
                 )
             )
         ) {
-            this.respond(HttpStatusCode.OK, "Shift data updated")
+            this.respond(HttpStatusCode.OK, "Смена обновлена.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error update shift data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка обновления смены.")
         }
     }
 }
@@ -86,9 +86,9 @@ suspend fun ApplicationCall.deleteShift() {
     this.structureId?.let {
         val receive = this.receive<IdReceive>()
         if (Shifts.deleteShift(receive.id)) {
-            this.respond(HttpStatusCode.OK, "Shift data deleted")
+            this.respond(HttpStatusCode.OK, "Смена удалена.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error delete shift data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка удаления смены.")
         }
     }
 }

@@ -15,7 +15,7 @@ suspend fun ApplicationCall.getDirections() {
         if (list.isNotEmpty()) {
             this.respond(DirectionsResponse(list))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error getting directions data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка получения направлений.")
         }
     }
 }
@@ -27,9 +27,9 @@ suspend fun ApplicationCall.getDirection() {
             if (direction.structureId == structureId) {
                 this.respond(DirectionResponse(direction))
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры")
             }
-        } ?: this.respond(HttpStatusCode.InternalServerError, "Error getting direction data")
+        } ?: this.respond(HttpStatusCode.InternalServerError, "Ошибка получения направления.")
     }
 }
 
@@ -37,9 +37,9 @@ suspend fun ApplicationCall.insertDirection() {
     this.structureId?.let { structureId ->
         val receive = this.receive<DirectionRequest>()
         if (Directions.insertDirection(DirectionDTO(0, receive.name, structureId))) {
-            this.respond(HttpStatusCode.OK, "Direction data inserted")
+            this.respond(HttpStatusCode.OK, "Направление добавлено.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error insert direction data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка добавления направления.")
         }
     }
 }
@@ -48,9 +48,9 @@ suspend fun ApplicationCall.updateDirection() {
     this.structureId?.let { structureId ->
         val receive = this.receive<DirectionRequest>()
         if (Directions.updateDirection(DirectionDTO(receive.id, receive.name, structureId))) {
-            this.respond(HttpStatusCode.OK, "Direction data updated")
+            this.respond(HttpStatusCode.OK, "Направление обновлено.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error update direction data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка обновления направления.")
         }
     }
 }
@@ -59,9 +59,9 @@ suspend fun ApplicationCall.deleteDirection() {
     this.structureId?.let {
         val receive = this.receive<IdReceive>()
         if (Directions.deleteDirection(receive.id)) {
-            this.respond(HttpStatusCode.OK, "Direction data deleted")
+            this.respond(HttpStatusCode.OK, "Направление удалено.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error delete direction data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка удаления направления.")
         }
     }
 }

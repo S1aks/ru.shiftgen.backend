@@ -15,7 +15,7 @@ suspend fun ApplicationCall.getTimeSheets() {
         if (list.isNotEmpty()) {
             this.respond(TimeSheetsResponse(list))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error getting timesheets data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка получения табелей рабочего времени.")
         }
     }
 }
@@ -27,9 +27,9 @@ suspend fun ApplicationCall.getTimeSheetById() {
             if (timeSheet.structureId == structureId) {
                 this.respond(TimeSheetResponse(timeSheet))
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
             }
-        } ?: this.respond(HttpStatusCode.InternalServerError, "Error getting timesheet data by id")
+        } ?: this.respond(HttpStatusCode.InternalServerError, "Ошибка получения табеля рабочего времени по id.")
     }
 }
 
@@ -41,10 +41,13 @@ suspend fun ApplicationCall.getTimeSheetsByWorkerId() {
             if (list.first().structureId == structureId) {
                 this.respond(TimeSheetsResponse(list))
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
             }
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error getting timesheets data by worker id")
+            this.respond(
+                HttpStatusCode.InternalServerError,
+                "Ошибка получения табелей рабочего времени по id работника."
+            )
         }
     }
 }
@@ -56,11 +59,11 @@ suspend fun ApplicationCall.getTimeSheetByWorkerIdInYearMonth() {
             if (timeSheet.structureId == structureId) {
                 this.respond(TimeSheetResponse(timeSheet))
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
             }
         } ?: this.respond(
             HttpStatusCode.InternalServerError,
-            "Error getting timesheet data by worker id and year - month"
+            "Ошибка получения табеля рабочего времени по id работника и по рабочему месяцу."
         )
     }
 }
@@ -73,10 +76,13 @@ suspend fun ApplicationCall.getTimeSheetsInYearMonth() {
             if (list.first().structureId == structureId) {
                 this.respond(TimeSheetsResponse(list))
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Structure Id match error")
+                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
             }
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error getting timesheets data by year - month")
+            this.respond(
+                HttpStatusCode.InternalServerError,
+                "Ошибка получения табелей рабочего времени по рабочему месяцу."
+            )
         }
     }
 }
@@ -96,9 +102,9 @@ suspend fun ApplicationCall.insertTimeSheet() {
                 )
             )
         ) {
-            this.respond(HttpStatusCode.OK, "TimeSheet data inserted")
+            this.respond(HttpStatusCode.OK, "Табель рабочего времени добавлен.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error insert timesheet data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка добавления табеля рабочего времени.")
         }
     }
 }
@@ -118,9 +124,9 @@ suspend fun ApplicationCall.updateTimeSheet() {
                 )
             )
         ) {
-            this.respond(HttpStatusCode.OK, "TimeSheet data updated")
+            this.respond(HttpStatusCode.OK, "Табель рабочего времени обновлен.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error update timesheet data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка обновления табеля рабочего времени.")
         }
     }
 }
@@ -129,9 +135,9 @@ suspend fun ApplicationCall.deleteTimeSheet() {
     this.structureId?.let {
         val receive = this.receive<IdReceive>()
         if (TimeSheets.deleteTimeSheet(receive.id)) {
-            this.respond(HttpStatusCode.OK, "TimeSheet data deleted")
+            this.respond(HttpStatusCode.OK, "Табель рабочего времени удален.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Error delete timesheet data")
+            this.respond(HttpStatusCode.InternalServerError, "Ошибка удаления табеля рабочего времени.")
         }
     }
 }

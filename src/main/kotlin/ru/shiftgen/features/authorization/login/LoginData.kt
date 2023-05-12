@@ -9,8 +9,12 @@ data class LoginRequest(
 )
 
 @Serializable
+data class AccessRequest(
+    val accessToken: String
+)
+
+@Serializable
 data class RefreshRequest(
-    val login: String,
     val refreshToken: String
 )
 
