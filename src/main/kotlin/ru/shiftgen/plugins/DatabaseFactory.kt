@@ -36,16 +36,7 @@ object DatabaseFactory {
     fun init() {
         val database = Database.connect(jdbcURL, driverClassName, dbUser, dbPassword)
         transaction(database) {
-            SchemaUtils.createMissingTablesAndColumns(
-                Tokens,
-                Users,
-                Directions,
-                Shifts,
-                Structures,
-                TimeBlocks,
-                TimeSheets,
-                Workers
-            )
+            SchemaUtils.create(Tokens, Users, Directions, Shifts, Structures, TimeBlocks, TimeSheets, Workers)
         }
         CoroutineScope(Job()).launch { initAdminAccount() }
         CoroutineScope(Job()).launch { createTestData() }
