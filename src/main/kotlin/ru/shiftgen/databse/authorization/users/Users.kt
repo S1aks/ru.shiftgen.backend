@@ -2,10 +2,12 @@ package ru.shiftgen.databse.authorization.users
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.javatime.datetime
 import ru.shiftgen.databse.authorization.tokens.Tokens
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.workers.Workers
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
+import java.time.LocalDateTime
 
 object Users : Table(), UsersDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
@@ -19,7 +21,8 @@ object Users : Table(), UsersDAO {
     internal val group = integer("group")
     internal val workerId = reference("worker_id", Workers.id).nullable()
     internal val structureId = reference("structure_id", Structures.id).nullable()
-    override val primaryKey = PrimaryKey(login, name = "PK_User_Id")
+    internal val createdAt = datetime("created_at").clientDefault { LocalDateTime.now() }
+    override val primaryKey = PrimaryKey(login)
 
     override suspend fun ifUserExist(login: String): Boolean = dbQuery {
         Users.select { Users.login eq login }.singleOrNull() != null

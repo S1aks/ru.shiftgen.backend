@@ -58,7 +58,7 @@ object DatabaseFactory {
 
     private suspend fun createTestData() = dbQuery {
         if (Structures.getStructure(1) == null) {
-            Structures.insertStructure(StructureDTO(1, "Тестовый раздел", "Тестовая структура для пробных запросов."))
+            Structures.insertStructure(StructureDTO(1, "Тест", "Тестовая структура для пробных запросов."))
         }
     }
 

@@ -11,7 +11,7 @@ object TimeBlocks : Table(), TimeBlocksDAO {
     internal val name = varchar("name", 30)
     internal val duration = long("duration")
     internal val action = integer("action")
-    override val primaryKey = PrimaryKey(id, name = "PK_TimeBlock_Id")
+    override val primaryKey = PrimaryKey(id)
 
     override suspend fun insertTimeBlock(timeBlock: TimeBlockDTO): Boolean = dbQuery {
         TimeBlocks.insert {

@@ -18,7 +18,7 @@ object Shifts : Table(), ShiftsDAO {
     internal val directionId = reference("direction_id", Directions.id)
     internal val startTime = varchar("start_time", 30)
     internal val timeBlocksIds = varchar("event_id", 256)
-    override val primaryKey = PrimaryKey(id, name = "PK_Shift_Id")
+    override val primaryKey = PrimaryKey(id)
 
     override suspend fun insertShift(shift: ShiftDTO): Boolean = dbQuery {
         Shifts.insert {

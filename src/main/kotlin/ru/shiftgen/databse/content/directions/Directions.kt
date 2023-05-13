@@ -9,7 +9,7 @@ object Directions : Table(), DirectionsDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val name = varchar("name", 30).uniqueIndex()
     internal val structureId = reference("structure_id", Structures.id)
-    override val primaryKey = PrimaryKey(id, name = "PK_Direction_Id")
+    override val primaryKey = PrimaryKey(id)
 
     override suspend fun insertDirection(direction: DirectionDTO): Boolean = dbQuery {
         Directions.insert {

@@ -11,7 +11,7 @@ object Tokens : Table(), TokensDAO {
     internal val accessToken = varchar("access_token", 256)
     internal val refreshToken = varchar("refresh_token", 50)
     private val refreshTokenExpiration = long("refresh_token_expiration")
-    override val primaryKey = PrimaryKey(login, name = "PK_Token_Login")
+    override val primaryKey = PrimaryKey(login)
 
     override suspend fun insertToken(token: TokenDTO): Boolean = dbQuery {
         Tokens.insert {

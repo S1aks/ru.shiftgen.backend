@@ -15,7 +15,7 @@ object Workers : Table(), WorkersDAO {
     internal val lastName = varchar("last_name", 30)
     internal val patronymic = varchar("patronymic", 30).nullable()
     internal val accessToDirections = varchar("access_to_events", 256).nullable()
-    override val primaryKey = PrimaryKey(id, name = "PK_Worker_Id")
+    override val primaryKey = PrimaryKey(id)
 
     override suspend fun insertWorker(worker: WorkerDTO): Boolean = dbQuery {
         Workers.insert {

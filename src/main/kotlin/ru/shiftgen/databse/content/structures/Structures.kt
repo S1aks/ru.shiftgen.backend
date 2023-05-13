@@ -12,7 +12,7 @@ object Structures : Table(), StructuresDAO {
     internal val allowedConsecutiveNights = integer("allowed_consecutive_nights")
     internal val nightStartHour = integer("night_start_hour")
     internal val nightEndHour = integer("night_end_hour")
-    override val primaryKey = PrimaryKey(id, name = "PK_Structure_Id")
+    override val primaryKey = PrimaryKey(id)
 
     override suspend fun ifStructureExists(id: Int): Boolean = dbQuery {
         Structures.select { Structures.id eq id }.singleOrNull() != null
