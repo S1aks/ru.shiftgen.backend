@@ -21,5 +21,5 @@ data class StructureResponse(
 
 @Serializable
 data class StructuresResponse(
-    val list: Map<Int, String>
+    val list: Map<String, Int>
 )

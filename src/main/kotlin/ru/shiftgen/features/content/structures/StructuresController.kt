@@ -12,7 +12,7 @@ import ru.shiftgen.plugins.structureId
 suspend fun ApplicationCall.getStructures() {
     val list = Structures.getStructures()
     if (list.isNotEmpty()) {
-        this.respond(StructuresResponse(list.associateBy({ it.id }, { it.name })))
+        this.respond(StructuresResponse(list.associateBy({ it.name }, { it.id })))
     } else {
         this.respond(HttpStatusCode.InternalServerError, "Ошибка получения структур.")
     }
