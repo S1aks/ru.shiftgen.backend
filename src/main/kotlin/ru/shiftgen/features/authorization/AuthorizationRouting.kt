@@ -15,7 +15,7 @@ fun Application.configureAuthorizationRouting() {
         post("auth/login") { call.performLogin() }
         post("auth/refresh") { call.refreshToken() }
         authenticate("auth-jwt") {
-            post("auth/access") { call.checkAccess() }
+            get("auth/access") { call.checkAccess() }
         }
     }
 }
