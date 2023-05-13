@@ -7,6 +7,7 @@ import ru.shiftgen.databse.authorization.tokens.Tokens
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.workers.Workers
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
+import ru.shiftgen.plugins.PasswordEncryptor
 import java.time.LocalDateTime
 
 object Users : Table(), UsersDAO {
@@ -31,7 +32,7 @@ object Users : Table(), UsersDAO {
     override suspend fun insertUser(user: UserDTO): Boolean = dbQuery {
         Users.insert {
             it[login] = user.login
-            it[password] = user.password
+            it[password] = PasswordEncryptor.hash(user.password)
             it[email] = user.email
             it[phone] = user.phone
             it[firstName] = user.firstName
@@ -45,7 +46,7 @@ object Users : Table(), UsersDAO {
 
     override suspend fun updateUser(user: UserDTO): Boolean = dbQuery {
         Users.update({ id eq user.id }) {
-            it[password] = user.password
+            it[password] = PasswordEncryptor.hash(user.password)
             it[email] = user.email
             it[phone] = user.phone
             it[firstName] = user.firstName

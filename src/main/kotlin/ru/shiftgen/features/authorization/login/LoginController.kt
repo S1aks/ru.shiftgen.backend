@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import ru.shiftgen.databse.authorization.tokens.TokenState
 import ru.shiftgen.databse.authorization.tokens.Tokens
 import ru.shiftgen.databse.authorization.users.Users
+import ru.shiftgen.plugins.PasswordEncryptor
 import ru.shiftgen.plugins.login
 import ru.shiftgen.plugins.structureId
 
@@ -17,7 +18,8 @@ suspend fun ApplicationCall.performLogin() {
         this.respond(HttpStatusCode.BadRequest, "Пользователь не найден.")
         return
     }
-    if (user.password == receive.password && user.structureId != null) {
+    val encryptedPassword = PasswordEncryptor.hash(receive.password)
+    if (user.password == encryptedPassword && user.structureId != null) {
         when (val tokenState = Tokens.createAndSaveTokens(receive.login, user.structureId)) {
             is TokenState.Success -> {
                 this.respond(LoginResponse(tokenState.data.accessToken, tokenState.data.refreshToken))
