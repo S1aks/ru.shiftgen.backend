@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 object Users : Table(), UsersDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val login = varchar("login", 25).uniqueIndex()
-    internal val password = varchar("password", 30)
+    internal val password = varchar("password", 40)
     internal val email = varchar("email", 30).nullable()
     internal val phone = varchar("phone", 30).nullable()
     internal val firstName = varchar("first_name", 30)
