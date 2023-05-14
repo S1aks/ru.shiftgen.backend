@@ -8,8 +8,9 @@ apt -y install postgresql
 service postgresql restart
 
 psql -h localhost -U postgres -c "ALTER USER postgres PASSWORD 'D\!24013555';"
-psql -h localhost -U postgres -c 'create database shiftgen_db;'
 
+/// Для создания БД:
+/// psql -h localhost -U postgres -c 'create database shiftgen_db;'
 /// Для удаления БД:
 /// psql -h localhost -U postgres -c 'drop database shiftgen_db;'
 

@@ -7,7 +7,7 @@ import ru.shiftgen.features.authorization.configureAuthorizationRouting
 import ru.shiftgen.features.content.configureContentRouting
 import ru.shiftgen.plugins.DatabaseFactory
 import ru.shiftgen.plugins.configureAuthentication
-import ru.shiftgen.plugins.configureSerialization
+import ru.shiftgen.plugins.configurePlugins
 
 fun main() {
     embeddedServer(CIO, port = 8080, module = Application::module)
@@ -16,8 +16,8 @@ fun main() {
 
 fun Application.module() {
     DatabaseFactory.init()
-    configureSerialization()
     configureAuthentication()
+    configurePlugins()
     configureAuthorizationRouting()
     configureContentRouting()
 }

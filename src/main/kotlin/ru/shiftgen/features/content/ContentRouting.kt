@@ -25,7 +25,7 @@ fun Application.configureContentRouting() {
 }
 
 fun Route.directionsRoute() {
-    authenticate("auth-jwt") {
+    authenticate {
         get("/directions") { call.getDirections() }
         get("/direction/get") { call.getDirection() }
         post("/direction/insert") { call.insertDirection() }
@@ -35,7 +35,7 @@ fun Route.directionsRoute() {
 }
 
 fun Route.shiftsRoute() {
-    authenticate("auth-jwt") {
+    authenticate {
         get("/shifts") { call.getShifts() }
         get("/shift/get") { call.getShift() }
         post("/shift/insert") { call.insertShift() }
@@ -47,7 +47,7 @@ fun Route.shiftsRoute() {
 fun Route.structuresRoute() {
     get("/structures") { call.getStructures() }
     post("/structure/insert") { call.insertStructure() }
-    authenticate("auth-jwt") {
+    authenticate {
         get("/structure/get") { call.getStructure() }
         post("/structure/update") { call.updateStructure() }
         post("/structure/delete") { call.deleteStructure() }
@@ -55,7 +55,7 @@ fun Route.structuresRoute() {
 }
 
 fun Route.timeBlocksRoute() {
-    authenticate("auth-jwt") {
+    authenticate {
         get("/time_blocks") { call.getTimeBlocks() }
         get("/time_block/get") { call.getTimeBlock() }
         post("/time_block/insert") { call.insertTimeBlock() }
@@ -65,7 +65,7 @@ fun Route.timeBlocksRoute() {
 }
 
 fun Route.timeSheetsRoute() {
-    authenticate("auth-jwt") {
+    authenticate {
         get("/timesheets") { call.getTimeSheets() }
         get("/timesheet/get_by_id") { call.getTimeSheetById() }
         get("/timesheet/get_by_worker_id") { call.getTimeSheetsByWorkerId() }
@@ -78,7 +78,7 @@ fun Route.timeSheetsRoute() {
 }
 
 fun Route.workersRoute() {
-    authenticate("auth-jwt") {
+    authenticate {
         get("/workers") { call.getWorkers() }
         get("/worker/get") { call.getWorker() }
         post("/worker/insert") { call.insertWorker() }

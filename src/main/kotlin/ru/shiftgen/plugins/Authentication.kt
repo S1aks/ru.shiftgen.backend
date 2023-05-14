@@ -13,7 +13,7 @@ import java.util.*
 fun Application.configureAuthentication() {
 
     install(Authentication) {
-        jwt("auth-jwt") {
+        jwt {
             verifier(JWTService.verifier)
             realm = JWTService.realm
             validate {
