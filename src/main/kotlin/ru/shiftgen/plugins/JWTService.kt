@@ -3,7 +3,6 @@ package ru.shiftgen.plugins
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import ru.shiftgen.databse.authorization.users.Users
 import java.util.*
 
 object JWTService {

@@ -15,6 +15,7 @@ data class AccessRequest(
 
 @Serializable
 data class RefreshRequest(
+    val login: String,
     val refreshToken: String
 )
 
