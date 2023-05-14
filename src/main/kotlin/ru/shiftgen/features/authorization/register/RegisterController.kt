@@ -10,7 +10,7 @@ import ru.shiftgen.databse.authorization.tokens.Tokens
 import ru.shiftgen.databse.authorization.users.UserDTO
 import ru.shiftgen.databse.authorization.users.Users
 import ru.shiftgen.databse.content.structures.Structures
-import ru.shiftgen.plugins.JWTGenerator
+import ru.shiftgen.plugins.JWTService
 import ru.shiftgen.utils.isValidEmail
 import java.util.*
 
@@ -70,7 +70,7 @@ suspend fun ApplicationCall.registerNewUser() {
         }
     }
     if (Users.insertUser(user)) {
-        val accessToken = JWTGenerator.makeToken(user.login, user.structureId)
+        val accessToken = JWTService.makeToken(user.login, user.structureId)
         val refreshToken = UUID.randomUUID().toString()
         val token = TokenDTO(user.login, accessToken, refreshToken)
         if (Tokens.insertToken(token)) {

@@ -14,8 +14,8 @@ fun Application.configureAuthentication() {
 
     install(Authentication) {
         jwt("auth-jwt") {
-            verifier(JWTGenerator.verifier)
-            realm = JWTGenerator.realm
+            verifier(JWTService.verifier)
+            realm = JWTService.realm
             validate {
                 val expiredTime = it.expiresAt
                 if (expiredTime != null && expiredTime > Date()) {

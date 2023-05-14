@@ -1,7 +1,7 @@
 package ru.shiftgen.databse.authorization.tokens
 
 import org.jetbrains.exposed.sql.ResultRow
-import ru.shiftgen.plugins.JWTGenerator
+import ru.shiftgen.plugins.JWTService
 import java.util.*
 
 interface TokensDAO {
@@ -12,7 +12,7 @@ interface TokensDAO {
     )
 
     suspend fun createAndSaveTokens(login: String, structureId: Int): TokenState {
-        val accessToken = JWTGenerator.makeToken(login, structureId)
+        val accessToken = JWTService.makeToken(login, structureId)
         val refreshToken = UUID.randomUUID().toString()
         val token = TokenDTO(login, accessToken, refreshToken)
         return if (Tokens.getToken(token.login) != null) {

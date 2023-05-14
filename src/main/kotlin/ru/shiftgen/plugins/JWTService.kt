@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import java.util.*
 
-object JWTGenerator {
+object JWTService {
     private const val secret = "NL7cR4j1DH7zFGi36rvDNAfgVTq9ra5wyzvw4VJfOI4"
     private const val issuer = "Shiftgen.ru"
     const val realm = "Shiftgen API"
@@ -19,6 +19,7 @@ object JWTGenerator {
         .build()
 
     fun makeToken(login: String, structureId: Int?): String = JWT.create()
+        .withSubject("Authentication")
         .withIssuer(issuer)
         .withClaim("login", login)
         .withClaim("structureId", structureId)
