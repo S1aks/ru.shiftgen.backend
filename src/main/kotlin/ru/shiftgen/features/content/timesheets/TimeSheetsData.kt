@@ -6,7 +6,7 @@ import ru.shiftgen.utils.YearMonthSerializer
 import java.time.YearMonth
 
 @Serializable
-data class TimeSheetRequest(
+data class TimeSheetReceive(
     val id: Int,
     val workerId: Int,
     val structureId: Int,
@@ -18,14 +18,14 @@ data class TimeSheetRequest(
 )
 
 @Serializable
-data class TimeSheetsWorkerIdYearMonthRequest(
+data class TimeSheetsWorkerIdYearMonthReceive(
     val workerId: Int,
     @Serializable(with = YearMonthSerializer::class)
     val yearMonth: YearMonth
 )
 
 @Serializable
-data class TimeSheetsYearMonthRequest(
+data class TimeSheetsYearMonthReceive(
     @Serializable(with = YearMonthSerializer::class)
     val yearMonth: YearMonth
 )

@@ -5,7 +5,7 @@ import ru.shiftgen.databse.content.enums.Action
 import ru.shiftgen.databse.content.time_blocks.TimeBlockDTO
 
 @Serializable
-data class TimeBlockRequest(
+data class TimeBlockReceive(
     val id: Int,
     val structureId: Int,
     val name: String,

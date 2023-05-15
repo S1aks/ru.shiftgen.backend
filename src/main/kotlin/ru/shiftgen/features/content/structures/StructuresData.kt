@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import ru.shiftgen.databse.content.structures.StructureDTO
 
 @Serializable
-data class StructureRequest(
+data class StructureReceive(
     val id: Int,
     val name: String,
     val description: String?,

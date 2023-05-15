@@ -15,7 +15,7 @@ import ru.shiftgen.utils.isValidEmail
 import java.util.*
 
 suspend fun ApplicationCall.registerNewUser() {
-    val receive = this.receive<RegisterRequest>()
+    val receive = this.receive<RegisterReceive>()
     if (!receive.email.isValidEmail()) {
         this.respond(HttpStatusCode.BadRequest, "Неверный E-mail.")
         return
@@ -48,7 +48,7 @@ suspend fun ApplicationCall.registerNewUser() {
         }
 
         Groups.WORKER.ordinal -> {
-            this.respond(HttpStatusCode.Conflict, "Группа рабочего пока не может быть создана.")
+            this.respond(HttpStatusCode.Conflict, "Рабочий пока не может быть создан.")
             return
 //            user = UserDTO(
 //                id = 0,

@@ -11,7 +11,7 @@ import ru.shiftgen.plugins.PasswordEncryptor
 import ru.shiftgen.plugins.structureId
 
 suspend fun ApplicationCall.performLogin() {
-    val receive = this.receive<LoginRequest>()
+    val receive = this.receive<LoginReceive>()
     val user = Users.getUserByLogin(receive.login)
     if (user == null) {
         this.respond(HttpStatusCode.BadRequest, "Пользователь не найден.")
@@ -44,7 +44,7 @@ suspend fun ApplicationCall.checkAccess() {
 }
 
 suspend fun ApplicationCall.refreshToken() {
-    val receive = this.receive<RefreshRequest>()
+    val receive = this.receive<RefreshReceive>()
     val login = receive.login
     val user = Users.getUserByLogin(login)
     val token = Tokens.getRefreshToken(login)
@@ -56,7 +56,7 @@ suspend fun ApplicationCall.refreshToken() {
         respond(HttpStatusCode.BadRequest, "Ошибка в JWT токене: неверный id структуры.")
         return
     }
-    if (token == receive.refreshToken && user.structureId != null) {
+    if (!token.isNullOrEmpty() && token == receive.refreshToken && user.structureId != null) {
         when (val tokenState = Tokens.createAndSaveTokens(login, user.structureId)) {
             is TokenState.Success -> {
                 respond(LoginResponse(tokenState.data.accessToken, tokenState.data.refreshToken))

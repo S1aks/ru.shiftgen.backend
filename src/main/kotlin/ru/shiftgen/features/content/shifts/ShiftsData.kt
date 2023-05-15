@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 import java.time.YearMonth
 
 @Serializable
-data class ShiftRequest(
+data class ShiftReceive(
     val id: Int,
     val name: String,
     @Serializable(with = YearMonthSerializer::class)
@@ -24,7 +24,7 @@ data class ShiftRequest(
 )
 
 @Serializable
-data class ShiftsRequest(
+data class ShiftsReceive(
     @Serializable(with = YearMonthSerializer::class)
     val yearMonth: YearMonth
 )

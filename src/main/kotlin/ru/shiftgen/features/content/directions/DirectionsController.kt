@@ -35,7 +35,7 @@ suspend fun ApplicationCall.getDirection() {
 
 suspend fun ApplicationCall.insertDirection() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<DirectionRequest>()
+        val receive = this.receive<DirectionReceive>()
         if (Directions.insertDirection(DirectionDTO(0, receive.name, structureId))) {
             this.respond(HttpStatusCode.OK, "Направление добавлено.")
         } else {
@@ -46,7 +46,7 @@ suspend fun ApplicationCall.insertDirection() {
 
 suspend fun ApplicationCall.updateDirection() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<DirectionRequest>()
+        val receive = this.receive<DirectionReceive>()
         if (Directions.updateDirection(DirectionDTO(receive.id, receive.name, structureId))) {
             this.respond(HttpStatusCode.OK, "Направление обновлено.")
         } else {

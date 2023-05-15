@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import ru.shiftgen.databse.content.workers.WorkerDTO
 
 @Serializable
-data class WorkerRequest(
+data class WorkerReceive(
     val id: Int,
     val personnelNumber: Int?,
     val userId: Int?,

@@ -3,18 +3,13 @@ package ru.shiftgen.features.authorization.login
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginRequest(
+data class LoginReceive(
     val login: String,
     val password: String
 )
 
 @Serializable
-data class AccessRequest(
-    val accessToken: String
-)
-
-@Serializable
-data class RefreshRequest(
+data class RefreshReceive(
     val login: String,
     val refreshToken: String
 )

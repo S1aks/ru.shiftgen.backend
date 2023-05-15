@@ -32,7 +32,7 @@ suspend fun ApplicationCall.getStructure() {
 }
 
 suspend fun ApplicationCall.insertStructure() {
-    val receive = this.receive<StructureRequest>()
+    val receive = this.receive<StructureReceive>()
     if (Structures.insertStructure(
             StructureDTO(
                 0,
@@ -53,7 +53,7 @@ suspend fun ApplicationCall.insertStructure() {
 
 suspend fun ApplicationCall.updateStructure() {
     this.structureId?.let { structureId ->
-        val receive = this.receive<StructureRequest>()
+        val receive = this.receive<StructureReceive>()
         if (receive.id == structureId) {
             if (Structures.updateStructure(
                     StructureDTO(

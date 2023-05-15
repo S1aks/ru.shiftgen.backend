@@ -3,7 +3,7 @@ package ru.shiftgen.features.authorization.register
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterRequest(
+data class RegisterReceive(
     val login: String,
     val email: String,
     val password: String,
