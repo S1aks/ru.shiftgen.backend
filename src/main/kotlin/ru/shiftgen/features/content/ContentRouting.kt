@@ -27,7 +27,7 @@ fun Application.configureContentRouting() {
 fun Route.directionsRoute() {
     authenticate {
         get("/directions") { call.getDirections() }
-        get("/direction/get") { call.getDirection() }
+        post("/direction/get") { call.getDirection() }
         post("/direction/insert") { call.insertDirection() }
         post("/direction/update") { call.updateDirection() }
         post("/direction/delete") { call.deleteDirection() }
@@ -36,8 +36,8 @@ fun Route.directionsRoute() {
 
 fun Route.shiftsRoute() {
     authenticate {
-        get("/shifts") { call.getShifts() }
-        get("/shift/get") { call.getShift() }
+        post("/shifts") { call.getShifts() }
+        post("/shift/get") { call.getShift() }
         post("/shift/insert") { call.insertShift() }
         post("/shift/update") { call.updateShift() }
         post("/shift/delete") { call.deleteShift() }
@@ -48,7 +48,7 @@ fun Route.structuresRoute() {
     get("/structures") { call.getStructures() }
     post("/structure/insert") { call.insertStructure() }
     authenticate {
-        get("/structure/get") { call.getStructure() }
+        post("/structure/get") { call.getStructure() }
         post("/structure/update") { call.updateStructure() }
         post("/structure/delete") { call.deleteStructure() }
     }
@@ -57,7 +57,7 @@ fun Route.structuresRoute() {
 fun Route.timeBlocksRoute() {
     authenticate {
         get("/time_blocks") { call.getTimeBlocks() }
-        get("/time_block/get") { call.getTimeBlock() }
+        post("/time_block/get") { call.getTimeBlock() }
         post("/time_block/insert") { call.insertTimeBlock() }
         post("/time_block/update") { call.updateTimeBlock() }
         post("/time_block/delete") { call.deleteTimeBlock() }
@@ -67,10 +67,10 @@ fun Route.timeBlocksRoute() {
 fun Route.timeSheetsRoute() {
     authenticate {
         get("/timesheets") { call.getTimeSheets() }
-        get("/timesheet/get_by_id") { call.getTimeSheetById() }
-        get("/timesheet/get_by_worker_id") { call.getTimeSheetsByWorkerId() }
-        get("/timesheet/get_by_worker_id_in_year_month") { call.getTimeSheetByWorkerIdInYearMonth() }
-        get("/timesheet/get_by_year_month") { call.getTimeSheetsInYearMonth() }
+        post("/timesheet/get_by_id") { call.getTimeSheetById() }
+        post("/timesheet/get_by_worker_id") { call.getTimeSheetsByWorkerId() }
+        post("/timesheet/get_by_worker_id_in_year_month") { call.getTimeSheetByWorkerIdInYearMonth() }
+        post("/timesheet/get_by_year_month") { call.getTimeSheetsInYearMonth() }
         post("/timesheet/insert") { call.insertTimeSheet() }
         post("/timesheet/update") { call.updateTimeSheet() }
         post("/timesheet/delete") { call.deleteTimeSheet() }
@@ -80,7 +80,7 @@ fun Route.timeSheetsRoute() {
 fun Route.workersRoute() {
     authenticate {
         get("/workers") { call.getWorkers() }
-        get("/worker/get") { call.getWorker() }
+        post("/worker/get") { call.getWorker() }
         post("/worker/insert") { call.insertWorker() }
         post("/worker/update") { call.updateWorker() }
         post("/worker/delete") { call.deleteWorker() }
