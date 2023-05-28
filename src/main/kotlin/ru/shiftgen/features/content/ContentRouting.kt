@@ -48,6 +48,7 @@ fun Route.structuresRoute() {
     get("/structures") { call.getStructures() }
     post("/structure/insert") { call.insertStructure() }
     authenticate {
+        get("/structure_id") { call.getUserStructureId() }
         post("/structure/get") { call.getStructure() }
         post("/structure/update") { call.updateStructure() }
         post("/structure/delete") { call.deleteStructure() }

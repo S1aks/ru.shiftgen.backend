@@ -18,6 +18,12 @@ suspend fun ApplicationCall.getStructures() {
     }
 }
 
+suspend fun ApplicationCall.getUserStructureId() {
+    this.structureId?.let { structureId ->
+        respond(StructureIdResponse(structureId))
+    } ?: this.respond(HttpStatusCode.InternalServerError, "ошибка получения id структуры.")
+}
+
 suspend fun ApplicationCall.getStructure() {
     this.structureId?.let { structureId ->
         val receive = this.receive<IdReceive>()
