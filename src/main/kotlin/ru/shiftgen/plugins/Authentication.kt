@@ -11,10 +11,12 @@ import ru.shiftgen.databse.authorization.users.Users
 import ru.shiftgen.databse.content.structures.Structures
 import java.util.*
 
+//internal val JWTLogger: Logger = LoggerFactory.getLogger("io.ktor.auth.jwt")
+
 fun Application.configureAuthentication() {
 
     install(Authentication) {
-        jwt {
+        jwt("auth-jwt") {
             verifier(JWTService.verifier)
             realm = JWTService.realm
             validate {
