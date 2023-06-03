@@ -31,7 +31,8 @@ suspend fun ApplicationCall.registerNewUser() {
         return
     }
     val dispatcherPin = structure.dispatcherPin
-    if (dispatcherPin != receive.dispatcherPin) {
+    val structureIsNotEmpty = Users.getUsersByStructure(structure.id).isNotEmpty()
+    if (structureIsNotEmpty && dispatcherPin != receive.dispatcherPin) {
         this.respond(HttpStatusCode.BadRequest, "Pin диспетчера не совпадает.")
         return
     }
