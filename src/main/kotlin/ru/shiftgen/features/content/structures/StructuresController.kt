@@ -37,6 +37,10 @@ suspend fun ApplicationCall.getStructure() {
     }
 }
 
+private fun generatePin(): String = StringBuilder("").apply {
+    repeat(5) { append((Math.random() * 10).toInt()) }
+}.toString()
+
 suspend fun ApplicationCall.insertStructure() {
     val receive = this.receive<StructureReceive>()
     if (Structures.insertStructure(
@@ -47,7 +51,8 @@ suspend fun ApplicationCall.insertStructure() {
                 receive.restHours,
                 receive.allowedConsecutiveNights,
                 receive.nightStartHour,
-                receive.nightEndHour
+                receive.nightEndHour,
+                generatePin()
             )
         )
     ) {

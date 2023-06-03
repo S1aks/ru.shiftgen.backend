@@ -11,7 +11,8 @@ data class StructureReceive(
     val restHours: Int,
     val allowedConsecutiveNights: Int,
     val nightStartHour: Int,
-    val nightEndHour: Int
+    val nightEndHour: Int,
+    val dispatcherPin: String
 )
 
 @Serializable

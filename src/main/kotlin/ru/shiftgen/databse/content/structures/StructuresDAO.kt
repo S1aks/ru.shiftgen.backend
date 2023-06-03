@@ -10,7 +10,8 @@ interface StructuresDAO {
         restHours = this[Structures.restHours],
         allowedConsecutiveNights = this[Structures.allowedConsecutiveNights],
         nightStartHour = this[Structures.nightStartHour],
-        nightEndHour = this[Structures.nightEndHour]
+        nightEndHour = this[Structures.nightEndHour],
+        dispatcherPin = this[Structures.dispatcherPin]
     )
 
     suspend fun ifStructureExists(id: Int): Boolean

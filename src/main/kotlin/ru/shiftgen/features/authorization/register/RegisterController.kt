@@ -30,6 +30,11 @@ suspend fun ApplicationCall.registerNewUser() {
         this.respond(HttpStatusCode.BadRequest, "Структура не существует.")
         return
     }
+    val dispatcherPin = structure.dispatcherPin
+    if (dispatcherPin != receive.dispatcherPin) {
+        this.respond(HttpStatusCode.BadRequest, "Pin диспетчера не совпадает.")
+        return
+    }
     val user: UserDTO?
     when (receive.group) {
         Groups.DISPATCHER.ordinal -> {
@@ -43,7 +48,7 @@ suspend fun ApplicationCall.registerNewUser() {
                 lastName = "",
                 patronymic = "",
                 group = Groups.DISPATCHER,
-                structureId = receive.structureId
+                structureId = receive.structureId,
             )
         }
 
