@@ -10,64 +10,64 @@ import ru.shiftgen.features.content.IdReceive
 import ru.shiftgen.plugins.structureId
 
 suspend fun ApplicationCall.getTimeBlocks() {
-    this.structureId?.let { structureId ->
+    structureId?.let { structureId ->
         val list = TimeBlocks.getTimeBlocks(structureId)
         if (list.isNotEmpty()) {
-            this.respond(TimeBlocksResponse(list))
+            respond(TimeBlocksResponse(list))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка получения временных блоков.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка получения временных блоков.")
         }
     }
 }
 
 suspend fun ApplicationCall.getTimeBlock() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<IdReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<IdReceive>()
         TimeBlocks.getTimeBlock(receive.id)?.let { timeBlock ->
             if (timeBlock.structureId == structureId) {
-                this.respond(TimeBlockResponse(timeBlock))
+                respond(TimeBlockResponse(timeBlock))
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
+                respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
             }
-        } ?: this.respond(HttpStatusCode.InternalServerError, "Ошибка получения временного блока.")
+        } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения временного блока.")
     }
 }
 
 suspend fun ApplicationCall.insertTimeBlock() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<TimeBlockReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<TimeBlockReceive>()
         if (TimeBlocks.insertTimeBlock(
                 TimeBlockDTO(0, structureId, receive.name, receive.duration, receive.action)
             )
         ) {
-            this.respond(HttpStatusCode.OK, "Временной блок добавлен.")
+            respond(HttpStatusCode.OK, "Временной блок добавлен.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка добавления временного блока.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка добавления временного блока.")
         }
     }
 }
 
 suspend fun ApplicationCall.updateTimeBlock() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<TimeBlockReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<TimeBlockReceive>()
         if (TimeBlocks.updateTimeBlock(
                 TimeBlockDTO(receive.id, structureId, receive.name, receive.duration, receive.action)
             )
         ) {
-            this.respond(HttpStatusCode.OK, "Временной блок обновлен.")
+            respond(HttpStatusCode.OK, "Временной блок обновлен.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка обновления временного блока.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка обновления временного блока.")
         }
     }
 }
 
 suspend fun ApplicationCall.deleteTimeBlock() {
-    this.structureId?.let {
-        val receive = this.receive<IdReceive>()
+    structureId?.let {
+        val receive = receive<IdReceive>()
         if (TimeBlocks.deleteTimeBlock(receive.id)) {
-            this.respond(HttpStatusCode.OK, "Временной блок удален.")
+            respond(HttpStatusCode.OK, "Временной блок удален.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка удаления временного блока.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка удаления временного блока.")
         }
     }
 }

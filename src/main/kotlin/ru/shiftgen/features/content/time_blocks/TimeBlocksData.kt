@@ -7,7 +7,6 @@ import ru.shiftgen.databse.content.time_blocks.TimeBlockDTO
 @Serializable
 data class TimeBlockReceive(
     val id: Int,
-    val structureId: Int,
     val name: String,
     val duration: Long,
     val action: Action

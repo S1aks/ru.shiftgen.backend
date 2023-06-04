@@ -10,33 +10,33 @@ import ru.shiftgen.features.content.IdReceive
 import ru.shiftgen.plugins.structureId
 
 suspend fun ApplicationCall.getShifts() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<ShiftsReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<ShiftsReceive>()
         val list = Shifts.getShifts(structureId, receive.yearMonth)
         if (list.isNotEmpty()) {
-            this.respond(ShiftsResponse(list))
+            respond(ShiftsResponse(list))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка получения смен.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка получения смен.")
         }
     }
 }
 
 suspend fun ApplicationCall.getShift() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<IdReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<IdReceive>()
         Shifts.getShift(receive.id)?.let { shift ->
             if (shift.structureId == structureId) {
-                this.respond(ShiftResponse(shift))
+                respond(ShiftResponse(shift))
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
+                respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
             }
-        } ?: this.respond(HttpStatusCode.InternalServerError, "Ошибка получения смены.")
+        } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения смены.")
     }
 }
 
 suspend fun ApplicationCall.insertShift() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<ShiftReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<ShiftReceive>()
         if (Shifts.insertShift(
                 ShiftDTO(
                     0,
@@ -51,16 +51,16 @@ suspend fun ApplicationCall.insertShift() {
                 )
             )
         ) {
-            this.respond(HttpStatusCode.OK, "Смена добавлена.")
+            respond(HttpStatusCode.OK, "Смена добавлена.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка добавления смены.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка добавления смены.")
         }
     }
 }
 
 suspend fun ApplicationCall.updateShift() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<ShiftReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<ShiftReceive>()
         if (Shifts.updateShift(
                 ShiftDTO(
                     receive.id,
@@ -75,20 +75,20 @@ suspend fun ApplicationCall.updateShift() {
                 )
             )
         ) {
-            this.respond(HttpStatusCode.OK, "Смена обновлена.")
+            respond(HttpStatusCode.OK, "Смена обновлена.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка обновления смены.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка обновления смены.")
         }
     }
 }
 
 suspend fun ApplicationCall.deleteShift() {
-    this.structureId?.let {
-        val receive = this.receive<IdReceive>()
+    structureId?.let {
+        val receive = receive<IdReceive>()
         if (Shifts.deleteShift(receive.id)) {
-            this.respond(HttpStatusCode.OK, "Смена удалена.")
+            respond(HttpStatusCode.OK, "Смена удалена.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка удаления смены.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка удаления смены.")
         }
     }
 }
