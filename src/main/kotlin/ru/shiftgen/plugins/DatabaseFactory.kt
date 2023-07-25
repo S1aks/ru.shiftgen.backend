@@ -16,7 +16,6 @@ import ru.shiftgen.databse.content.directions.Directions
 import ru.shiftgen.databse.content.shifts.Shifts
 import ru.shiftgen.databse.content.structures.StructureDTO
 import ru.shiftgen.databse.content.structures.Structures
-import ru.shiftgen.databse.content.time_blocks.TimeBlocks
 import ru.shiftgen.databse.content.timesheets.TimeSheets
 import ru.shiftgen.databse.content.workers.Workers
 
@@ -37,7 +36,7 @@ object DatabaseFactory {
         val database = Database.connect(jdbcURL, driverClassName, dbUser, dbPassword)
         transaction(database) {
             SchemaUtils.createDatabase()
-            SchemaUtils.create(Tokens, Users, Directions, Shifts, Structures, TimeBlocks, TimeSheets, Workers)
+            SchemaUtils.create(Tokens, Users, Directions, Shifts, Structures, TimeSheets, Workers)
         }
         CoroutineScope(Job()).launch { initAdminAccount() }
         CoroutineScope(Job()).launch { createTestData() }

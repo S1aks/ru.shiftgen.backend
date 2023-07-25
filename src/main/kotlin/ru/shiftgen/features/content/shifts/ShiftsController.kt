@@ -24,9 +24,11 @@ suspend fun ApplicationCall.getShifts() {
 suspend fun ApplicationCall.getShift() {
     structureId?.let { structureId ->
         val receive = receive<IdReceive>()
-        Shifts.getShift(receive.id)?.let { shift ->
-            if (shift.structureId == structureId) {
-                respond(ShiftResponse(shift))
+        Shifts.getShiftStructureId(receive.id)?.let { id ->
+            if (id == structureId) {
+                Shifts.getShift(receive.id)?.let { shiftId ->
+                    respond(ShiftResponse(shiftId))
+                } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения смены.")
             } else {
                 respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
             }
@@ -38,16 +40,18 @@ suspend fun ApplicationCall.insertShift() {
     structureId?.let { structureId ->
         val receive = receive<ShiftReceive>()
         if (Shifts.insertShift(
+                structureId,
                 ShiftDTO(
                     0,
                     receive.name,
                     receive.yearMonth,
                     receive.periodicity,
                     receive.workerId,
-                    structureId,
                     receive.directionId,
+                    receive.action,
                     receive.startTime,
-                    receive.timeBlocksIds
+                    receive.duration,
+                    receive.restDuration
                 )
             )
         ) {
@@ -62,16 +66,18 @@ suspend fun ApplicationCall.updateShift() {
     structureId?.let { structureId ->
         val receive = receive<ShiftReceive>()
         if (Shifts.updateShift(
+                structureId,
                 ShiftDTO(
                     receive.id,
                     receive.name,
                     receive.yearMonth,
                     receive.periodicity,
                     receive.workerId,
-                    structureId,
                     receive.directionId,
+                    receive.action,
                     receive.startTime,
-                    receive.timeBlocksIds
+                    receive.duration,
+                    receive.restDuration
                 )
             )
         ) {

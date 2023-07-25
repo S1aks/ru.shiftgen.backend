@@ -7,7 +7,7 @@ import ru.shiftgen.plugins.DatabaseFactory.dbQuery
 
 object Directions : Table(), DirectionsDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
-    internal val name = varchar("name", 30).uniqueIndex()
+    internal val name = varchar("name", 30)
     internal val structureId = reference("structure_id", Structures.id)
     override val primaryKey = PrimaryKey(id)
 

@@ -8,7 +8,6 @@ import io.ktor.server.routing.*
 import ru.shiftgen.features.content.directions.*
 import ru.shiftgen.features.content.shifts.*
 import ru.shiftgen.features.content.structures.*
-import ru.shiftgen.features.content.time_blocks.*
 import ru.shiftgen.features.content.timesheets.*
 import ru.shiftgen.features.content.workers.*
 
@@ -18,7 +17,6 @@ fun Application.configureContentRouting() {
         directionsRoute()
         shiftsRoute()
         structuresRoute()
-        timeBlocksRoute()
         timeSheetsRoute()
         workersRoute()
     }
@@ -52,16 +50,6 @@ fun Route.structuresRoute() {
         post("/structure/get") { call.getStructure() }
         post("/structure/update") { call.updateStructure() }
         post("/structure/delete") { call.deleteStructure() }
-    }
-}
-
-fun Route.timeBlocksRoute() {
-    authenticate("auth-jwt") {
-        get("/time_blocks") { call.getTimeBlocks() }
-        post("/time_block/get") { call.getTimeBlock() }
-        post("/time_block/insert") { call.insertTimeBlock() }
-        post("/time_block/update") { call.updateTimeBlock() }
-        post("/time_block/delete") { call.deleteTimeBlock() }
     }
 }
 

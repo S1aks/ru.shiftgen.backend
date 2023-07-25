@@ -16,38 +16,48 @@ object Shifts : Table(), ShiftsDAO {
     internal val workerId = reference("worker_id", Workers.id).nullable()
     internal val structureId = reference("structure_id", Structures.id)
     internal val directionId = reference("direction_id", Directions.id)
+    internal val action = integer("action")
     internal val startTime = varchar("start_time", 30)
-    internal val timeBlocksIds = varchar("event_id", 256)
+    internal val duration = long("duration")
+    internal val restDuration = long("rest_duration")
     override val primaryKey = PrimaryKey(id)
 
-    override suspend fun insertShift(shift: ShiftDTO): Boolean = dbQuery {
+    override suspend fun insertShift(structureId: Int, shift: ShiftDTO): Boolean = dbQuery {
         Shifts.insert {
             it[name] = shift.name
             it[yearMonth] = shift.yearMonth.toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
-            it[structureId] = shift.structureId
+            it[this.structureId] = structureId
             it[directionId] = shift.directionId
+            it[action] = shift.action.ordinal
             it[startTime] = shift.startTime.toString()
-            it[timeBlocksIds] = shift.timeBlocksIds.joinToString(",")
+            it[duration] = shift.duration
+            it[restDuration] = shift.restDuration
         }.insertedCount > 0
     }
 
-    override suspend fun updateShift(shift: ShiftDTO): Boolean = dbQuery {
+    override suspend fun updateShift(structureId: Int, shift: ShiftDTO): Boolean = dbQuery {
         Shifts.update({ id eq shift.id }) {
             it[name] = shift.name
             it[yearMonth] = shift.yearMonth.toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
-            it[structureId] = shift.structureId
+            it[this.structureId] = structureId
             it[directionId] = shift.directionId
+            it[action] = shift.action.ordinal
             it[startTime] = shift.startTime.toString()
-            it[timeBlocksIds] = shift.timeBlocksIds.joinToString(",")
+            it[duration] = shift.duration
+            it[restDuration] = shift.restDuration
         } > 0
     }
 
     override suspend fun getShift(id: Int): ShiftDTO? = dbQuery {
         Shifts.select { Shifts.id eq id }.singleOrNull()?.toShiftDTO()
+    }
+
+    override suspend fun getShiftStructureId(id: Int): Int? = dbQuery {
+        Shifts.select { Shifts.id eq id }.singleOrNull()?.structureId()
     }
 
     override suspend fun getShifts(structureId: Int, yearMonth: YearMonth): List<ShiftDTO> = dbQuery {

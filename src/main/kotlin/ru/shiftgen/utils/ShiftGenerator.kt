@@ -1,10 +1,8 @@
 package ru.shiftgen.utils
 
-import ru.shiftgen.databse.content.enums.Action
 import ru.shiftgen.databse.content.shifts.ShiftDTO
 import ru.shiftgen.databse.content.shifts.Shifts
 import ru.shiftgen.databse.content.structures.StructureDTO
-import ru.shiftgen.databse.content.time_blocks.TimeBlocks
 import ru.shiftgen.databse.content.timesheets.TimeSheets
 import ru.shiftgen.databse.content.workers.WorkerDTO
 import ru.shiftgen.databse.content.workers.Workers
@@ -14,38 +12,19 @@ import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
 class ShiftGenerator {
-    private suspend fun ShiftDTO.getShiftDuration(): Long = dbQuery {
-        var shiftDuration = 0L
-        this.timeBlocksIds.forEach { timeBlockId ->
-            shiftDuration += TimeBlocks.getTimeBlock(timeBlockId)?.duration ?: 0
-        }
-        shiftDuration
-    }
 
-    private suspend fun ShiftDTO.endTimeWithCorrection(correctTime: Long): LocalDateTime =
-        this.startTime.plus(this.getShiftDuration() + correctTime, ChronoUnit.MILLIS)
+    private suspend fun ShiftDTO.endTimeWithRestCorrection(correctTime: Long): LocalDateTime =
+        this.startTime.plus(this.duration + correctTime, ChronoUnit.MILLIS)
 
     private suspend fun ShiftDTO.endTime(): LocalDateTime =
-        this.startTime.plus(this.getShiftDuration(), ChronoUnit.MILLIS)
-
-    private suspend fun ShiftDTO.workTime(): Long = dbQuery {
-        var workTime = 0L
-        this.timeBlocksIds.forEach { timeBlockId ->
-            TimeBlocks.getTimeBlock(timeBlockId)?.let { timeBlock ->
-                workTime += if (timeBlock.action == Action.WORK) {
-                    timeBlock.duration
-                } else 0L
-            }
-        }
-        workTime
-    }
+        this.startTime.plus(this.duration, ChronoUnit.MILLIS)
 
     private suspend fun getBusyOrRestWorkersIdsOnTime(
         shifts: List<ShiftDTO>, yearMonth: YearMonth, time: LocalDateTime, restHours: Int
     ): List<Int?> = shifts
         .filter { it.workerId != null }
         .filter { shift ->
-            time >= shift.startTime && time <= shift.endTimeWithCorrection(restHours.hoursToMillis)
+            time >= shift.startTime && time <= shift.endTimeWithRestCorrection(restHours.hoursToMillis)
         }
         .filter { it.yearMonth == yearMonth }
         .map { it.workerId }
@@ -88,7 +67,7 @@ class ShiftGenerator {
         .filter { shift ->
             shift.startTime >= currentShift.startTime.minusDays(allowedConsecutiveNights.toLong())
                 .toLocalDate().atStartOfDay().plusHours(nightEndHour.toLong()) &&
-                    shift.endTimeWithCorrection(restHours.hoursToMillis) < currentShift.startTime &&
+                    shift.endTimeWithRestCorrection(restHours.hoursToMillis) < currentShift.startTime &&
                     getNumberOfNightsInShift(shift, nightStartHour, nightEndHour) > 0
         } // Оставляем те смены, были не ранее allowedConsecutiveNights ночей назад,
         // которые закончатся за restHours до начала текущей смены и затрагивали ночь
@@ -143,7 +122,7 @@ class ShiftGenerator {
                 if (shift.workerId != null) { // Если рабочий найден
                     workers.find { it.id == shift.workerId }?.let { worker ->
                         // Рассчитываем рабочее время в поездке
-                        val workTime = shift.workTime()
+                        val workTime = shift.duration - shift.restDuration
                         val timeSheet = timeSheets.first { it.workerId == worker.id }
                         timeSheet.calculatedTime = timeSheet.calculatedTime.plus(workTime)
                         if (LocalDateTime.now() > shift.endTime()) {
