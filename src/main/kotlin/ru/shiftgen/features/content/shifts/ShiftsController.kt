@@ -98,3 +98,12 @@ suspend fun ApplicationCall.deleteShift() {
         }
     }
 }
+
+suspend fun ApplicationCall.getYearMonths() {
+    structureId?.let { structureId ->
+        val yearMonths = Shifts.getYearMonths(structureId)
+        if (yearMonths.isNotEmpty()) {
+            respond(YearMonthsResponse(yearMonths))
+        }
+    }
+}

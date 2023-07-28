@@ -66,6 +66,10 @@ object Shifts : Table(), ShiftsDAO {
             .map { it.toShiftDTO() }
     }
 
+    override suspend fun getYearMonths(structureId: Int): List<String> = dbQuery {
+        Shifts.select { Shifts.structureId eq structureId }.map { it[yearMonth] }.distinct()
+    }
+
     override suspend fun deleteShift(id: Int): Boolean = dbQuery {
         Shifts.deleteWhere { Shifts.id eq id } > 0
     }

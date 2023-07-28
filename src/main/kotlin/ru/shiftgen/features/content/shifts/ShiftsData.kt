@@ -40,3 +40,8 @@ data class ShiftResponse(
 data class ShiftsResponse(
     val list: List<ShiftDTO>
 )
+
+@Serializable
+data class YearMonthsResponse(
+    val list: List<String>
+)

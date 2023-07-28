@@ -27,5 +27,6 @@ interface ShiftsDAO {
     suspend fun getShift(id: Int): ShiftDTO?
     suspend fun getShiftStructureId(id: Int): Int?
     suspend fun getShifts(structureId: Int, yearMonth: YearMonth): List<ShiftDTO>
+    suspend fun getYearMonths(structureId: Int): List<String>
     suspend fun deleteShift(id: Int): Boolean
 }
