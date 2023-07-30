@@ -10,7 +10,6 @@ interface ShiftsDAO {
     fun ResultRow.toShiftDTO() = ShiftDTO(
         id = this[Shifts.id],
         name = this[Shifts.name],
-        yearMonth = YearMonth.parse(this[Shifts.yearMonth]),
         periodicity = Periodicity.values()[this[Shifts.periodicity]],
         workerId = this[Shifts.workerId],
         directionId = this[Shifts.directionId],

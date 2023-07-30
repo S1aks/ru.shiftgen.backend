@@ -39,7 +39,7 @@ fun Route.shiftsRoute() {
         post("/shift/insert") { call.insertShift() }
         post("/shift/update") { call.updateShift() }
         post("/shift/delete") { call.deleteShift() }
-        post("/shifts/yearmonths") { call.getYearMonths() }
+        get("/shifts/yearmonths") { call.getYearMonths() }
     }
 }
 

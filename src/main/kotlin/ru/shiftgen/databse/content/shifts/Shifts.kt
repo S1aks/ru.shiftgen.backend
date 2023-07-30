@@ -25,7 +25,7 @@ object Shifts : Table(), ShiftsDAO {
     override suspend fun insertShift(structureId: Int, shift: ShiftDTO): Boolean = dbQuery {
         Shifts.insert {
             it[name] = shift.name
-            it[yearMonth] = shift.yearMonth.toString()
+            it[yearMonth] = YearMonth.of(shift.startTime.year, shift.startTime.month).toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
             it[this.structureId] = structureId
@@ -40,7 +40,7 @@ object Shifts : Table(), ShiftsDAO {
     override suspend fun updateShift(structureId: Int, shift: ShiftDTO): Boolean = dbQuery {
         Shifts.update({ id eq shift.id }) {
             it[name] = shift.name
-            it[yearMonth] = shift.yearMonth.toString()
+            it[yearMonth] = YearMonth.of(shift.startTime.year, shift.startTime.month).toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
             it[this.structureId] = structureId
@@ -67,7 +67,7 @@ object Shifts : Table(), ShiftsDAO {
     }
 
     override suspend fun getYearMonths(structureId: Int): List<String> = dbQuery {
-        Shifts.select { Shifts.structureId eq structureId }.map { it[yearMonth] }.distinct()
+        Shifts.select { Shifts.structureId eq structureId }.orderBy(yearMonth).map { it[yearMonth] }.distinct()
     }
 
     override suspend fun deleteShift(id: Int): Boolean = dbQuery {

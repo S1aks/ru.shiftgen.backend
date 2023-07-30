@@ -16,7 +16,7 @@ suspend fun ApplicationCall.getShifts() {
         if (list.isNotEmpty()) {
             respond(ShiftsResponse(list))
         } else {
-            respond(HttpStatusCode.InternalServerError, "Ошибка получения смен.")
+            respond(HttpStatusCode.InternalServerError, "Список смен пуст.")
         }
     }
 }
@@ -44,7 +44,6 @@ suspend fun ApplicationCall.insertShift() {
                 ShiftDTO(
                     0,
                     receive.name,
-                    receive.yearMonth,
                     receive.periodicity,
                     receive.workerId,
                     receive.directionId,
@@ -70,7 +69,6 @@ suspend fun ApplicationCall.updateShift() {
                 ShiftDTO(
                     receive.id,
                     receive.name,
-                    receive.yearMonth,
                     receive.periodicity,
                     receive.workerId,
                     receive.directionId,
@@ -104,6 +102,8 @@ suspend fun ApplicationCall.getYearMonths() {
         val yearMonths = Shifts.getYearMonths(structureId)
         if (yearMonths.isNotEmpty()) {
             respond(YearMonthsResponse(yearMonths))
+        } else {
+            respond(HttpStatusCode.InternalServerError, "Список смен пуст.")
         }
     }
 }

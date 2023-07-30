@@ -13,8 +13,6 @@ import java.time.YearMonth
 data class ShiftReceive(
     val id: Int,
     val name: String,
-    @Serializable(with = YearMonthSerializer::class)
-    val yearMonth: YearMonth,
     val periodicity: Periodicity,
     val workerId: Int?,
     val directionId: Int,

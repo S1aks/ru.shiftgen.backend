@@ -12,8 +12,6 @@ import java.time.YearMonth
 data class ShiftDTO(
     val id: Int = 0,
     val name: String,
-    @Serializable(with = YearMonthSerializer::class)
-    val yearMonth: YearMonth,
     val periodicity: Periodicity,
     var workerId: Int?,
     val directionId: Int,
