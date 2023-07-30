@@ -3,6 +3,7 @@ package ru.shiftgen.databse.content.workers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import ru.shiftgen.databse.authorization.users.Users
+import ru.shiftgen.databse.content.shifts.Shifts.structureId
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
 
@@ -17,11 +18,11 @@ object Workers : Table(), WorkersDAO {
     internal val accessToDirections = varchar("access_to_events", 256).nullable()
     override val primaryKey = PrimaryKey(id)
 
-    override suspend fun insertWorker(worker: WorkerDTO): Boolean = dbQuery {
+    override suspend fun insertWorker(structureId: Int, worker: WorkerDTO): Boolean = dbQuery {
         Workers.insert {
             it[personnelNumber] = worker.personnelNumber
             it[userId] = worker.userId
-            it[structureId] = worker.structureId
+            it[this.structureId] = structureId
             it[firstName] = worker.firstName
             it[lastName] = worker.lastName
             it[patronymic] = worker.patronymic
@@ -33,7 +34,6 @@ object Workers : Table(), WorkersDAO {
         Workers.update({ id eq worker.id }) {
             it[personnelNumber] = worker.personnelNumber
             it[userId] = worker.userId
-            it[structureId] = worker.structureId
             it[firstName] = worker.firstName
             it[lastName] = worker.lastName
             it[patronymic] = worker.patronymic
@@ -47,6 +47,10 @@ object Workers : Table(), WorkersDAO {
 
     override suspend fun getWorkers(structureId: Int): List<WorkerDTO> = dbQuery {
         Workers.select { Workers.structureId eq structureId }.orderBy(lastName).map { it.toWorkerDTO() }
+    }
+
+    override suspend fun getWorkerStructureId(id: Int): Int? = dbQuery {
+        Workers.select { Workers.id eq id }.singleOrNull()?.structureId()
     }
 
     override suspend fun deleteWorker(id: Int): Boolean = dbQuery {

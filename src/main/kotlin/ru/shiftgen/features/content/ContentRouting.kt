@@ -57,7 +57,7 @@ fun Route.structuresRoute() {
 fun Route.timeSheetsRoute() {
     authenticate("auth-jwt") {
         get("/timesheets") { call.getTimeSheets() }
-        post("/timesheet/get_by_id") { call.getTimeSheetById() }
+        post("/timesheet/get") { call.getTimeSheet() }
         post("/timesheet/get_by_worker_id") { call.getTimeSheetsByWorkerId() }
         post("/timesheet/get_by_worker_id_in_year_month") { call.getTimeSheetByWorkerIdInYearMonth() }
         post("/timesheet/get_by_year_month") { call.getTimeSheetsInYearMonth() }

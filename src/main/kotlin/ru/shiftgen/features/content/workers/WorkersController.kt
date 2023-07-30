@@ -23,13 +23,15 @@ suspend fun ApplicationCall.getWorkers() {
 suspend fun ApplicationCall.getWorker() {
     structureId?.let { structureId ->
         val receive = receive<IdReceive>()
-        Workers.getWorker(receive.id)?.let { worker ->
-            if (worker.structureId == structureId) {
-                respond(WorkerResponse(worker))
+        Workers.getWorkerStructureId(receive.id)?.let { workerStructureId ->
+            if (workerStructureId == structureId) {
+                Workers.getWorker(receive.id)?.let { worker ->
+                    respond(WorkerResponse(worker))
+                } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения работника.")
             } else {
-                respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
+                null
             }
-        } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения работника.")
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }
 
@@ -37,11 +39,11 @@ suspend fun ApplicationCall.insertWorker() {
     structureId?.let { structureId ->
         val receive = receive<WorkerReceive>()
         if (Workers.insertWorker(
+                structureId,
                 WorkerDTO(
                     0,
                     receive.personnelNumber,
                     receive.userId,
-                    structureId,
                     receive.firstName,
                     receive.lastName,
                     receive.patronymic,
@@ -59,33 +61,44 @@ suspend fun ApplicationCall.insertWorker() {
 suspend fun ApplicationCall.updateWorker() {
     structureId?.let { structureId ->
         val receive = receive<WorkerReceive>()
-        if (Workers.updateWorker(
-                WorkerDTO(
-                    receive.id,
-                    receive.personnelNumber,
-                    receive.userId,
-                    structureId,
-                    receive.firstName,
-                    receive.lastName,
-                    receive.patronymic,
-                    receive.accessToDirections
-                )
-            )
-        ) {
-            respond(HttpStatusCode.OK, "Работник обновлен.")
-        } else {
-            respond(HttpStatusCode.InternalServerError, "Ошибка обновления работника.")
-        }
+        Workers.getWorkerStructureId(receive.id)?.let { workerStructureId ->
+            if (workerStructureId == structureId) {
+                if (Workers.updateWorker(
+                        WorkerDTO(
+                            receive.id,
+                            receive.personnelNumber,
+                            receive.userId,
+                            receive.firstName,
+                            receive.lastName,
+                            receive.patronymic,
+                            receive.accessToDirections
+                        )
+                    )
+                ) {
+                    respond(HttpStatusCode.OK, "Работник обновлен.")
+                } else {
+                    respond(HttpStatusCode.InternalServerError, "Ошибка обновления работника.")
+                }
+            } else {
+                null
+            }
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }
 
 suspend fun ApplicationCall.deleteWorker() {
-    structureId?.let {
+    structureId?.let { structureId ->
         val receive = receive<IdReceive>()
-        if (Workers.deleteWorker(receive.id)) {
-            respond(HttpStatusCode.OK, "Работник удален.")
-        } else {
-            respond(HttpStatusCode.InternalServerError, "Ошибка удаления работника.")
-        }
+        Workers.getWorkerStructureId(receive.id)?.let { workerStructureId ->
+            if (workerStructureId == structureId) {
+                if (Workers.deleteWorker(receive.id)) {
+                    respond(HttpStatusCode.OK, "Работник удален.")
+                } else {
+                    respond(HttpStatusCode.InternalServerError, "Ошибка удаления работника.")
+                }
+            } else {
+                null
+            }
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }

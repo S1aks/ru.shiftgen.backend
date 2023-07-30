@@ -24,15 +24,15 @@ suspend fun ApplicationCall.getShifts() {
 suspend fun ApplicationCall.getShift() {
     structureId?.let { structureId ->
         val receive = receive<IdReceive>()
-        Shifts.getShiftStructureId(receive.id)?.let { id ->
-            if (id == structureId) {
-                Shifts.getShift(receive.id)?.let { shiftId ->
-                    respond(ShiftResponse(shiftId))
+        Shifts.getShiftStructureId(receive.id)?.let { shiftStructureId ->
+            if (shiftStructureId == structureId) {
+                Shifts.getShift(receive.id)?.let { shift ->
+                    respond(ShiftResponse(shift))
                 } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения смены.")
             } else {
-                respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
+                null
             }
-        } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения смены.")
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }
 
@@ -64,36 +64,47 @@ suspend fun ApplicationCall.insertShift() {
 suspend fun ApplicationCall.updateShift() {
     structureId?.let { structureId ->
         val receive = receive<ShiftReceive>()
-        if (Shifts.updateShift(
-                structureId,
-                ShiftDTO(
-                    receive.id,
-                    receive.name,
-                    receive.periodicity,
-                    receive.workerId,
-                    receive.directionId,
-                    receive.action,
-                    receive.startTime,
-                    receive.duration,
-                    receive.restDuration
-                )
-            )
-        ) {
-            respond(HttpStatusCode.OK, "Смена обновлена.")
-        } else {
-            respond(HttpStatusCode.InternalServerError, "Ошибка обновления смены.")
-        }
+        Shifts.getShiftStructureId(receive.id)?.let { shiftStructureId ->
+            if (shiftStructureId == structureId) {
+                if (Shifts.updateShift(
+                        ShiftDTO(
+                            receive.id,
+                            receive.name,
+                            receive.periodicity,
+                            receive.workerId,
+                            receive.directionId,
+                            receive.action,
+                            receive.startTime,
+                            receive.duration,
+                            receive.restDuration
+                        )
+                    )
+                ) {
+                    respond(HttpStatusCode.OK, "Смена обновлена.")
+                } else {
+                    respond(HttpStatusCode.InternalServerError, "Ошибка обновления смены.")
+                }
+            } else {
+                null
+            }
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }
 
 suspend fun ApplicationCall.deleteShift() {
-    structureId?.let {
+    structureId?.let { structureId ->
         val receive = receive<IdReceive>()
-        if (Shifts.deleteShift(receive.id)) {
-            respond(HttpStatusCode.OK, "Смена удалена.")
-        } else {
-            respond(HttpStatusCode.InternalServerError, "Ошибка удаления смены.")
-        }
+        Shifts.getShiftStructureId(receive.id)?.let { shiftStructureId ->
+            if (shiftStructureId == structureId) {
+                if (Shifts.deleteShift(receive.id)) {
+                    respond(HttpStatusCode.OK, "Смена удалена.")
+                } else {
+                    respond(HttpStatusCode.InternalServerError, "Ошибка удаления смены.")
+                }
+            } else {
+                null
+            }
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }
 

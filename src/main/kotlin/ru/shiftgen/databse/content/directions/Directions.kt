@@ -19,10 +19,9 @@ object Directions : Table(), DirectionsDAO {
         }.insertedCount > 0
     }
 
-    override suspend fun updateDirection(structureId: Int, direction: DirectionDTO): Boolean = dbQuery {
+    override suspend fun updateDirection(direction: DirectionDTO): Boolean = dbQuery {
         Directions.update({ id eq direction.id }) {
             it[name] = direction.name
-            it[this.structureId] = structureId
         } > 0
     }
 

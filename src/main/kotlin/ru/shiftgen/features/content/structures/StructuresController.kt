@@ -14,7 +14,7 @@ suspend fun ApplicationCall.getStructures() {
     if (list.isNotEmpty()) {
         respond(StructuresResponse(list.associateBy({ it.name }, { it.id })))
     } else {
-        respond(HttpStatusCode.InternalServerError, "Ошибка получения структур.")
+        respond(HttpStatusCode.InternalServerError, "Список структур пуст.")
     }
 }
 

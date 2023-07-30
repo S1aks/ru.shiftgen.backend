@@ -8,7 +8,6 @@ import java.time.YearMonth
 data class TimeSheetDTO(
     val id: Int = 0,
     val workerId: Int,
-    val structureId: Int,
     @Serializable(with = YearMonthSerializer::class)
     val yearMonth: YearMonth,
     var workedTime: Long = 0L,

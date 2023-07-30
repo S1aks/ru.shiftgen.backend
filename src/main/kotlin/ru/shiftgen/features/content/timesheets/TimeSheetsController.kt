@@ -20,16 +20,18 @@ suspend fun ApplicationCall.getTimeSheets() {
     }
 }
 
-suspend fun ApplicationCall.getTimeSheetById() {
+suspend fun ApplicationCall.getTimeSheet() {
     structureId?.let { structureId ->
         val receive = receive<IdReceive>()
-        TimeSheets.getTimeSheetById(receive.id)?.let { timeSheet ->
-            if (timeSheet.structureId == structureId) {
-                respond(TimeSheetResponse(timeSheet))
+        TimeSheets.getTimeSheetStructureId(receive.id)?.let { sheetStructureId ->
+            if (sheetStructureId == structureId) {
+                TimeSheets.getTimeSheet(receive.id)?.let { timeSheet ->
+                    respond(TimeSheetResponse(timeSheet))
+                } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения табеля рабочего времени по id.")
             } else {
-                respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
+                null
             }
-        } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения табеля рабочего времени по id.")
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }
 
@@ -38,11 +40,13 @@ suspend fun ApplicationCall.getTimeSheetsByWorkerId() {
         val receive = receive<IdReceive>()
         val list = TimeSheets.getTimeSheetsByWorkerId(receive.id)
         if (list.isNotEmpty()) {
-            if (list.first().structureId == structureId) {
-                respond(TimeSheetsResponse(list))
-            } else {
-                respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
-            }
+            TimeSheets.getTimeSheetStructureId(list.first().id)?.let { sheetStructureId ->
+                if (sheetStructureId == structureId) {
+                    respond(TimeSheetsResponse(list))
+                } else {
+                    null
+                }
+            } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
         } else {
             respond(
                 HttpStatusCode.InternalServerError,
@@ -56,11 +60,13 @@ suspend fun ApplicationCall.getTimeSheetByWorkerIdInYearMonth() {
     structureId?.let { structureId ->
         val receive = receive<TimeSheetsWorkerIdYearMonthReceive>()
         TimeSheets.getTimeSheetByWorkerIdInYearMonth(receive.workerId, receive.yearMonth)?.let { timeSheet ->
-            if (timeSheet.structureId == structureId) {
-                respond(TimeSheetResponse(timeSheet))
-            } else {
-                respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
-            }
+            TimeSheets.getTimeSheetStructureId(timeSheet.id)?.let { sheetStructureId ->
+                if (sheetStructureId == structureId) {
+                    respond(TimeSheetResponse(timeSheet))
+                } else {
+                    null
+                }
+            } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
         } ?: respond(
             HttpStatusCode.InternalServerError,
             "Ошибка получения табеля рабочего времени по id работника и по рабочему месяцу."
@@ -73,11 +79,13 @@ suspend fun ApplicationCall.getTimeSheetsInYearMonth() {
         val receive = receive<TimeSheetsYearMonthReceive>()
         val list = TimeSheets.getTimeSheetsInYearMonth(structureId, receive.yearMonth)
         if (list.isNotEmpty()) {
-            if (list.first().structureId == structureId) {
-                respond(TimeSheetsResponse(list))
-            } else {
-                respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
-            }
+            TimeSheets.getTimeSheetStructureId(list.first().id)?.let { sheetStructureId ->
+                if (sheetStructureId == structureId) {
+                    respond(TimeSheetsResponse(list))
+                } else {
+                    null
+                }
+            } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
         } else {
             respond(
                 HttpStatusCode.InternalServerError,
@@ -91,10 +99,10 @@ suspend fun ApplicationCall.insertTimeSheet() {
     structureId?.let { structureId ->
         val receive = receive<TimeSheetReceive>()
         if (TimeSheets.insertTimeSheet(
+                structureId,
                 TimeSheetDTO(
                     0,
                     receive.workerId,
-                    structureId,
                     receive.yearMonth,
                     receive.workedTime,
                     receive.calculatedTime,
@@ -112,32 +120,43 @@ suspend fun ApplicationCall.insertTimeSheet() {
 suspend fun ApplicationCall.updateTimeSheet() {
     structureId?.let { structureId ->
         val receive = receive<TimeSheetReceive>()
-        if (TimeSheets.updateTimeSheet(
-                TimeSheetDTO(
-                    receive.id,
-                    receive.workerId,
-                    structureId,
-                    receive.yearMonth,
-                    receive.workedTime,
-                    receive.calculatedTime,
-                    receive.correctionTime
-                )
-            )
-        ) {
-            respond(HttpStatusCode.OK, "Табель рабочего времени обновлен.")
-        } else {
-            respond(HttpStatusCode.InternalServerError, "Ошибка обновления табеля рабочего времени.")
-        }
+        TimeSheets.getTimeSheetStructureId(receive.id)?.let { timesheetStructureId ->
+            if (timesheetStructureId == structureId) {
+                if (TimeSheets.updateTimeSheet(
+                        TimeSheetDTO(
+                            receive.id,
+                            receive.workerId,
+                            receive.yearMonth,
+                            receive.workedTime,
+                            receive.calculatedTime,
+                            receive.correctionTime
+                        )
+                    )
+                ) {
+                    respond(HttpStatusCode.OK, "Табель рабочего времени обновлен.")
+                } else {
+                    respond(HttpStatusCode.InternalServerError, "Ошибка обновления табеля рабочего времени.")
+                }
+            } else {
+                null
+            }
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }
 
 suspend fun ApplicationCall.deleteTimeSheet() {
-    structureId?.let {
+    structureId?.let { structureId ->
         val receive = receive<IdReceive>()
-        if (TimeSheets.deleteTimeSheet(receive.id)) {
-            respond(HttpStatusCode.OK, "Табель рабочего времени удален.")
-        } else {
-            respond(HttpStatusCode.InternalServerError, "Ошибка удаления табеля рабочего времени.")
-        }
+        TimeSheets.getTimeSheetStructureId(receive.id)?.let { timesheetStructureId ->
+            if (timesheetStructureId == structureId) {
+                if (TimeSheets.deleteTimeSheet(receive.id)) {
+                    respond(HttpStatusCode.OK, "Табель рабочего времени удален.")
+                } else {
+                    respond(HttpStatusCode.InternalServerError, "Ошибка удаления табеля рабочего времени.")
+                }
+            } else {
+                null
+            }
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }

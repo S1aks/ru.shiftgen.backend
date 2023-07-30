@@ -38,13 +38,12 @@ object Shifts : Table(), ShiftsDAO {
         }.insertedCount > 0
     }
 
-    override suspend fun updateShift(structureId: Int, shift: ShiftDTO): Boolean = dbQuery {
+    override suspend fun updateShift(shift: ShiftDTO): Boolean = dbQuery {
         Shifts.update({ id eq shift.id }) {
             it[name] = shift.name
             it[yearMonth] = shift.startTime.toYearMonth().toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
-            it[this.structureId] = structureId
             it[directionId] = shift.directionId
             it[action] = shift.action.ordinal
             it[startTime] = shift.startTime.toString()

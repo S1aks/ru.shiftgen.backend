@@ -22,7 +22,7 @@ interface ShiftsDAO {
     fun ResultRow.structureId() = this[Shifts.structureId]
 
     suspend fun insertShift(structureId: Int, shift: ShiftDTO): Boolean
-    suspend fun updateShift(structureId: Int, shift: ShiftDTO): Boolean
+    suspend fun updateShift(shift: ShiftDTO): Boolean
     suspend fun getShift(id: Int): ShiftDTO?
     suspend fun getShiftStructureId(id: Int): Int?
     suspend fun getShifts(structureId: Int, yearMonth: YearMonth): List<ShiftDTO>
