@@ -6,6 +6,7 @@ import ru.shiftgen.databse.content.directions.Directions
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.workers.Workers
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
+import ru.shiftgen.utils.toYearMonth
 import java.time.YearMonth
 
 object Shifts : Table(), ShiftsDAO {
@@ -25,7 +26,7 @@ object Shifts : Table(), ShiftsDAO {
     override suspend fun insertShift(structureId: Int, shift: ShiftDTO): Boolean = dbQuery {
         Shifts.insert {
             it[name] = shift.name
-            it[yearMonth] = YearMonth.of(shift.startTime.year, shift.startTime.month).toString()
+            it[yearMonth] = shift.startTime.toYearMonth().toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
             it[this.structureId] = structureId
@@ -40,7 +41,7 @@ object Shifts : Table(), ShiftsDAO {
     override suspend fun updateShift(structureId: Int, shift: ShiftDTO): Boolean = dbQuery {
         Shifts.update({ id eq shift.id }) {
             it[name] = shift.name
-            it[yearMonth] = YearMonth.of(shift.startTime.year, shift.startTime.month).toString()
+            it[yearMonth] = shift.startTime.toYearMonth().toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
             it[this.structureId] = structureId

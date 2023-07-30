@@ -15,7 +15,7 @@ suspend fun ApplicationCall.getDirections() {
         if (list.isNotEmpty()) {
             respond(DirectionsResponse(list))
         } else {
-            respond(HttpStatusCode.InternalServerError, "Ошибка получения направлений.")
+            respond(HttpStatusCode.InternalServerError, "Список направлений пуст.")
         }
     }
 }
@@ -24,7 +24,7 @@ suspend fun ApplicationCall.getDirection() {
     structureId?.let { structureId ->
         val receive = receive<IdReceive>()
         Directions.getDirection(receive.id)?.let { direction ->
-            if (direction.structureId == structureId) {
+            if (Directions.getDirectionStructureId(receive.id) == structureId) {
                 respond(DirectionResponse(direction))
             } else {
                 respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры")
@@ -36,7 +36,7 @@ suspend fun ApplicationCall.getDirection() {
 suspend fun ApplicationCall.insertDirection() {
     structureId?.let { structureId ->
         val receive = receive<DirectionReceive>()
-        if (Directions.insertDirection(DirectionDTO(0, receive.name, structureId))) {
+        if (Directions.insertDirection(structureId, DirectionDTO(0, receive.name))) {
             respond(HttpStatusCode.OK, "Направление добавлено.")
         } else {
             respond(HttpStatusCode.InternalServerError, "Ошибка добавления направления.")
@@ -47,7 +47,7 @@ suspend fun ApplicationCall.insertDirection() {
 suspend fun ApplicationCall.updateDirection() {
     structureId?.let { structureId ->
         val receive = receive<DirectionReceive>()
-        if (Directions.updateDirection(DirectionDTO(receive.id, receive.name, structureId))) {
+        if (Directions.updateDirection(structureId, DirectionDTO(receive.id, receive.name))) {
             respond(HttpStatusCode.OK, "Направление обновлено.")
         } else {
             respond(HttpStatusCode.InternalServerError, "Ошибка обновления направления.")

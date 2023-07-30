@@ -26,7 +26,7 @@ class ShiftGenerator {
         .filter { shift ->
             time >= shift.startTime && time <= shift.endTimeWithRestCorrection(restHours.hoursToMillis)
         }
-        .filter { it.yearMonth == yearMonth }
+        .filter { it.startTime.toYearMonth() == yearMonth }
         .map { it.workerId }
 
 //    private suspend fun isShiftCrossNight(shift: ShiftDTO, nightStartHour: Int, nightEndHour: Int): Boolean {
@@ -84,7 +84,12 @@ class ShiftGenerator {
             .filter { it.accessToDirections?.contains(shift.directionId) ?: false }
             // Отсеиваем тех кто занят или на отдыхе после смены
             .filter {
-                it.id !in getBusyOrRestWorkersIdsOnTime(shifts, shift.yearMonth, shift.startTime, restHours)
+                it.id !in getBusyOrRestWorkersIdsOnTime(
+                    shifts,
+                    shift.startTime.toYearMonth(),
+                    shift.startTime,
+                    restHours
+                )
             }
 
     suspend fun fillShiftsListWithWorkers(
