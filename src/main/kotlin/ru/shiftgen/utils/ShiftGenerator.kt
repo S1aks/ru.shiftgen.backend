@@ -3,6 +3,7 @@ package ru.shiftgen.utils
 import ru.shiftgen.databse.content.shifts.ShiftDTO
 import ru.shiftgen.databse.content.shifts.Shifts
 import ru.shiftgen.databse.content.structures.StructureDTO
+import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.timesheets.TimeSheets
 import ru.shiftgen.databse.content.workers.WorkerDTO
 import ru.shiftgen.databse.content.workers.Workers
@@ -11,15 +12,15 @@ import java.time.LocalDateTime
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
-class ShiftGenerator {
+object ShiftGenerator {
 
-    private suspend fun ShiftDTO.endTimeWithRestCorrection(correctTime: Long): LocalDateTime =
+    private fun ShiftDTO.endTimeWithRestCorrection(correctTime: Long): LocalDateTime =
         this.startTime.plus(this.duration + correctTime, ChronoUnit.MILLIS)
 
-    private suspend fun ShiftDTO.endTime(): LocalDateTime =
+    private fun ShiftDTO.endTime(): LocalDateTime =
         this.startTime.plus(this.duration, ChronoUnit.MILLIS)
 
-    private suspend fun getBusyOrRestWorkersIdsOnTime(
+    private fun getBusyOrRestWorkersIdsOnTime(
         shifts: List<ShiftDTO>, yearMonth: YearMonth, time: LocalDateTime, restHours: Int
     ): List<Int?> = shifts
         .filter { it.workerId != null }
@@ -29,21 +30,7 @@ class ShiftGenerator {
         .filter { it.startTime.toYearMonth() == yearMonth }
         .map { it.workerId }
 
-//    private suspend fun isShiftCrossNight(shift: ShiftDTO, nightStartHour: Int, nightEndHour: Int): Boolean {
-//        val shiftStart = shift.startTime
-//        val shiftEnd = shift.endTime()
-//        val nightStart = shiftStart.withHour(nightStartHour)
-//        val nightEnd = shiftStart.withHour(nightEndHour)
-//        return if (nightStartHour in 18..23) {
-//            shiftStart < nightEnd && shiftEnd > nightEnd.minusDays(1) ||
-//                    shiftStart < nightEnd.plusDays(1) && shiftEnd > nightStart
-//        } else {
-//            shiftStart < nightEnd && shiftEnd > nightStart ||
-//                    shiftStart < nightEnd.plusDays(1) && shiftEnd > nightStart.plusDays(1)
-//        }
-//    }
-
-    private suspend fun getNumberOfNightsInShift(shift: ShiftDTO, nightStartHour: Int, nightEndHour: Int): Int {
+    private fun getNumberOfNightsInShift(shift: ShiftDTO, nightStartHour: Int, nightEndHour: Int): Int {
         val shiftStart = shift.startTime
         val shiftEnd = shift.endTime()
         var numberOfNights = 0
@@ -55,7 +42,7 @@ class ShiftGenerator {
         return numberOfNights
     }
 
-    private suspend fun getWorkersIdsWhoCannotWorkThatNight(
+    private fun getWorkersIdsWhoCannotWorkThatNight(
         shifts: List<ShiftDTO>,
         currentShift: ShiftDTO,
         restHours: Int,
@@ -76,7 +63,7 @@ class ShiftGenerator {
         .filter { it.value == allowedConsecutiveNights } // Отсеять тех у кого есть 6 ночей
         .map { it.key } // Преобразовать в список Id
 
-    private suspend fun List<WorkerDTO>.getFreeWorkersForShift(
+    private fun List<WorkerDTO>.getFreeWorkersForShift(
         shifts: List<ShiftDTO>, shift: ShiftDTO, restHours: Int
     ): List<WorkerDTO> =
         this // Берём список рабочих,
@@ -92,10 +79,12 @@ class ShiftGenerator {
                 )
             }
 
-    suspend fun fillShiftsListWithWorkers(
-        structure: StructureDTO,
-        yearMonth: YearMonth
+    internal suspend fun arrangeTheWorkers(
+        structureId: Int
     ): List<ShiftDTO> = dbQuery {
+        val structure: StructureDTO =
+            Structures.getStructure(structureId) ?: throw RuntimeException("Error get structure data.")
+        val yearMonth: YearMonth = YearMonth.now()
         val prevPeriodShifts = Shifts.getShifts(structure.id, yearMonth.minusMonths(1))
         val currentPeriodShifts = Shifts.getShifts(structure.id, yearMonth)
         val shifts = prevPeriodShifts + currentPeriodShifts
@@ -140,5 +129,4 @@ class ShiftGenerator {
         }
         shifts
     }
-
 }
