@@ -16,12 +16,6 @@ import java.time.temporal.ChronoUnit
 
 object ShiftGenerator {
 
-    private fun ShiftDTO.endTimeWithRestCorrection(correctTime: Long): LocalDateTime =
-        this.startTime.plus(this.duration + correctTime, ChronoUnit.MILLIS)
-
-    private fun ShiftDTO.endTime(): LocalDateTime =
-        this.startTime.plus(this.duration, ChronoUnit.MILLIS)
-
     private fun getBusyOrRestWorkersIdsOnTime(
         shifts: List<ShiftDTO>, time: LocalDateTime, restHours: Int
     ): List<Int> = shifts
@@ -59,10 +53,9 @@ object ShiftGenerator {
                     getNumberOfNightsInShift(shift, nightStartHour, nightEndHour) > 0
         } // Оставляем те смены, были не ранее allowedConsecutiveNights ночей назад,
         // которые закончатся за restHours до начала текущей смены и затрагивали ночь
-        .filter { it.workerId != null }
-        .groupBy({ it.workerId ?: -1 }, { getNumberOfNightsInShift(it, nightStartHour, nightEndHour) })
+        .groupBy({ it.workerId!! }, { getNumberOfNightsInShift(it, nightStartHour, nightEndHour) })
         .mapValues { it.value.sum() } // Сгруппировать по Id и посчитать количество ночей у каждого
-        .filter { it.value == allowedConsecutiveNights } // Отсеять тех у кого есть 6 ночей
+        .filter { it.value == allowedConsecutiveNights } // Выбрать тех у кого уже разрешенное количества ночей
         .map { it.key } // Преобразовать в список Id
 
     private fun List<WorkerDTO>.getFreeWorkersForShift(
@@ -82,11 +75,10 @@ object ShiftGenerator {
 
     private suspend fun List<TimeSheetDTO>.updateTimeSheet(
         shift: ShiftDTO,
-        yearMonth: YearMonth,
         timeNow: LocalDateTime
     ) {
         val workTime = shift.duration - shift.restDuration
-        find { it.workerId == shift.workerId && it.yearMonth == yearMonth }?.let { timeSheet ->
+        find { it.workerId == shift.workerId }?.let { timeSheet ->
             timeSheet.calculatedTime = timeSheet.calculatedTime.plus(workTime)
             if (timeNow > shift.endTime()) {
                 timeSheet.workedTime = timeSheet.workedTime.plus(workTime)
@@ -96,23 +88,19 @@ object ShiftGenerator {
     }
 
     internal suspend fun arrangeTheWorkers(
-        structureId: Int
+        structureId: Int,
+        yearMonth: YearMonth
     ): Unit = withContext(Dispatchers.Default) {
         val structure: StructureDTO =
             Structures.getStructure(structureId) ?: throw RuntimeException("Error get structure data.")
-        val yearMonthNow: YearMonth = YearMonth.now()
-        val yearMonthPrev: YearMonth = yearMonthNow.minusMonths(1)
-        val yearMonthNext: YearMonth = yearMonthNow.plusMonths(1)
+        val currentPeriodShifts = Shifts.getShifts(structure.id, yearMonth)
+        val yearMonthPrev: YearMonth = yearMonth.minusMonths(1)
         val prevPeriodShifts = Shifts.getShifts(structure.id, yearMonthPrev).filter { shift ->
-            shift.endTime().plusHours(structure.restHours.toLong()).toYearMonth() == yearMonthNow
+            shift.endTimeWithRestCorrection(structure.restHours.hoursToMillis).toYearMonth() == yearMonth
         }
-        val currentPeriodShifts = Shifts.getShifts(structure.id, yearMonthNow)
-        val nextPeriodShifts = Shifts.getShifts(structure.id, yearMonthNext)
-        val shifts = (prevPeriodShifts + currentPeriodShifts + nextPeriodShifts).toMutableList()
+        val shifts = (prevPeriodShifts + currentPeriodShifts).toMutableList()
         val workers = Workers.getWorkers(structure.id)
-        val timeSheetsNow = TimeSheets.getTimeSheetsInYearMonth(structure.id, yearMonthNow)
-        val timeSheetsNext = TimeSheets.getTimeSheetsInYearMonth(structure.id, yearMonthNext)
-        val timeSheets = (timeSheetsNow + timeSheetsNext).toMutableList()
+        val timeSheets = TimeSheets.getTimeSheetsInYearMonth(structure.id, yearMonth).toMutableList()
         val timeNow = LocalDateTime.now()
         shifts.forEach { shift ->
             if (shift.startTime > timeNow) {
@@ -125,19 +113,13 @@ object ShiftGenerator {
         }
         workers.forEach { worker -> // Проверяем, что для каждого рабочего есть табель учета времени
             if (timeSheets.firstOrNull { it.workerId == worker.id } == null) {
-                TimeSheets.insertTimeSheet(structureId, TimeSheetDTO(0, worker.id, yearMonthNow))?.let { id ->
-                    timeSheets.add(TimeSheetDTO(id, worker.id, yearMonthNow))
+                TimeSheets.insertTimeSheet(structureId, TimeSheetDTO(0, worker.id, yearMonth))?.let { id ->
+                    timeSheets.add(TimeSheetDTO(id, worker.id, yearMonth))
                 }
-                    ?: throw RuntimeException("Error insert timesheet for workerId = ${worker.id} in year-month $yearMonthNow")
-            }
-            if (timeSheets.firstOrNull { it.workerId == worker.id && it.yearMonth == yearMonthNext } == null) {
-                TimeSheets.insertTimeSheet(structureId, TimeSheetDTO(0, worker.id, yearMonthNext))?.let { id ->
-                    timeSheets.add(TimeSheetDTO(id, worker.id, yearMonthNext))
-                }
-                    ?: throw RuntimeException("Error insert timesheet for workerId = ${worker.id} in year-month $yearMonthNext")
+                    ?: throw RuntimeException("Error insert timesheet for workerId = ${worker.id} in year-month $yearMonth")
             }
         }
-        shifts.filter { it.startTime.toYearMonth() >= yearMonthNow }
+        shifts.filter { it.startTime.toYearMonth() == yearMonth }
             .forEach { shift ->
                 if (shift.workerId == null) {   // Если рабочий не назначен
                     shift.workerId = workers
@@ -159,16 +141,14 @@ object ShiftGenerator {
                         } // Отсеиваем по условию работы нескольких ночей (allowedConsecutiveNights) ночей подряд
                         // Из оставшихся выбираем того рабочего, у которого меньше всего отработано часов
                         .minByOrNull { worker ->
-                            timeSheets.first { it.workerId == worker.id }.workedTime
+                            timeSheets.find { it.workerId == worker.id }!!.workedTime
                         }?.id
                     if (shift.workerId != null) { // Если рабочий найден
                         Shifts.updateShift(shift) // Сохраняем его в таблицу смен
-                        timeSheets.updateTimeSheet(shift, yearMonthNow, timeNow)
-                        timeSheets.updateTimeSheet(shift, yearMonthNext, timeNow)
+                        timeSheets.updateTimeSheet(shift, timeNow)  // и обновляем табель
                     }
-                } else { // если рабочий есть, то просто просчитываем рабочее время
-                    timeSheets.updateTimeSheet(shift, yearMonthNow, timeNow)
-                    timeSheets.updateTimeSheet(shift, yearMonthNext, timeNow)
+                } else { // если рабочий есть, то просто обновляем табель
+                    timeSheets.updateTimeSheet(shift, timeNow)
                 }
             }
     }

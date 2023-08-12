@@ -9,15 +9,13 @@ import ru.shiftgen.databse.content.shifts.ShiftDTO
 import ru.shiftgen.databse.content.shifts.Shifts
 import ru.shiftgen.features.content.IdReceive
 import ru.shiftgen.plugins.structureId
-import ru.shiftgen.utils.ShiftGenerator
-import ru.shiftgen.utils.toEvenInt
-import ru.shiftgen.utils.toOddInt
-import ru.shiftgen.utils.toYearMonth
+import ru.shiftgen.utils.*
 import java.time.LocalDateTime
 
 suspend fun ApplicationCall.getShifts() {
     structureId?.let { structureId ->
         val receive = receive<ShiftsReceive>()
+        ShiftGenerator.arrangeTheWorkers(structureId, receive.yearMonth)
         val list = Shifts.getShifts(structureId, receive.yearMonth)
         if (list.isNotEmpty()) {
             respond(ShiftsResponse(list))
@@ -83,7 +81,8 @@ suspend fun ApplicationCall.insertShift() {
         val currentLocalDateTime = LocalDateTime.now()
         val nextYearMonth = currentLocalDateTime.toYearMonth().plusMonths(1)
         if (
-            receive.startTime >= currentLocalDateTime || receive.startTime.toYearMonth() <= nextYearMonth
+            receive.startTime < receive.endTime()
+            && (receive.startTime >= currentLocalDateTime || receive.startTime.toYearMonth() <= nextYearMonth)
         ) {
             val result: ActionResult = when (receive.periodicity) {
                 Periodicity.ON_EVEN -> {
@@ -154,12 +153,10 @@ suspend fun ApplicationCall.insertShift() {
             }
             when (result) {
                 ActionResult.OK_ONE -> {
-                    ShiftGenerator.arrangeTheWorkers(structureId)
                     respond(HttpStatusCode.OK, "Смена добавлена.")
                 }
 
                 ActionResult.OK_ALL -> {
-                    ShiftGenerator.arrangeTheWorkers(structureId)
                     respond(HttpStatusCode.OK, "Смены добавлены.")
                 }
 
@@ -179,7 +176,8 @@ suspend fun ApplicationCall.updateShift() {
         val currentLocalDateTime = LocalDateTime.now()
         val nextYearMonth = currentLocalDateTime.toYearMonth().plusMonths(1)
         if (
-            receive.startTime >= currentLocalDateTime || receive.startTime.toYearMonth() <= nextYearMonth
+            receive.startTime < receive.endTime()
+            && (receive.startTime >= currentLocalDateTime || receive.startTime.toYearMonth() <= nextYearMonth)
         ) {
             Shifts.getShiftStructureId(receive.id)?.let { shiftStructureId ->
                 if (shiftStructureId == structureId) {
@@ -197,7 +195,6 @@ suspend fun ApplicationCall.updateShift() {
                             )
                         )
                     ) {
-                        ShiftGenerator.arrangeTheWorkers(structureId)
                         respond(HttpStatusCode.OK, "Смена обновлена.")
                     } else {
                         respond(HttpStatusCode.InternalServerError, "Ошибка обновления смены.")
@@ -218,7 +215,6 @@ suspend fun ApplicationCall.deleteShift() {
         Shifts.getShiftStructureId(receive.id)?.let { shiftStructureId ->
             if (shiftStructureId == structureId) {
                 if (Shifts.deleteShift(receive.id)) {
-                    ShiftGenerator.arrangeTheWorkers(structureId)
                     respond(HttpStatusCode.OK, "Смена удалена.")
                 } else {
                     respond(HttpStatusCode.InternalServerError, "Ошибка удаления смены.")
