@@ -236,7 +236,7 @@ suspend fun ApplicationCall.getYearMonths() {
         if (yearMonths.isNotEmpty()) {
             respond(YearMonthsResponse(yearMonths))
         } else {
-            respond(HttpStatusCode.InternalServerError, "Список смен пуст.")
+            respond(HttpStatusCode.InternalServerError, "Список месяцев пуст.")
         }
     }
 }
