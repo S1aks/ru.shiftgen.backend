@@ -107,10 +107,6 @@ object ShiftGenerator {
                 shift.workerId = null
             }
         }
-        timeSheets.forEach { timeSheet ->
-            timeSheet.workedTime = 0
-            timeSheet.calculatedTime = 0
-        }
         workers.forEach { worker -> // Проверяем, что для каждого рабочего есть табель учета времени
             if (timeSheets.firstOrNull { it.workerId == worker.id } == null) {
                 TimeSheets.insertTimeSheet(structureId, TimeSheetDTO(0, worker.id, yearMonth))?.let { id ->
@@ -118,6 +114,10 @@ object ShiftGenerator {
                 }
                     ?: throw RuntimeException("Error insert timesheet for workerId = ${worker.id} in year-month $yearMonth")
             }
+        }
+        timeSheets.forEach { timeSheet ->
+            timeSheet.workedTime = 0
+            timeSheet.calculatedTime = 0
         }
         shifts.filter { it.startTime.toYearMonth() == yearMonth }
             .forEach { shift ->
@@ -141,7 +141,7 @@ object ShiftGenerator {
                         } // Отсеиваем по условию работы нескольких ночей (allowedConsecutiveNights) ночей подряд
                         // Из оставшихся выбираем того рабочего, у которого меньше всего отработано часов
                         .minByOrNull { worker ->
-                            timeSheets.find { it.workerId == worker.id }!!.workedTime
+                            timeSheets.find { it.workerId == worker.id }!!.calculatedTime
                         }?.id
                     if (shift.workerId != null) { // Если рабочий найден
                         Shifts.updateShift(shift) // Сохраняем его в таблицу смен
