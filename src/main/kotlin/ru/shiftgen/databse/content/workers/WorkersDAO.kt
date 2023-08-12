@@ -13,6 +13,8 @@ interface WorkersDAO {
         accessToDirections = this[Workers.accessToDirections]?.split(",")?.map { it.toInt() }
     )
 
+    fun ResultRow.workerStructureId() = this[Workers.structureId]
+
     suspend fun insertWorker(structureId: Int, worker: WorkerDTO): Boolean
     suspend fun updateWorker(worker: WorkerDTO): Boolean
     suspend fun getWorker(id: Int): WorkerDTO?

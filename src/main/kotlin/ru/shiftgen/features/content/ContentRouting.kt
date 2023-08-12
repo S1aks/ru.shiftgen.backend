@@ -61,7 +61,7 @@ fun Route.timeSheetsRoute() {
         post("/timesheet/get_by_worker_id") { call.getTimeSheetsByWorkerId() }
         post("/timesheet/get_by_worker_id_in_year_month") { call.getTimeSheetByWorkerIdInYearMonth() }
         post("/timesheet/get_by_year_month") { call.getTimeSheetsInYearMonth() }
-        post("/timesheet/insert") { call.insertTimeSheet() }
+//        post("/timesheet/insert") { call.insertTimeSheet() }
         post("/timesheet/update") { call.updateTimeSheet() }
         post("/timesheet/delete") { call.deleteTimeSheet() }
     }

@@ -3,7 +3,6 @@ package ru.shiftgen.databse.content.workers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import ru.shiftgen.databse.authorization.users.Users
-import ru.shiftgen.databse.content.shifts.Shifts.structureId
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
 
@@ -50,7 +49,7 @@ object Workers : Table(), WorkersDAO {
     }
 
     override suspend fun getWorkerStructureId(id: Int): Int? = dbQuery {
-        Workers.select { Workers.id eq id }.singleOrNull()?.structureId()
+        Workers.select { Workers.id eq id }.singleOrNull()?.workerStructureId()
     }
 
     override suspend fun deleteWorker(id: Int): Boolean = dbQuery {

@@ -8,6 +8,8 @@ interface DirectionsDAO {
         name = this[Directions.name]
     )
 
+    fun ResultRow.directionStructureId() = this[Directions.structureId]
+
     suspend fun insertDirection(structureId: Int, direction: DirectionDTO): Boolean
     suspend fun updateDirection(direction: DirectionDTO): Boolean
     suspend fun getDirection(id: Int): DirectionDTO?

@@ -19,7 +19,7 @@ interface ShiftsDAO {
         restDuration = this[Shifts.restDuration]
     )
 
-    fun ResultRow.structureId() = this[Shifts.structureId]
+    fun ResultRow.shiftStructureId() = this[Shifts.structureId]
 
     suspend fun insertShift(structureId: Int, shift: ShiftDTO): Boolean
     suspend fun updateShift(shift: ShiftDTO): Boolean

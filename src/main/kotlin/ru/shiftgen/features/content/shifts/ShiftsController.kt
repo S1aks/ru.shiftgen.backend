@@ -9,7 +9,7 @@ import ru.shiftgen.databse.content.shifts.ShiftDTO
 import ru.shiftgen.databse.content.shifts.Shifts
 import ru.shiftgen.features.content.IdReceive
 import ru.shiftgen.plugins.structureId
-import ru.shiftgen.utils.andArrangeTheWorkers
+import ru.shiftgen.utils.ShiftGenerator
 import ru.shiftgen.utils.toEvenInt
 import ru.shiftgen.utils.toOddInt
 import ru.shiftgen.utils.toYearMonth
@@ -154,11 +154,13 @@ suspend fun ApplicationCall.insertShift() {
             }
             when (result) {
                 ActionResult.OK_ONE -> {
-                    respond(HttpStatusCode.OK, "Смена добавлена.").andArrangeTheWorkers(structureId)
+                    ShiftGenerator.arrangeTheWorkers(structureId)
+                    respond(HttpStatusCode.OK, "Смена добавлена.")
                 }
 
                 ActionResult.OK_ALL -> {
-                    respond(HttpStatusCode.OK, "Смены добавлены.").andArrangeTheWorkers(structureId)
+                    ShiftGenerator.arrangeTheWorkers(structureId)
+                    respond(HttpStatusCode.OK, "Смены добавлены.")
                 }
 
                 ActionResult.ERROR -> {
@@ -195,7 +197,8 @@ suspend fun ApplicationCall.updateShift() {
                             )
                         )
                     ) {
-                        respond(HttpStatusCode.OK, "Смена обновлена.").andArrangeTheWorkers(structureId)
+                        ShiftGenerator.arrangeTheWorkers(structureId)
+                        respond(HttpStatusCode.OK, "Смена обновлена.")
                     } else {
                         respond(HttpStatusCode.InternalServerError, "Ошибка обновления смены.")
                     }
@@ -215,7 +218,8 @@ suspend fun ApplicationCall.deleteShift() {
         Shifts.getShiftStructureId(receive.id)?.let { shiftStructureId ->
             if (shiftStructureId == structureId) {
                 if (Shifts.deleteShift(receive.id)) {
-                    respond(HttpStatusCode.OK, "Смена удалена.").andArrangeTheWorkers(structureId)
+                    ShiftGenerator.arrangeTheWorkers(structureId)
+                    respond(HttpStatusCode.OK, "Смена удалена.")
                 } else {
                     respond(HttpStatusCode.InternalServerError, "Ошибка удаления смены.")
                 }

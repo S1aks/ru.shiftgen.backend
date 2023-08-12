@@ -13,7 +13,9 @@ interface TimeSheetsDAO {
         correctionTime = this[TimeSheets.correctionTime]
     )
 
-    suspend fun insertTimeSheet(structureId: Int, timeSheet: TimeSheetDTO): Boolean
+    fun ResultRow.timesheetStructureId() = this[TimeSheets.structureId]
+
+    suspend fun insertTimeSheet(structureId: Int, timeSheet: TimeSheetDTO): Int?
     suspend fun updateTimeSheet(timeSheet: TimeSheetDTO): Boolean
     suspend fun getTimeSheet(id: Int): TimeSheetDTO?
     suspend fun getTimeSheetsByWorkerId(workerId: Int): List<TimeSheetDTO>

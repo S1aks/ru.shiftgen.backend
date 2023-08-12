@@ -95,27 +95,27 @@ suspend fun ApplicationCall.getTimeSheetsInYearMonth() {
     }
 }
 
-suspend fun ApplicationCall.insertTimeSheet() {
-    structureId?.let { structureId ->
-        val receive = receive<TimeSheetReceive>()
-        if (TimeSheets.insertTimeSheet(
-                structureId,
-                TimeSheetDTO(
-                    0,
-                    receive.workerId,
-                    receive.yearMonth,
-                    receive.workedTime,
-                    receive.calculatedTime,
-                    receive.correctionTime
-                )
-            )
-        ) {
-            respond(HttpStatusCode.OK, "Табель рабочего времени добавлен.")
-        } else {
-            respond(HttpStatusCode.InternalServerError, "Ошибка добавления табеля рабочего времени.")
-        }
-    }
-}
+//suspend fun ApplicationCall.insertTimeSheet() {
+//    structureId?.let { structureId ->
+//        val receive = receive<TimeSheetReceive>()
+//        if (TimeSheets.insertTimeSheet(
+//                structureId,
+//                TimeSheetDTO(
+//                    0,
+//                    receive.workerId,
+//                    receive.yearMonth,
+//                    receive.workedTime,
+//                    receive.calculatedTime,
+//                    receive.correctionTime
+//                )
+//            )
+//        ) {
+//            respond(HttpStatusCode.OK, "Табель рабочего времени добавлен.")
+//        } else {
+//            respond(HttpStatusCode.InternalServerError, "Ошибка добавления табеля рабочего времени.")
+//        }
+//    }
+//}
 
 suspend fun ApplicationCall.updateTimeSheet() {
     structureId?.let { structureId ->

@@ -2,7 +2,6 @@ package ru.shiftgen.databse.content.timesheets
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import ru.shiftgen.databse.content.shifts.Shifts.structureId
 import ru.shiftgen.databse.content.structures.Structures
 import ru.shiftgen.databse.content.workers.Workers
 import ru.shiftgen.plugins.DatabaseFactory.dbQuery
@@ -18,7 +17,7 @@ object TimeSheets : Table(), TimeSheetsDAO {
     internal val correctionTime = long("correction_time")
     override val primaryKey = PrimaryKey(id)
 
-    override suspend fun insertTimeSheet(structureId: Int, timeSheet: TimeSheetDTO): Boolean = dbQuery {
+    override suspend fun insertTimeSheet(structureId: Int, timeSheet: TimeSheetDTO): Int? = dbQuery {
         TimeSheets.insert {
             it[workerId] = timeSheet.workerId
             it[this.structureId] = structureId
@@ -26,7 +25,7 @@ object TimeSheets : Table(), TimeSheetsDAO {
             it[workedTime] = timeSheet.workedTime
             it[calculatedTime] = timeSheet.calculatedTime
             it[correctionTime] = timeSheet.correctionTime
-        }.insertedCount > 0
+        }.resultedValues?.first()?.toTimeSheetDTO()?.id
     }
 
     override suspend fun updateTimeSheet(timeSheet: TimeSheetDTO): Boolean = dbQuery {
@@ -68,7 +67,7 @@ object TimeSheets : Table(), TimeSheetsDAO {
         }
 
     override suspend fun getTimeSheetStructureId(id: Int): Int? = dbQuery {
-        TimeSheets.select { TimeSheets.id eq id }.singleOrNull()?.structureId()
+        TimeSheets.select { TimeSheets.id eq id }.singleOrNull()?.timesheetStructureId()
     }
 
     override suspend fun deleteTimeSheet(id: Int): Boolean = dbQuery {

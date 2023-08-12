@@ -57,7 +57,7 @@ object Shifts : Table(), ShiftsDAO {
     }
 
     override suspend fun getShiftStructureId(id: Int): Int? = dbQuery {
-        Shifts.select { Shifts.id eq id }.singleOrNull()?.structureId()
+        Shifts.select { Shifts.id eq id }.singleOrNull()?.shiftStructureId()
     }
 
     override suspend fun getShifts(structureId: Int, yearMonth: YearMonth): List<ShiftDTO> = dbQuery {
