@@ -12,7 +12,7 @@ data class ShiftDTO(
     val name: String,
     val periodicity: Periodicity,
     var workerId: Int?,
-    var manualWorkerSelection: Boolean = false,
+    val manualWorkerSelection: Boolean = false,
     val directionId: Int,
     val action: Action,
     @Serializable(with = LocalDateTimeSerializer::class)
