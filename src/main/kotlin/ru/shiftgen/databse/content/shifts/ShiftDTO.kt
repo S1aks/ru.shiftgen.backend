@@ -4,9 +4,7 @@ import kotlinx.serialization.Serializable
 import ru.shiftgen.databse.content.enums.Action
 import ru.shiftgen.databse.content.enums.Periodicity
 import ru.shiftgen.utils.LocalDateTimeSerializer
-import ru.shiftgen.utils.YearMonthSerializer
 import java.time.LocalDateTime
-import java.time.YearMonth
 
 @Serializable
 data class ShiftDTO(
