@@ -15,6 +15,7 @@ data class ShiftReceive(
     val name: String,
     val periodicity: Periodicity,
     val workerId: Int?,
+    var manualWorkerSelection: Boolean,
     val directionId: Int,
     val action: Action,
     @Serializable(with = LocalDateTimeSerializer::class)

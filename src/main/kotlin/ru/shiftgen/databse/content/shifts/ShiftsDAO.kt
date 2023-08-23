@@ -12,6 +12,7 @@ interface ShiftsDAO {
         name = this[Shifts.name],
         periodicity = Periodicity.values()[this[Shifts.periodicity]],
         workerId = this[Shifts.workerId],
+        manualWorkerSelection = this[Shifts.manualWorkerSelection],
         directionId = this[Shifts.directionId],
         action = Action.values()[this[Shifts.action]],
         startTime = LocalDateTime.parse(this[Shifts.startTime]),

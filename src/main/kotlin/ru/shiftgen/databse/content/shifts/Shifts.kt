@@ -15,6 +15,7 @@ object Shifts : Table(), ShiftsDAO {
     internal val yearMonth = varchar("year_month", 8)
     internal val periodicity = integer("periodicity")
     internal val workerId = reference("worker_id", Workers.id).nullable()
+    internal val manualWorkerSelection = bool("manual_worker_selection")
     internal val structureId = reference("structure_id", Structures.id)
     internal val directionId = reference("direction_id", Directions.id)
     internal val action = integer("action")
@@ -29,6 +30,7 @@ object Shifts : Table(), ShiftsDAO {
             it[yearMonth] = shift.startTime.toYearMonth().toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
+            it[manualWorkerSelection] = shift.manualWorkerSelection
             it[this.structureId] = structureId
             it[directionId] = shift.directionId
             it[action] = shift.action.ordinal
@@ -44,6 +46,7 @@ object Shifts : Table(), ShiftsDAO {
             it[yearMonth] = shift.startTime.toYearMonth().toString()
             it[periodicity] = shift.periodicity.ordinal
             it[workerId] = shift.workerId
+            it[manualWorkerSelection] = shift.manualWorkerSelection
             it[directionId] = shift.directionId
             it[action] = shift.action.ordinal
             it[startTime] = shift.startTime.toString()

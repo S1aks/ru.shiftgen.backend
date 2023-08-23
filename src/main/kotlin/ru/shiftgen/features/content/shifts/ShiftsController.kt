@@ -54,6 +54,7 @@ private suspend fun insertToShifts(structureId: Int, receive: ShiftReceive, day:
                 receive.name,
                 receive.periodicity,
                 receive.workerId,
+                receive.manualWorkerSelection,
                 receive.directionId,
                 receive.action,
                 day?.let {
@@ -187,6 +188,7 @@ suspend fun ApplicationCall.updateShift() {
                                 receive.name,
                                 receive.periodicity,
                                 receive.workerId,
+                                receive.manualWorkerSelection,
                                 receive.directionId,
                                 receive.action,
                                 receive.startTime,
