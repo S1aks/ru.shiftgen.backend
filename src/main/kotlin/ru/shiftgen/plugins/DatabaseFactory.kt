@@ -20,20 +20,19 @@ import ru.shiftgen.databse.content.timesheets.TimeSheets
 import ru.shiftgen.databse.content.workers.Workers
 
 object DatabaseFactory {
-    private const val dbUser = "postgres"
-
+    private const val DB_USER = "postgres"
     //    private const val dbPassword = "d24013" // local
-    private const val dbPassword = "D!24013555" // remote
-    private const val driverClassName = "org.postgresql.Driver"
-    private const val jdbcURL = "jdbc:postgresql://127.0.0.1:5432/shiftgen_db"
-    private const val adminLogin = "adm1n"
-    private const val adminPassword = "D43_7fG+3m/"
-    private const val adminEmail = "admin@shiftgen.ru"
-    private const val adminFirstName = "Administrator"
-    private const val adminLastName = ""
+    private const val DB_PASSWORD = "D!24013555" // remote
+    private const val DRIVER_CLASS_NAME = "org.postgresql.Driver"
+    private const val JDBC_URL = "jdbc:postgresql://127.0.0.1:5432/shiftgen_db"
+    private const val ADMIN_LOGIN = "adm1n"
+    private const val ADMIN_PASSWORD = "D43_7fG+3m/"
+    private const val ADMIN_EMAIL = "admin@shiftgen.ru"
+    private const val ADMIN_FIRST_NAME = "Administrator"
+    private const val ADMIN_LAST_NAME = ""
 
     fun init() {
-        val database = Database.connect(jdbcURL, driverClassName, dbUser, dbPassword)
+        val database = Database.connect(JDBC_URL, DRIVER_CLASS_NAME, DB_USER, DB_PASSWORD)
         transaction(database) {
             SchemaUtils.createDatabase()
             SchemaUtils.create(Tokens, Users, Directions, Shifts, Structures, TimeSheets, Workers)
@@ -43,13 +42,13 @@ object DatabaseFactory {
     }
 
     private suspend fun initAdminAccount() = dbQuery {
-        if (!Users.ifUserExist(adminLogin)) {
+        if (!Users.ifUserExist(ADMIN_LOGIN)) {
             val superUser = UserDTO(
-                login = adminLogin,
-                password = adminPassword,
-                email = adminEmail,
-                firstName = adminFirstName,
-                lastName = adminLastName,
+                login = ADMIN_LOGIN,
+                password = ADMIN_PASSWORD,
+                email = ADMIN_EMAIL,
+                firstName = ADMIN_FIRST_NAME,
+                lastName = ADMIN_LAST_NAME,
                 group = Groups.ADMIN
             )
             if (!Users.insertUser(superUser)) throw Exception("Error initialize admin account!")
