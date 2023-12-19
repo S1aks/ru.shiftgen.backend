@@ -49,6 +49,7 @@ suspend fun ApplicationCall.registerNewUser() {
                 lastName = "",
                 patronymic = "",
                 group = Groups.DISPATCHER,
+                workerId = null,
                 structureId = receive.structureId,
             )
         }

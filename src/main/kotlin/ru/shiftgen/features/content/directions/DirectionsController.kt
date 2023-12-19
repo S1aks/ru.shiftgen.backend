@@ -38,7 +38,7 @@ suspend fun ApplicationCall.getDirection() {
 suspend fun ApplicationCall.insertDirection() {
     structureId?.let { structureId ->
         val receive = receive<DirectionReceive>()
-        if (Directions.insertDirection(structureId, DirectionDTO(0, receive.name))) {
+        if (Directions.insertDirection(structureId, DirectionDTO(id = 0, receive.name))) {
             respond(HttpStatusCode.OK, "Направление добавлено.")
         } else {
             respond(HttpStatusCode.InternalServerError, "Ошибка добавления направления.")

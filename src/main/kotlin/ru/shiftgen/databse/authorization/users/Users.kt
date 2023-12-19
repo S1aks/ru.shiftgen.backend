@@ -14,15 +14,15 @@ object Users : Table(), UsersDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val login = varchar("login", 25).uniqueIndex()
     internal val password = varchar("password", 40)
-    internal val email = varchar("email", 30).nullable()
-    internal val phone = varchar("phone", 30).nullable()
+    internal val email = varchar("email", 30)
+    internal val phone = varchar("phone", 30)
     internal val firstName = varchar("first_name", 30)
     internal val lastName = varchar("last_name", 30)
-    internal val patronymic = varchar("patronymic", 30).nullable()
+    internal val patronymic = varchar("patronymic", 30)
     internal val group = integer("group")
     internal val workerId = reference("worker_id", Workers.id).nullable()
     internal val structureId = reference("structure_id", Structures.id).nullable()
-    internal val createdAt = datetime("created_at").clientDefault { LocalDateTime.now() }
+    internal val createdAt = datetime("created_at").clientDefault { LocalDateTime.now() } // todo For statistic
     override val primaryKey = PrimaryKey(login)
 
     override suspend fun ifUserExist(login: String): Boolean = dbQuery {

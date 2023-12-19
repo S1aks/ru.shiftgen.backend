@@ -50,7 +50,7 @@ private suspend fun insertToShifts(structureId: Int, receive: ShiftReceive, day:
     if (Shifts.insertShift(
             structureId,
             ShiftDTO(
-                0,
+                id = 0,
                 receive.name,
                 receive.periodicity,
                 receive.workerId,

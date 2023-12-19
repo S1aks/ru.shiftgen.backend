@@ -21,6 +21,7 @@ import ru.shiftgen.databse.content.workers.Workers
 
 object DatabaseFactory {
     private const val DB_USER = "postgres"
+
     //    private const val DB_PASSWORD = "d24013" // local
     private const val DB_PASSWORD = "D!24013555" // remote
     private const val DRIVER_CLASS_NAME = "org.postgresql.Driver"
@@ -44,12 +45,17 @@ object DatabaseFactory {
     private suspend fun initAdminAccount() = dbQuery {
         if (!Users.ifUserExist(ADMIN_LOGIN)) {
             val superUser = UserDTO(
+                id = 0,
                 login = ADMIN_LOGIN,
                 password = ADMIN_PASSWORD,
                 email = ADMIN_EMAIL,
+                phone = "",
                 firstName = ADMIN_FIRST_NAME,
                 lastName = ADMIN_LAST_NAME,
-                group = Groups.ADMIN
+                patronymic = "",
+                group = Groups.ADMIN,
+                workerId = null,
+                structureId = null
             )
             if (!Users.insertUser(superUser)) throw Exception("Error initialize admin account!")
         }
@@ -57,7 +63,18 @@ object DatabaseFactory {
 
     private suspend fun createTestData() = dbQuery {
         if (Structures.getStructure(1) == null) {
-            Structures.insertStructure(StructureDTO(1, "Тест", "", dispatcherPin = "55555"))
+            Structures.insertStructure(
+                StructureDTO(
+                    id = 1,
+                    name = "Тест",
+                    description = "",
+                    restHours = 0,
+                    allowedConsecutiveNights = 0,
+                    nightStartHour = 0,
+                    nightEndHour = 6,
+                    dispatcherPin = "55555"
+                )
+            )
         }
     }
 
