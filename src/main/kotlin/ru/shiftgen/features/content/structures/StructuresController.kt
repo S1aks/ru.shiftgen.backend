@@ -45,7 +45,7 @@ suspend fun ApplicationCall.insertStructure() {
     val receive = receive<StructureReceive>()
     if (Structures.insertStructure(
             StructureDTO(
-                0,
+                id = 0,
                 receive.name,
                 receive.description,
                 receive.restHours,
@@ -74,7 +74,8 @@ suspend fun ApplicationCall.updateStructure() {
                         receive.restHours,
                         receive.allowedConsecutiveNights,
                         receive.nightStartHour,
-                        receive.nightEndHour
+                        receive.nightEndHour,
+                        receive.dispatcherPin
                     )
                 )
             ) {

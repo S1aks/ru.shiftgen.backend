@@ -7,7 +7,7 @@ import ru.shiftgen.databse.content.structures.StructureDTO
 data class StructureReceive(
     val id: Int,
     val name: String,
-    val description: String?,
+    val description: String,
     val restHours: Int,
     val allowedConsecutiveNights: Int,
     val nightStartHour: Int,

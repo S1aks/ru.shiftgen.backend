@@ -109,8 +109,27 @@ object ShiftGenerator {
         }
         workers.forEach { worker -> // Проверяем, что для каждого рабочего есть табель учета времени
             if (timeSheets.firstOrNull { it.workerId == worker.id } == null) {
-                TimeSheets.insertTimeSheet(structureId, TimeSheetDTO(0, worker.id, yearMonth))?.let { id ->
-                    timeSheets.add(TimeSheetDTO(id, worker.id, yearMonth))
+                TimeSheets.insertTimeSheet(
+                    structureId,
+                    TimeSheetDTO(
+                        id = 0,
+                        worker.id,
+                        yearMonth,
+                        workedTime = 0L,
+                        calculatedTime = 0L,
+                        correctionTime = 0L
+                    )
+                )?.let { id ->
+                    timeSheets.add(
+                        TimeSheetDTO(
+                            id,
+                            worker.id,
+                            yearMonth,
+                            workedTime = 0L,
+                            calculatedTime = 0L,
+                            correctionTime = 0L
+                        )
+                    )
                 }
                     ?: throw RuntimeException("Error insert timesheet for workerId = ${worker.id} in year-month $yearMonth")
             }

@@ -7,7 +7,7 @@ import ru.shiftgen.plugins.DatabaseFactory.dbQuery
 object Structures : Table(), StructuresDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val name = varchar("name", 25).uniqueIndex()
-    internal val description = varchar("description", 256).nullable()
+    internal val description = varchar("description", 256)
     internal val restHours = integer("rest_hours")
     internal val allowedConsecutiveNights = integer("allowed_consecutive_nights")
     internal val nightStartHour = integer("night_start_hour")
