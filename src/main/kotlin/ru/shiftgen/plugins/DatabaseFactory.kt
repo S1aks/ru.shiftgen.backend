@@ -21,6 +21,7 @@ import ru.shiftgen.databse.content.workers.Workers
 
 object DatabaseFactory {
     private const val DB_USER = "postgres"
+
     //    private const val DB_PASSWORD = "d24013" // local
     private const val DB_PASSWORD = "D!24013555" // remote
     private const val DRIVER_CLASS_NAME = "org.postgresql.Driver"
