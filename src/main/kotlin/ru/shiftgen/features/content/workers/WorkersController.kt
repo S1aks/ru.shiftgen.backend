@@ -41,13 +41,14 @@ suspend fun ApplicationCall.insertWorker() {
         if (Workers.insertWorker(
                 structureId,
                 WorkerDTO(
-                    0,
+                    id = 0,
                     receive.personnelNumber,
                     receive.userId,
                     receive.firstName,
                     receive.lastName,
                     receive.patronymic,
-                    receive.accessToDirections
+                    receive.accessToDirections,
+                    fired = false
                 )
             )
         ) {
@@ -71,7 +72,8 @@ suspend fun ApplicationCall.updateWorker() {
                             receive.firstName,
                             receive.lastName,
                             receive.patronymic,
-                            receive.accessToDirections
+                            receive.accessToDirections,
+                            receive.fired
                         )
                     )
                 ) {

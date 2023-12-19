@@ -10,7 +10,8 @@ interface WorkersDAO {
         firstName = this[Workers.firstName],
         lastName = this[Workers.lastName],
         patronymic = this[Workers.patronymic],
-        accessToDirections = this[Workers.accessToDirections]?.split(",")?.map { it.toInt() }
+        accessToDirections = this[Workers.accessToDirections]?.split(",")?.map { it.toInt() },
+        fired = this[Workers.fired]
     )
 
     fun ResultRow.workerStructureId() = this[Workers.structureId]

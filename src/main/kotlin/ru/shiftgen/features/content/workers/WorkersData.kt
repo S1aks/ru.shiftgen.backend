@@ -11,7 +11,8 @@ data class WorkerReceive(
     val firstName: String,
     val lastName: String,
     val patronymic: String?,
-    val accessToDirections: List<Int>?
+    val accessToDirections: List<Int>?,
+    val fired: Boolean
 )
 
 @Serializable

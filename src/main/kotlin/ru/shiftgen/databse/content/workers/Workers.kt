@@ -15,6 +15,7 @@ object Workers : Table(), WorkersDAO {
     internal val lastName = varchar("last_name", 30)
     internal val patronymic = varchar("patronymic", 30).nullable()
     internal val accessToDirections = varchar("access_to_events", 256).nullable()
+    internal val fired = bool("fired")
     override val primaryKey = PrimaryKey(id)
 
     override suspend fun insertWorker(structureId: Int, worker: WorkerDTO): Boolean = dbQuery {
@@ -26,6 +27,7 @@ object Workers : Table(), WorkersDAO {
             it[lastName] = worker.lastName
             it[patronymic] = worker.patronymic
             it[accessToDirections] = worker.accessToDirections?.joinToString(",")
+            it[fired] = worker.fired
         }.insertedCount > 0
     }
 
@@ -37,6 +39,7 @@ object Workers : Table(), WorkersDAO {
             it[lastName] = worker.lastName
             it[patronymic] = worker.patronymic
             it[accessToDirections] = worker.accessToDirections?.joinToString(",")
+            it[fired] = worker.fired
         } > 0
     }
 
