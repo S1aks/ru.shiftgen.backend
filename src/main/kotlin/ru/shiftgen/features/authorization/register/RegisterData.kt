@@ -8,7 +8,8 @@ data class RegisterReceive(
     val email: String,
     val password: String,
     val group: Int,
-    val structureId: Int
+    val structureId: Int,
+    val dispatcherPin: String
 )
 
 @Serializable

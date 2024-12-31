@@ -4,11 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StructureDTO(
-    val id: Int = 0,
+    val id: Int,
     val name: String,
-    val description: String?,
-    val restHours: Int = 0,
-    val allowedConsecutiveNights: Int = 0,
-    val nightStartHour: Int = 0,
-    val nightEndHour: Int = 6
+    val description: String,
+    val restHours: Int,
+    val allowedConsecutiveNights: Int,
+    val nightStartHour: Int,
+    val nightEndHour: Int,
+    val dispatcherPin: String
 )

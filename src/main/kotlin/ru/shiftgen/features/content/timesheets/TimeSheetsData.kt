@@ -9,7 +9,6 @@ import java.time.YearMonth
 data class TimeSheetReceive(
     val id: Int,
     val workerId: Int,
-    val structureId: Int,
     @Serializable(with = YearMonthSerializer::class)
     val yearMonth: YearMonth,
     val workedTime: Long,

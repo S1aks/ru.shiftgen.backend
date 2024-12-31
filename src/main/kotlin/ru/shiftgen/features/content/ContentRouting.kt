@@ -8,7 +8,6 @@ import io.ktor.server.routing.*
 import ru.shiftgen.features.content.directions.*
 import ru.shiftgen.features.content.shifts.*
 import ru.shiftgen.features.content.structures.*
-import ru.shiftgen.features.content.time_blocks.*
 import ru.shiftgen.features.content.timesheets.*
 import ru.shiftgen.features.content.workers.*
 
@@ -18,7 +17,6 @@ fun Application.configureContentRouting() {
         directionsRoute()
         shiftsRoute()
         structuresRoute()
-        timeBlocksRoute()
         timeSheetsRoute()
         workersRoute()
     }
@@ -41,6 +39,7 @@ fun Route.shiftsRoute() {
         post("/shift/insert") { call.insertShift() }
         post("/shift/update") { call.updateShift() }
         post("/shift/delete") { call.deleteShift() }
+        get("/shifts/yearmonths") { call.getYearMonths() }
     }
 }
 
@@ -55,24 +54,14 @@ fun Route.structuresRoute() {
     }
 }
 
-fun Route.timeBlocksRoute() {
-    authenticate("auth-jwt") {
-        get("/time_blocks") { call.getTimeBlocks() }
-        post("/time_block/get") { call.getTimeBlock() }
-        post("/time_block/insert") { call.insertTimeBlock() }
-        post("/time_block/update") { call.updateTimeBlock() }
-        post("/time_block/delete") { call.deleteTimeBlock() }
-    }
-}
-
 fun Route.timeSheetsRoute() {
     authenticate("auth-jwt") {
         get("/timesheets") { call.getTimeSheets() }
-        post("/timesheet/get_by_id") { call.getTimeSheetById() }
+        post("/timesheet/get") { call.getTimeSheet() }
         post("/timesheet/get_by_worker_id") { call.getTimeSheetsByWorkerId() }
         post("/timesheet/get_by_worker_id_in_year_month") { call.getTimeSheetByWorkerIdInYearMonth() }
         post("/timesheet/get_by_year_month") { call.getTimeSheetsInYearMonth() }
-        post("/timesheet/insert") { call.insertTimeSheet() }
+//        post("/timesheet/insert") { call.insertTimeSheet() }
         post("/timesheet/update") { call.updateTimeSheet() }
         post("/timesheet/delete") { call.deleteTimeSheet() }
     }

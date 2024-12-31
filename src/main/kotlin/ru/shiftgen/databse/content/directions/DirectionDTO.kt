@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DirectionDTO(
-    val id: Int = 0,
-    val name: String,
-    val structureId: Int
+    val id: Int,
+    val name: String
 )

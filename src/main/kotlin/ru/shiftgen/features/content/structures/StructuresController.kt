@@ -12,54 +12,59 @@ import ru.shiftgen.plugins.structureId
 suspend fun ApplicationCall.getStructures() {
     val list = Structures.getStructures()
     if (list.isNotEmpty()) {
-        this.respond(StructuresResponse(list.associateBy({ it.name }, { it.id })))
+        respond(StructuresResponse(list.associateBy({ it.name }, { it.id })))
     } else {
-        this.respond(HttpStatusCode.InternalServerError, "Ошибка получения структур.")
+        respond(HttpStatusCode.InternalServerError, "Список структур пуст.")
     }
 }
 
 suspend fun ApplicationCall.getUserStructureId() {
-    this.structureId?.let { structureId ->
+    structureId?.let { structureId ->
         respond(StructureIdResponse(structureId))
-    } ?: this.respond(HttpStatusCode.InternalServerError, "ошибка получения id структуры.")
+    } ?: respond(HttpStatusCode.InternalServerError, "ошибка получения id структуры.")
 }
 
 suspend fun ApplicationCall.getStructure() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<IdReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<IdReceive>()
         if (receive.id == structureId) {
             Structures.getStructure(receive.id)?.let { structure ->
-                this.respond(StructureResponse(structure))
-            } ?: this.respond(HttpStatusCode.InternalServerError, "ошибка получения структуры.")
+                respond(StructureResponse(structure))
+            } ?: respond(HttpStatusCode.InternalServerError, "ошибка получения структуры.")
         } else {
-            this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
+            respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
         }
     }
 }
 
+private fun generatePin(): String = StringBuilder("").apply {
+    repeat(5) { append((Math.random() * 10).toInt()) }
+}.toString()
+
 suspend fun ApplicationCall.insertStructure() {
-    val receive = this.receive<StructureReceive>()
+    val receive = receive<StructureReceive>()
     if (Structures.insertStructure(
             StructureDTO(
-                0,
+                id = 0,
                 receive.name,
                 receive.description,
                 receive.restHours,
                 receive.allowedConsecutiveNights,
                 receive.nightStartHour,
-                receive.nightEndHour
+                receive.nightEndHour,
+                generatePin()
             )
         )
     ) {
-        this.respond(HttpStatusCode.OK, "Структура добавлена.")
+        respond(HttpStatusCode.OK, "Структура добавлена.")
     } else {
-        this.respond(HttpStatusCode.InternalServerError, "Ошибка добавления структуры.")
+        respond(HttpStatusCode.InternalServerError, "Ошибка добавления структуры.")
     }
 }
 
 suspend fun ApplicationCall.updateStructure() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<StructureReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<StructureReceive>()
         if (receive.id == structureId) {
             if (Structures.updateStructure(
                     StructureDTO(
@@ -69,31 +74,32 @@ suspend fun ApplicationCall.updateStructure() {
                         receive.restHours,
                         receive.allowedConsecutiveNights,
                         receive.nightStartHour,
-                        receive.nightEndHour
+                        receive.nightEndHour,
+                        receive.dispatcherPin
                     )
                 )
             ) {
-                this.respond(HttpStatusCode.OK, "Структура обновлена.")
+                respond(HttpStatusCode.OK, "Структура обновлена.")
             } else {
-                this.respond(HttpStatusCode.InternalServerError, "Ошибка обновления структуры.")
+                respond(HttpStatusCode.InternalServerError, "Ошибка обновления структуры.")
             }
         } else {
-            this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
+            respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
         }
     }
 }
 
 suspend fun ApplicationCall.deleteStructure() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<IdReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<IdReceive>()
         if (receive.id == structureId) {
             if (Structures.deleteStructure(receive.id)) {
-                this.respond(HttpStatusCode.OK, "Структура удалена.")
+                respond(HttpStatusCode.OK, "Структура удалена.")
             } else {
-                this.respond(HttpStatusCode.InternalServerError, "Ошибка удаления структуры.")
+                respond(HttpStatusCode.InternalServerError, "Ошибка удаления структуры.")
             }
         } else {
-            this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
+            respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
         }
     }
 }

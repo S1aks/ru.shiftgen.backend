@@ -8,11 +8,11 @@ data class WorkerReceive(
     val id: Int,
     val personnelNumber: Int?,
     val userId: Int?,
-    val structureId: Int,
     val firstName: String,
     val lastName: String,
     val patronymic: String?,
-    val accessToDirections: List<Int>?
+    val accessToDirections: List<Int>?,
+    val fired: Boolean
 )
 
 @Serializable

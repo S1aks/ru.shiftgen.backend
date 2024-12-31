@@ -10,82 +10,97 @@ import ru.shiftgen.features.content.IdReceive
 import ru.shiftgen.plugins.structureId
 
 suspend fun ApplicationCall.getWorkers() {
-    this.structureId?.let { structureId ->
+    structureId?.let { structureId ->
         val list = Workers.getWorkers(structureId)
         if (list.isNotEmpty()) {
-            this.respond(WorkersResponse(list))
+            respond(WorkersResponse(list))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка получения работников.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка получения работников.")
         }
     }
 }
 
 suspend fun ApplicationCall.getWorker() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<IdReceive>()
-        Workers.getWorker(receive.id)?.let { worker ->
-            if (worker.structureId == structureId) {
-                this.respond(WorkerResponse(worker))
+    structureId?.let { structureId ->
+        val receive = receive<IdReceive>()
+        Workers.getWorkerStructureId(receive.id)?.let { workerStructureId ->
+            if (workerStructureId == structureId) {
+                Workers.getWorker(receive.id)?.let { worker ->
+                    respond(WorkerResponse(worker))
+                } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения работника.")
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
+                null
             }
-        } ?: this.respond(HttpStatusCode.InternalServerError, "Ошибка получения работника.")
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }
 
 suspend fun ApplicationCall.insertWorker() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<WorkerReceive>()
+    structureId?.let { structureId ->
+        val receive = receive<WorkerReceive>()
         if (Workers.insertWorker(
+                structureId,
                 WorkerDTO(
-                    0,
+                    id = 0,
                     receive.personnelNumber,
                     receive.userId,
-                    structureId,
                     receive.firstName,
                     receive.lastName,
                     receive.patronymic,
-                    receive.accessToDirections
+                    receive.accessToDirections,
+                    fired = false
                 )
             )
         ) {
-            this.respond(HttpStatusCode.OK, "Работник добавлен.")
+            respond(HttpStatusCode.OK, "Работник добавлен.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка добавления работника.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка добавления работника.")
         }
     }
 }
 
 suspend fun ApplicationCall.updateWorker() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<WorkerReceive>()
-        if (Workers.updateWorker(
-                WorkerDTO(
-                    receive.id,
-                    receive.personnelNumber,
-                    receive.userId,
-                    structureId,
-                    receive.firstName,
-                    receive.lastName,
-                    receive.patronymic,
-                    receive.accessToDirections
-                )
-            )
-        ) {
-            this.respond(HttpStatusCode.OK, "Работник обновлен.")
-        } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка обновления работника.")
-        }
+    structureId?.let { structureId ->
+        val receive = receive<WorkerReceive>()
+        Workers.getWorkerStructureId(receive.id)?.let { workerStructureId ->
+            if (workerStructureId == structureId) {
+                if (Workers.updateWorker(
+                        WorkerDTO(
+                            receive.id,
+                            receive.personnelNumber,
+                            receive.userId,
+                            receive.firstName,
+                            receive.lastName,
+                            receive.patronymic,
+                            receive.accessToDirections,
+                            receive.fired
+                        )
+                    )
+                ) {
+                    respond(HttpStatusCode.OK, "Работник обновлен.")
+                } else {
+                    respond(HttpStatusCode.InternalServerError, "Ошибка обновления работника.")
+                }
+            } else {
+                null
+            }
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }
 
 suspend fun ApplicationCall.deleteWorker() {
-    this.structureId?.let {
-        val receive = this.receive<IdReceive>()
-        if (Workers.deleteWorker(receive.id)) {
-            this.respond(HttpStatusCode.OK, "Работник удален.")
-        } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка удаления работника.")
-        }
+    structureId?.let { structureId ->
+        val receive = receive<IdReceive>()
+        Workers.getWorkerStructureId(receive.id)?.let { workerStructureId ->
+            if (workerStructureId == structureId) {
+                if (Workers.deleteWorker(receive.id)) {
+                    respond(HttpStatusCode.OK, "Работник удален.")
+                } else {
+                    respond(HttpStatusCode.InternalServerError, "Ошибка удаления работника.")
+                }
+            } else {
+                null
+            }
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры.")
     }
 }

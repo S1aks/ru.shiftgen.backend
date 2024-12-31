@@ -15,19 +15,25 @@ import ru.shiftgen.utils.isValidEmail
 import java.util.*
 
 suspend fun ApplicationCall.registerNewUser() {
-    val receive = this.receive<RegisterReceive>()
+    val receive = receive<RegisterReceive>()
     if (!receive.email.isValidEmail()) {
-        this.respond(HttpStatusCode.BadRequest, "Неверный E-mail.")
+        respond(HttpStatusCode.BadRequest, "Неверный E-mail.")
         return
     }
     val userId = Users.getUserId(receive.login)
     if (userId != null) {
-        this.respond(HttpStatusCode.Conflict, "Пользователь существует.")
+        respond(HttpStatusCode.Conflict, "Пользователь существует.")
         return
     }
     val structure = Structures.getStructure(receive.structureId)
     if (structure == null) {
-        this.respond(HttpStatusCode.BadRequest, "Структура не существует.")
+        respond(HttpStatusCode.BadRequest, "Структура не существует.")
+        return
+    }
+    val dispatcherPin = structure.dispatcherPin
+    val structureIsNotEmpty = Users.getUsersByStructure(structure.id).isNotEmpty()
+    if (structureIsNotEmpty && dispatcherPin != receive.dispatcherPin) {
+        respond(HttpStatusCode.BadRequest, "Pin диспетчера не совпадает.")
         return
     }
     val user: UserDTO?
@@ -43,12 +49,13 @@ suspend fun ApplicationCall.registerNewUser() {
                 lastName = "",
                 patronymic = "",
                 group = Groups.DISPATCHER,
-                structureId = receive.structureId
+                workerId = null,
+                structureId = receive.structureId,
             )
         }
 
         Groups.WORKER.ordinal -> {
-            this.respond(HttpStatusCode.Conflict, "Рабочий пока не может быть создан.")
+            respond(HttpStatusCode.Conflict, "Рабочий пока не может быть создан.")
             return
 //            user = UserDTO(
 //                id = 0,
@@ -65,7 +72,7 @@ suspend fun ApplicationCall.registerNewUser() {
         }
 
         else -> {
-            this.respond(HttpStatusCode.Conflict, "Группа не существует.")
+            respond(HttpStatusCode.Conflict, "Группа не существует.")
             return
         }
     }
@@ -74,11 +81,11 @@ suspend fun ApplicationCall.registerNewUser() {
         val refreshToken = UUID.randomUUID().toString()
         val token = TokenDTO(user.login, accessToken, refreshToken)
         if (Tokens.insertToken(token)) {
-            this.respond(RegisterResponse(token.accessToken, token.refreshToken))
+            respond(RegisterResponse(token.accessToken, token.refreshToken))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка создания JWT токена.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка создания JWT токена.")
         }
     } else {
-        this.respond(HttpStatusCode.InternalServerError, "Ошибка создания пользователя.")
+        respond(HttpStatusCode.InternalServerError, "Ошибка создания пользователя.")
     }
 }

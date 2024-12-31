@@ -10,58 +10,72 @@ import ru.shiftgen.features.content.IdReceive
 import ru.shiftgen.plugins.structureId
 
 suspend fun ApplicationCall.getDirections() {
-    this.structureId?.let { structureId ->
+    structureId?.let { structureId ->
         val list = Directions.getDirections(structureId)
         if (list.isNotEmpty()) {
-            this.respond(DirectionsResponse(list))
+            respond(DirectionsResponse(list))
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка получения направлений.")
+            respond(HttpStatusCode.InternalServerError, "Список направлений пуст.")
         }
     }
 }
 
 suspend fun ApplicationCall.getDirection() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<IdReceive>()
-        Directions.getDirection(receive.id)?.let { direction ->
-            if (direction.structureId == structureId) {
-                this.respond(DirectionResponse(direction))
+    structureId?.let { structureId ->
+        val receive = receive<IdReceive>()
+        Directions.getDirectionStructureId(receive.id)?.let { directionStructureId ->
+            if (directionStructureId == structureId) {
+                Directions.getDirection(receive.id)?.let { direction ->
+                    respond(DirectionResponse(direction))
+                } ?: respond(HttpStatusCode.InternalServerError, "Ошибка получения направления.")
             } else {
-                this.respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры")
+                null
             }
-        } ?: this.respond(HttpStatusCode.InternalServerError, "Ошибка получения направления.")
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры")
     }
 }
 
 suspend fun ApplicationCall.insertDirection() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<DirectionReceive>()
-        if (Directions.insertDirection(DirectionDTO(0, receive.name, structureId))) {
-            this.respond(HttpStatusCode.OK, "Направление добавлено.")
+    structureId?.let { structureId ->
+        val receive = receive<DirectionReceive>()
+        if (Directions.insertDirection(structureId, DirectionDTO(id = 0, receive.name))) {
+            respond(HttpStatusCode.OK, "Направление добавлено.")
         } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка добавления направления.")
+            respond(HttpStatusCode.InternalServerError, "Ошибка добавления направления.")
         }
     }
 }
 
 suspend fun ApplicationCall.updateDirection() {
-    this.structureId?.let { structureId ->
-        val receive = this.receive<DirectionReceive>()
-        if (Directions.updateDirection(DirectionDTO(receive.id, receive.name, structureId))) {
-            this.respond(HttpStatusCode.OK, "Направление обновлено.")
-        } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка обновления направления.")
-        }
+    structureId?.let { structureId ->
+        val receive = receive<DirectionReceive>()
+        Directions.getDirectionStructureId(receive.id)?.let { directionStructureId ->
+            if (directionStructureId == structureId) {
+                if (Directions.updateDirection(DirectionDTO(receive.id, receive.name))) {
+                    respond(HttpStatusCode.OK, "Направление обновлено.")
+                } else {
+                    respond(HttpStatusCode.InternalServerError, "Ошибка обновления направления.")
+                }
+            } else {
+                null
+            }
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры")
     }
 }
 
 suspend fun ApplicationCall.deleteDirection() {
-    this.structureId?.let {
-        val receive = this.receive<IdReceive>()
-        if (Directions.deleteDirection(receive.id)) {
-            this.respond(HttpStatusCode.OK, "Направление удалено.")
-        } else {
-            this.respond(HttpStatusCode.InternalServerError, "Ошибка удаления направления.")
-        }
+    structureId?.let { structureId ->
+        val receive = receive<IdReceive>()
+        Directions.getDirectionStructureId(receive.id)?.let { directionStructureId ->
+            if (directionStructureId == structureId) {
+                if (Directions.deleteDirection(receive.id)) {
+                    respond(HttpStatusCode.OK, "Направление удалено.")
+                } else {
+                    respond(HttpStatusCode.InternalServerError, "Ошибка удаления направления.")
+                }
+            } else {
+                null
+            }
+        } ?: respond(HttpStatusCode.BadRequest, "Ошибка соответствия id структуры")
     }
 }

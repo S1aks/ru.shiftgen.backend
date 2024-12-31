@@ -15,17 +15,19 @@ object Workers : Table(), WorkersDAO {
     internal val lastName = varchar("last_name", 30)
     internal val patronymic = varchar("patronymic", 30).nullable()
     internal val accessToDirections = varchar("access_to_events", 256).nullable()
+    internal val fired = bool("fired")
     override val primaryKey = PrimaryKey(id)
 
-    override suspend fun insertWorker(worker: WorkerDTO): Boolean = dbQuery {
+    override suspend fun insertWorker(structureId: Int, worker: WorkerDTO): Boolean = dbQuery {
         Workers.insert {
             it[personnelNumber] = worker.personnelNumber
             it[userId] = worker.userId
-            it[structureId] = worker.structureId
+            it[this.structureId] = structureId
             it[firstName] = worker.firstName
             it[lastName] = worker.lastName
             it[patronymic] = worker.patronymic
             it[accessToDirections] = worker.accessToDirections?.joinToString(",")
+            it[fired] = worker.fired
         }.insertedCount > 0
     }
 
@@ -33,11 +35,11 @@ object Workers : Table(), WorkersDAO {
         Workers.update({ id eq worker.id }) {
             it[personnelNumber] = worker.personnelNumber
             it[userId] = worker.userId
-            it[structureId] = worker.structureId
             it[firstName] = worker.firstName
             it[lastName] = worker.lastName
             it[patronymic] = worker.patronymic
             it[accessToDirections] = worker.accessToDirections?.joinToString(",")
+            it[fired] = worker.fired
         } > 0
     }
 
@@ -47,6 +49,10 @@ object Workers : Table(), WorkersDAO {
 
     override suspend fun getWorkers(structureId: Int): List<WorkerDTO> = dbQuery {
         Workers.select { Workers.structureId eq structureId }.orderBy(lastName).map { it.toWorkerDTO() }
+    }
+
+    override suspend fun getWorkerStructureId(id: Int): Int? = dbQuery {
+        Workers.select { Workers.id eq id }.singleOrNull()?.workerStructureId()
     }
 
     override suspend fun deleteWorker(id: Int): Boolean = dbQuery {

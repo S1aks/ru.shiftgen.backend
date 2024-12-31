@@ -17,21 +17,20 @@ object TimeSheets : Table(), TimeSheetsDAO {
     internal val correctionTime = long("correction_time")
     override val primaryKey = PrimaryKey(id)
 
-    override suspend fun insertTimeSheet(timeSheet: TimeSheetDTO): Boolean = dbQuery {
+    override suspend fun insertTimeSheet(structureId: Int, timeSheet: TimeSheetDTO): Int? = dbQuery {
         TimeSheets.insert {
             it[workerId] = timeSheet.workerId
-            it[structureId] = timeSheet.structureId
+            it[this.structureId] = structureId
             it[yearMonth] = timeSheet.yearMonth.toString()
             it[workedTime] = timeSheet.workedTime
             it[calculatedTime] = timeSheet.calculatedTime
             it[correctionTime] = timeSheet.correctionTime
-        }.insertedCount > 0
+        }.resultedValues?.first()?.toTimeSheetDTO()?.id
     }
 
     override suspend fun updateTimeSheet(timeSheet: TimeSheetDTO): Boolean = dbQuery {
         TimeSheets.update({ id eq timeSheet.id }) {
             it[workerId] = timeSheet.workerId
-            it[structureId] = timeSheet.structureId
             it[yearMonth] = timeSheet.yearMonth.toString()
             it[workedTime] = timeSheet.workedTime
             it[calculatedTime] = timeSheet.calculatedTime
@@ -39,7 +38,7 @@ object TimeSheets : Table(), TimeSheetsDAO {
         } > 0
     }
 
-    override suspend fun getTimeSheetById(id: Int): TimeSheetDTO? = dbQuery {
+    override suspend fun getTimeSheet(id: Int): TimeSheetDTO? = dbQuery {
         TimeSheets.select { TimeSheets.id eq id }.singleOrNull()?.toTimeSheetDTO()
     }
 
@@ -66,6 +65,10 @@ object TimeSheets : Table(), TimeSheetsDAO {
             TimeSheets.select { TimeSheets.structureId eq structureId and (TimeSheets.yearMonth eq yearMonth.toString()) }
                 .map { it.toTimeSheetDTO() }
         }
+
+    override suspend fun getTimeSheetStructureId(id: Int): Int? = dbQuery {
+        TimeSheets.select { TimeSheets.id eq id }.singleOrNull()?.timesheetStructureId()
+    }
 
     override suspend fun deleteTimeSheet(id: Int): Boolean = dbQuery {
         TimeSheets.deleteWhere { TimeSheets.id eq id } > 0

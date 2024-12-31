@@ -7,11 +7,12 @@ import ru.shiftgen.plugins.DatabaseFactory.dbQuery
 object Structures : Table(), StructuresDAO {
     internal val id = integer("id").uniqueIndex().autoIncrement()
     internal val name = varchar("name", 25).uniqueIndex()
-    internal val description = varchar("description", 256).nullable()
+    internal val description = varchar("description", 256)
     internal val restHours = integer("rest_hours")
     internal val allowedConsecutiveNights = integer("allowed_consecutive_nights")
     internal val nightStartHour = integer("night_start_hour")
     internal val nightEndHour = integer("night_end_hour")
+    internal val dispatcherPin = varchar("dispatcher_pin", 5)
     override val primaryKey = PrimaryKey(id)
 
     override suspend fun ifStructureExists(id: Int): Boolean = dbQuery {
@@ -26,6 +27,7 @@ object Structures : Table(), StructuresDAO {
             it[allowedConsecutiveNights] = structure.allowedConsecutiveNights
             it[nightStartHour] = structure.nightStartHour
             it[nightEndHour] = structure.nightEndHour
+            it[dispatcherPin] = structure.dispatcherPin
         }.insertedCount > 0
     }
 

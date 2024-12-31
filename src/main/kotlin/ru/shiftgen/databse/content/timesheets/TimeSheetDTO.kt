@@ -6,12 +6,11 @@ import java.time.YearMonth
 
 @Serializable
 data class TimeSheetDTO(
-    val id: Int = 0,
+    val id: Int,
     val workerId: Int,
-    val structureId: Int,
     @Serializable(with = YearMonthSerializer::class)
     val yearMonth: YearMonth,
-    var workedTime: Long = 0L,
-    var calculatedTime: Long = 0L,
-    val correctionTime: Long = 0L
+    var workedTime: Long,
+    var calculatedTime: Long,
+    val correctionTime: Long
 )
